@@ -2,7 +2,9 @@
   "extends": "react-app",
   "parser": "babel-eslint",
   "rules": {
-    "quotes": [2, "single", "avoid-escape"],
+    "quotes": [
+      0
+    ],
     "globals": {
       "document": true,
       "window": true,

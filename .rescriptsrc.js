@@ -1,41 +1,63 @@
-const fs = require('fs');
-const path = require('path');
-const lessToJs = require('less-vars-to-js');
-const AntDesignThemePlugin = require('antd-theme-webpack-plugin');
+const fs = require("fs");
+const path = require("path");
+const lessToJs = require("less-vars-to-js");
+const AntDesignThemePlugin = require("./lib/antd-theme-webpack-plugin");
 
 module.exports = [
-  ['use-babel-config', '.babelrc'],
-  ['use-eslint-config', '.eslintrc'],
+  ["use-babel-config", ".babelrc"],
+  ["use-eslint-config", ".eslintrc"],
   config => {
     const newConfig = config;
     let rule = newConfig.module.rules.find(rule => rule.oneOf);
-    const paletteLess = fs.readFileSync('./src/styles/variables.less', 'utf8');
+    const paletteLess = fs.readFileSync("./src/styles/variables.less", "utf8");
     const variables = lessToJs(paletteLess);
+
+    const colorLessBase = fs.readFileSync(
+      "./node_modules/antd/lib/style/color/colors.less",
+      "utf8"
+    );
+    const colorBase = lessToJs(colorLessBase);
+
+    const themesLessBase = fs.readFileSync(
+      "./node_modules/antd/lib/style/themes/default.less",
+      "utf8"
+    );
+    const themesBase = lessToJs(themesLessBase);
+    // 生成 initialValue
+    let baseLess = { ...colorBase, ...themesBase, ...variables };
+    // Object.keys(variables).forEach(key => {
+    //   if (isValidColor(variables[key])) {
+    //     baseLess[key] = variables[key];
+    //   }
+    // });
+    fs.writeFileSync(
+      path.join(__dirname, "./src/initialValue.js"),
+      `export default ${JSON.stringify(baseLess)};`
+    );
+
     const options = {
-      antDir: path.join(__dirname, './node_modules/antd'),
-      stylesDir: path.join(__dirname, './src/styles'),
-      varFile: path.join(__dirname, './src/styles/variables.less'),
-      mainLessFile: path.join(__dirname, './src/styles/index.less'),
-      themeVariables: Object.keys(variables), // ['@primary-color', '@secondry-color', '@text-color-secondary', '@text-color', '@processing-color', '@layout-header-background', '@heading-color', '@btn-primary-bg'],
-      indexFileName: 'index.html',
+      antDir: path.join(__dirname, "./node_modules/antd"),
+      stylesDir: path.join(__dirname, "./src/styles"),
+      varFile: path.join(__dirname, "./src/styles/variables.less"),
+      mainLessFile: path.join(__dirname, "./src/styles/index.less"),
+      themeVariables: Object.keys(baseLess),
+      indexFileName: "index.html",
       generateOnce: false
-    }
-    
-    
+    };
+
     const themePlugin = new AntDesignThemePlugin(options);
-    
-    
+
     rule.oneOf.unshift({
       test: /\.less$/,
       use: [
         {
-          loader: 'style-loader'
+          loader: "style-loader"
         },
         {
-          loader: 'css-loader'
+          loader: "css-loader"
         },
         {
-          loader: 'less-loader',
+          loader: "less-loader",
           options: {
             javascriptEnabled: true,
             modifyVars: variables
@@ -44,6 +66,7 @@ module.exports = [
       ]
     });
     config.plugins.push(themePlugin);
+
     return newConfig;
   }
 ];

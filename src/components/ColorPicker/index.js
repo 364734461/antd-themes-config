@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { ChromePicker, SketchPicker } from 'react-color';
+import React, { Component } from "react";
+import { ChromePicker, SketchPicker } from "react-color";
 
 const noop = () => {};
 
@@ -12,7 +12,7 @@ class ColorPicker extends Component {
   static defaultProps = {
     onChange: noop,
     onChangeComplete: noop,
-    position: 'bottom'
+    position: "bottom"
   };
 
   constructor(props) {
@@ -46,39 +46,44 @@ class ColorPicker extends Component {
 
     const styles = {
       color: {
-        width: small ? '16px' : '120px',
-        height: small ? '16px' : '24px',
-        borderRadius: '2px',
+        width: small ? "16px" : "120px",
+        height: small ? "16px" : "24px",
+        borderRadius: "2px",
         background: this.state.color
       },
       swatch: {
-        padding: '4px',
-        background: '#fff',
-        borderRadius: '2px',
-        boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
-        display: 'inline-block',
-        cursor: 'pointer'
+        padding: "4px",
+        background: "#fff",
+        borderRadius: "2px",
+        boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
+        display: "inline-block",
+        cursor: "pointer"
       },
       popover: {
-        position: 'absolute',
-        zIndex: '2'
+        position: "absolute",
+        zIndex: "2"
       },
       cover: {
-        position: 'fixed',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px'
+        position: "fixed",
+        top: "0px",
+        right: "0px",
+        bottom: "0px",
+        left: "0px"
       },
       wrapper: {
-        position: 'inherit',
-        zIndex: '100'
+        position: "inherit",
+        zIndex: "100"
       }
     };
 
-    if (position === 'top') {
-      styles.wrapper.transform = 'translate(13%, -50%)';
+    if (position === "top") {
+      styles.wrapper.transform = "translate(0%, 10%)";
       styles.wrapper.paddingBottom = 8;
+    } else if (position === "bottom") {
+      styles.wrapper.transform = "translate(0%, -100%)";
+      styles.wrapper.paddingTop = 8;
+    } else {
+      styles.wrapper.transform = "translate(13%, -50%)";
     }
 
     const swatch = (
@@ -100,7 +105,14 @@ class ColorPicker extends Component {
       </div>
     ) : null;
 
-    if (position === 'top') {
+    if (position === "top") {
+      return (
+        <div>
+          {picker}
+          {swatch}
+        </div>
+      );
+    } else if (position === "bottom") {
       return (
         <div>
           {picker}
