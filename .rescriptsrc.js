@@ -12,24 +12,18 @@ module.exports = [
     const paletteLess = fs.readFileSync("./src/styles/variables.less", "utf8");
     const variables = lessToJs(paletteLess);
 
+    // 生成 initialValue
     const colorLessBase = fs.readFileSync(
       "./node_modules/antd/lib/style/color/colors.less",
       "utf8"
     );
     const colorBase = lessToJs(colorLessBase);
-
     const themesLessBase = fs.readFileSync(
       "./node_modules/antd/lib/style/themes/default.less",
       "utf8"
     );
     const themesBase = lessToJs(themesLessBase);
-    // 生成 initialValue
     let baseLess = { ...colorBase, ...themesBase, ...variables };
-    // Object.keys(variables).forEach(key => {
-    //   if (isValidColor(variables[key])) {
-    //     baseLess[key] = variables[key];
-    //   }
-    // });
     fs.writeFileSync(
       path.join(__dirname, "./src/initialValue.js"),
       `export default ${JSON.stringify(baseLess)};`

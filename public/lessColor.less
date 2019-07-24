@@ -1,0 +1,31 @@
+@import "./lib/style/themes/default";
+@import "./lib/style/mixins/index";
+
+// .backgroundcard(@className,@index) {
+//   .colorPalette-@{className}-@{index} {
+//     background-color: color(~`colorPalette("@{className}", @index) `);
+//   }
+// }
+
+// @bgcardList: "blue", "purple", "cyan", "green", "magenta", "pink", "red",
+//   "orange", "yellow", "volcano", "geekblue", "lime", "gold";
+
+// .backgroundcardLoopItem(@key, @i) when (@i < 10) {
+//   .backgroundcard(@key, @i);
+//   .backgroundcardLoopItem(@i+1);
+// }
+
+// .backgroundcardLoop(@key, @i) when (@i < 10) {
+//   .backgroundcardLoopItem("@{key}-@{i}", 1);
+//   .backgroundcardLoop(@i+1);
+// }
+
+// .loop(@i) when (@i < length(@bgcardList)+1) {
+//   .backgroundcardLoop(extract(@bgcardList, @i), 1);
+//   .loop(@i+1);
+// }
+// .loop(1);
+
+.colorPalette-blue-6-1 {
+  background-color: color(~`colorPalette("@{blue-6}", 1) `);
+}

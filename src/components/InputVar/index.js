@@ -1,8 +1,31 @@
 import React from "react";
-import { Row, Col, Input } from "antd";
+import { Row, Col, Input, Button } from "antd";
 
 import ColorPicker from "../ColorPicker";
-import whiteList from "./isColorVar";
+import AllList from "../../initialValue";
+
+function getColor(varName, mappings = AllList) {
+  const color = mappings[varName];
+  if (color in mappings) {
+    return getColor(color, mappings);
+  } else {
+    return color;
+  }
+}
+
+function isValidColor(color) {
+  if (!color || color.match(/px/g)) return false;
+  if (color.match(/colorPalette|fade/g)) return true;
+  if (color.charAt(0) === "#") {
+    color = color.substring(1);
+    return (
+      [3, 4, 6, 8].indexOf(color.length) > -1 && !isNaN(parseInt(color, 16))
+    );
+  }
+  return /^(rgb|hsl|hsv)a?\((\d+%?(deg|rad|grad|turn)?[,\s]+){2,3}[\s\/]*[\d\.]+%?\)$/i.test(
+    color
+  );
+}
 
 export default class extends React.Component {
   constructor(props) {
@@ -22,6 +45,10 @@ export default class extends React.Component {
     handleChange(varName, this.state.value);
   };
 
+  handleChangeCancel = () => {
+    this.setState({ value: this.props.data });
+  };
+
   onChangeComplete = color => {
     this.setState({ value: color });
   };
@@ -33,14 +60,15 @@ export default class extends React.Component {
 
   render() {
     const { position, varName, data } = this.props;
+    const color = getColor(this.state.value) || this.state.value;
     return (
       <Row className="color-row">
         <Col xs={2} className="color-palette">
-          {whiteList[varName] && (
+          {isValidColor(color) && (
             <ColorPicker
               type="chrome"
               small
-              color={this.state.value}
+              color={color}
               position={position || "right"}
               presetColors={[
                 "#F5222D",
@@ -67,15 +95,29 @@ export default class extends React.Component {
           <Input
             value={this.state.value}
             addonAfter={
-              <span
-                onClick={this.handleChange}
-                style={{
-                  cursor: "pointer",
-                  display: this.state.value === data ? "none" : "block"
-                }}
-              >
-                更新
-              </span>
+              <>
+                <Button
+                  size="small"
+                  type="primary"
+                  onClick={this.handleChange}
+                  style={{
+                    cursor: "pointer",
+                    display: this.state.value === data ? "none" : "inline-block"
+                  }}
+                >
+                  更新
+                </Button>
+                <Button
+                  size="small"
+                  onClick={this.handleChangeCancel}
+                  style={{
+                    cursor: "pointer",
+                    display: this.state.value === data ? "none" : "inline-block"
+                  }}
+                >
+                  取消
+                </Button>
+              </>
             }
             onChange={this.onChange}
           />

@@ -88,7 +88,10 @@ class ColorPicker extends Component {
 
     const swatch = (
       <div style={styles.swatch} onClick={this.handleClick}>
-        <div style={styles.color} />
+        <div
+          style={styles.color}
+          // className="colorPalette-blue-6-1"
+        />
       </div>
     );
     const picker = this.state.displayColorPicker ? (
