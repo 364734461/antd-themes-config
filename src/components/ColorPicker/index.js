@@ -88,13 +88,13 @@ class ColorPicker extends Component {
 
     let className = "";
     if (this.state.color.match(/colorPalette/g)) {
-      // console.log(this.state.color);
-      const reg = /@\{(.)+\}/;
-      const reg2 = /,(.)+\)/;
-      this.state.color.replace(reg, reg2, (key, i) => {
-        console.log(key);
-        console.log(i);
-      });
+      const reg = /@\{(.+)\}/;
+      const reg2 = /,\s?(\d{1})/;
+      const m1 = this.state.color.match(reg);
+      const m2 = this.state.color.match(reg2);
+      if (m1 && m2) {
+        className = "colorPalette-" + m1[1] + "-" + m2[1].replace(/\s*/g, "");
+      }
     } else if (this.state.color.match(/fade/g)) {
     } else if (this.state.color.match(/tint/g)) {
     }
