@@ -96,7 +96,29 @@ class ColorPicker extends Component {
         className = "colorPalette-" + m1[1] + "-" + m2[1].replace(/\s*/g, "");
       }
     } else if (this.state.color.match(/fade/g)) {
+      const reg = /\((.+),/;
+      const reg2 = /,\s?(\d+)/;
+      const m1 = this.state.color.match(reg);
+      const m2 = this.state.color.match(reg2);
+      if (m1 && m2) {
+        className =
+          "fade-" +
+          m1[1].substring(1, m1[1].length) +
+          "-" +
+          m2[1].replace(/\s*/g, "");
+      }
     } else if (this.state.color.match(/tint/g)) {
+      const reg = /\((.+),/;
+      const reg2 = /,\s?(\d+)/;
+      const m1 = this.state.color.match(reg);
+      const m2 = this.state.color.match(reg2);
+      if (m1 && m2) {
+        className =
+          "tint-" +
+          m1[1].substring(1, m1[1].length) +
+          "-" +
+          m2[1].replace(/\s*/g, "");
+      }
     }
 
     const swatch = (
