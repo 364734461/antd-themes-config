@@ -57,7 +57,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -105,11 +105,12 @@ function (_React$Component) {
           restProps = __rest(props, ["prefixCls", "className", "percent", "status", "format", "trailColor", "size", "successPercent", "type", "strokeWidth", "width", "showInfo", "gapDegree", "gapPosition", "strokeColor", "strokeLinecap"]);
 
       var prefixCls = getPrefixCls('progress', customizePrefixCls);
-      var progressStatus = parseInt(successPercent !== undefined ? successPercent.toString() : percent.toString(), 10) >= 100 && !('status' in props) ? 'success' : status || 'normal';
-      var progress;
 
-      var progressInfo = _this.renderProcessInfo(prefixCls, progressStatus); // Render progress shape
+      var progressStatus = _this.getProgressStatus();
 
+      var progressInfo = _this.renderProcessInfo(prefixCls, progressStatus);
+
+      var progress; // Render progress shape
 
       if (type === 'line') {
         progress = React.createElement(_Line["default"], _extends({}, _this.props, {
@@ -132,14 +133,34 @@ function (_React$Component) {
   }
 
   _createClass(Progress, [{
+    key: "getPercentNumber",
+    value: function getPercentNumber() {
+      var _this$props = this.props,
+          successPercent = _this$props.successPercent,
+          _this$props$percent = _this$props.percent,
+          percent = _this$props$percent === void 0 ? 0 : _this$props$percent;
+      return parseInt(successPercent !== undefined ? successPercent.toString() : percent.toString(), 10);
+    }
+  }, {
+    key: "getProgressStatus",
+    value: function getProgressStatus() {
+      var status = this.props.status;
+
+      if (ProgressStatuses.indexOf(status) < 0 && this.getPercentNumber() >= 100) {
+        return 'success';
+      }
+
+      return status || 'normal';
+    }
+  }, {
     key: "renderProcessInfo",
     value: function renderProcessInfo(prefixCls, progressStatus) {
-      var _this$props = this.props,
-          showInfo = _this$props.showInfo,
-          format = _this$props.format,
-          type = _this$props.type,
-          percent = _this$props.percent,
-          successPercent = _this$props.successPercent;
+      var _this$props2 = this.props,
+          showInfo = _this$props2.showInfo,
+          format = _this$props2.format,
+          type = _this$props2.type,
+          percent = _this$props2.percent,
+          successPercent = _this$props2.successPercent;
       if (!showInfo) return null;
       var text;
 
@@ -196,9 +217,9 @@ Progress.propTypes = {
   width: PropTypes.number,
   strokeWidth: PropTypes.number,
   strokeLinecap: PropTypes.oneOf(['round', 'square']),
-  strokeColor: PropTypes.string,
+  strokeColor: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   trailColor: PropTypes.string,
   format: PropTypes.func,
-  gapDegree: PropTypes.number,
-  "default": PropTypes.oneOf(['default', 'small'])
+  gapDegree: PropTypes.number
 };
+//# sourceMappingURL=progress.js.map

@@ -7,23 +7,21 @@ exports["default"] = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
-var ReactDOM = _interopRequireWildcard(require("react-dom"));
-
-var PropTypes = _interopRequireWildcard(require("prop-types"));
-
-var _addEventListener = _interopRequireDefault(require("rc-util/lib/Dom/addEventListener"));
+var _reactLifecyclesCompat = require("react-lifecycles-compat");
 
 var _classnames = _interopRequireDefault(require("classnames"));
-
-var _shallowequal = _interopRequireDefault(require("shallowequal"));
 
 var _omit = _interopRequireDefault(require("omit.js"));
 
 var _configProvider = require("../config-provider");
 
-var _getScroll = _interopRequireDefault(require("../_util/getScroll"));
-
 var _throttleByAnimationFrame = require("../_util/throttleByAnimationFrame");
+
+var _resizeObserver = _interopRequireDefault(require("../_util/resizeObserver"));
+
+var _warning = _interopRequireDefault(require("../_util/warning"));
+
+var _utils = require("./utils");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -61,35 +59,16 @@ var __decorate = void 0 && (void 0).__decorate || function (decorators, target, 
   return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
-function getTargetRect(target) {
-  return target !== window ? target.getBoundingClientRect() : {
-    top: 0,
-    left: 0,
-    bottom: 0
-  };
-}
-
-function getOffset(element, target) {
-  var elemRect = element.getBoundingClientRect();
-  var targetRect = getTargetRect(target);
-  var scrollTop = (0, _getScroll["default"])(target, true);
-  var scrollLeft = (0, _getScroll["default"])(target, false);
-  var docElem = window.document.body;
-  var clientTop = docElem.clientTop || 0;
-  var clientLeft = docElem.clientLeft || 0;
-  return {
-    top: elemRect.top - targetRect.top + scrollTop - clientTop,
-    left: elemRect.left - targetRect.left + scrollLeft - clientLeft,
-    width: elemRect.width,
-    height: elemRect.height
-  };
-}
-
-function noop() {}
-
 function getDefaultTarget() {
   return typeof window !== 'undefined' ? window : null;
 }
+
+var AffixStatus;
+
+(function (AffixStatus) {
+  AffixStatus[AffixStatus["None"] = 0] = "None";
+  AffixStatus[AffixStatus["Prepare"] = 1] = "Prepare";
+})(AffixStatus || (AffixStatus = {}));
 
 var Affix =
 /*#__PURE__*/
@@ -103,248 +82,250 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Affix).apply(this, arguments));
     _this.state = {
-      affixStyle: undefined,
-      placeholderStyle: undefined
+      status: AffixStatus.None,
+      lastAffix: false,
+      prevTarget: null
     };
-    _this.eventHandlers = {};
-    _this.events = ['resize', 'scroll', 'touchstart', 'touchmove', 'touchend', 'pageshow', 'load'];
 
-    _this.saveFixedNode = function (node) {
-      _this.fixedNode = node;
+    _this.getOffsetTop = function () {
+      var _this$props = _this.props,
+          offset = _this$props.offset,
+          offsetBottom = _this$props.offsetBottom;
+      var offsetTop = _this.props.offsetTop;
+
+      if (typeof offsetTop === 'undefined') {
+        offsetTop = offset;
+        (0, _warning["default"])(typeof offset === 'undefined', 'Affix', '`offset` is deprecated. Please use `offsetTop` instead.');
+      }
+
+      if (offsetBottom === undefined && offsetTop === undefined) {
+        offsetTop = 0;
+      }
+
+      return offsetTop;
+    };
+
+    _this.getOffsetBottom = function () {
+      return _this.props.offsetBottom;
     };
 
     _this.savePlaceholderNode = function (node) {
       _this.placeholderNode = node;
     };
 
+    _this.saveFixedNode = function (node) {
+      _this.fixedNode = node;
+    }; // @ts-ignore TS6133
+
+
+    _this.prepareMeasure = function (event) {
+      // event param is used before. Keep compatible ts define here.
+      _this.setState({
+        status: AffixStatus.Prepare,
+        affixStyle: undefined,
+        placeholderStyle: undefined
+      }); // Test if `updatePosition` called
+
+
+      if (process.env.NODE_ENV === 'test') {
+        var onTestUpdatePosition = _this.props.onTestUpdatePosition;
+
+        if (onTestUpdatePosition) {
+          onTestUpdatePosition();
+        }
+      }
+    };
+
+    _this.measure = function () {
+      var _this$state = _this.state,
+          status = _this$state.status,
+          lastAffix = _this$state.lastAffix;
+      var _this$props2 = _this.props,
+          target = _this$props2.target,
+          onChange = _this$props2.onChange;
+
+      if (status !== AffixStatus.Prepare || !_this.fixedNode || !_this.placeholderNode || !target) {
+        return;
+      }
+
+      var offsetTop = _this.getOffsetTop();
+
+      var offsetBottom = _this.getOffsetBottom();
+
+      var targetNode = target();
+
+      if (!targetNode) {
+        return;
+      }
+
+      var newState = {
+        status: AffixStatus.None
+      };
+      var targetRect = (0, _utils.getTargetRect)(targetNode);
+      var placeholderReact = (0, _utils.getTargetRect)(_this.placeholderNode);
+      var fixedTop = (0, _utils.getFixedTop)(placeholderReact, targetRect, offsetTop);
+      var fixedBottom = (0, _utils.getFixedBottom)(placeholderReact, targetRect, offsetBottom);
+
+      if (fixedTop !== undefined) {
+        newState.affixStyle = {
+          position: 'fixed',
+          top: fixedTop,
+          width: placeholderReact.width,
+          height: placeholderReact.height
+        };
+        newState.placeholderStyle = {
+          width: placeholderReact.width,
+          height: placeholderReact.height
+        };
+      } else if (fixedBottom !== undefined) {
+        newState.affixStyle = {
+          position: 'fixed',
+          bottom: fixedBottom,
+          width: placeholderReact.width,
+          height: placeholderReact.height
+        };
+        newState.placeholderStyle = {
+          width: placeholderReact.width,
+          height: placeholderReact.height
+        };
+      }
+
+      newState.lastAffix = !!newState.affixStyle;
+
+      if (onChange && lastAffix !== newState.lastAffix) {
+        onChange(newState.lastAffix);
+      }
+
+      _this.setState(newState);
+    }; // =================== Render ===================
+
+
     _this.renderAffix = function (_ref) {
       var getPrefixCls = _ref.getPrefixCls;
-      var prefixCls = _this.props.prefixCls;
-      var className = (0, _classnames["default"])(_defineProperty({}, getPrefixCls('affix', prefixCls), _this.state.affixStyle));
-      var props = (0, _omit["default"])(_this.props, ['prefixCls', 'offsetTop', 'offsetBottom', 'target', 'onChange']);
+      var _this$state2 = _this.state,
+          affixStyle = _this$state2.affixStyle,
+          placeholderStyle = _this$state2.placeholderStyle;
+      var _this$props3 = _this.props,
+          prefixCls = _this$props3.prefixCls,
+          children = _this$props3.children;
+      var className = (0, _classnames["default"])(_defineProperty({}, getPrefixCls('affix', prefixCls), affixStyle));
+      var props = (0, _omit["default"])(_this.props, ['prefixCls', 'offsetTop', 'offsetBottom', 'target', 'onChange']); // Omit this since `onTestUpdatePosition` only works on test.
 
-      var placeholderStyle = _extends({}, _this.state.placeholderStyle, _this.props.style);
+      if (process.env.NODE_ENV === 'test') {
+        props = (0, _omit["default"])(props, ['onTestUpdatePosition']);
+      }
 
-      return React.createElement("div", _extends({}, props, {
-        style: placeholderStyle,
+      return React.createElement(_resizeObserver["default"], {
+        onResize: function onResize() {
+          _this.updatePosition();
+        }
+      }, React.createElement("div", _extends({}, props, {
         ref: _this.savePlaceholderNode
+      }), affixStyle && React.createElement("div", {
+        style: placeholderStyle,
+        "aria-hidden": "true"
       }), React.createElement("div", {
         className: className,
         ref: _this.saveFixedNode,
-        style: _this.state.affixStyle
-      }, _this.props.children));
+        style: affixStyle
+      }, React.createElement(_resizeObserver["default"], {
+        onResize: function onResize() {
+          _this.updatePosition();
+        }
+      }, children))));
     };
 
     return _this;
-  }
+  } // Event handler
+
 
   _createClass(Affix, [{
-    key: "setAffixStyle",
-    value: function setAffixStyle(e, affixStyle) {
-      var _this2 = this;
-
-      var _this$props = this.props,
-          _this$props$onChange = _this$props.onChange,
-          onChange = _this$props$onChange === void 0 ? noop : _this$props$onChange,
-          _this$props$target = _this$props.target,
-          target = _this$props$target === void 0 ? getDefaultTarget : _this$props$target;
-      var originalAffixStyle = this.state.affixStyle;
-      var isWindow = target() === window;
-
-      if (e.type === 'scroll' && originalAffixStyle && affixStyle && isWindow) {
-        return;
-      }
-
-      if ((0, _shallowequal["default"])(affixStyle, originalAffixStyle)) {
-        return;
-      }
-
-      this.setState({
-        affixStyle: affixStyle
-      }, function () {
-        var affixed = !!_this2.state.affixStyle;
-
-        if (affixStyle && !originalAffixStyle || !affixStyle && originalAffixStyle) {
-          onChange(affixed);
-        }
-      });
-    }
-  }, {
-    key: "setPlaceholderStyle",
-    value: function setPlaceholderStyle(placeholderStyle) {
-      var originalPlaceholderStyle = this.state.placeholderStyle;
-
-      if ((0, _shallowequal["default"])(placeholderStyle, originalPlaceholderStyle)) {
-        return;
-      }
-
-      this.setState({
-        placeholderStyle: placeholderStyle
-      });
-    }
-  }, {
-    key: "syncPlaceholderStyle",
-    value: function syncPlaceholderStyle(e) {
-      var affixStyle = this.state.affixStyle;
-
-      if (!affixStyle) {
-        return;
-      }
-
-      this.placeholderNode.style.cssText = '';
-      this.setAffixStyle(e, _extends({}, affixStyle, {
-        width: this.placeholderNode.offsetWidth
-      }));
-      this.setPlaceholderStyle({
-        width: this.placeholderNode.offsetWidth
-      });
-    }
-  }, {
-    key: "updatePosition",
-    value: function updatePosition(e) {
-      var _this$props2 = this.props,
-          offsetBottom = _this$props2.offsetBottom,
-          offset = _this$props2.offset,
-          _this$props2$target = _this$props2.target,
-          target = _this$props2$target === void 0 ? getDefaultTarget : _this$props2$target;
-      var offsetTop = this.props.offsetTop;
-      var targetNode = target(); // Backwards support
-      // Fix: if offsetTop === 0, it will get undefined,
-      //   if offsetBottom is type of number, offsetMode will be { top: false, ... }
-
-      offsetTop = typeof offsetTop === 'undefined' ? offset : offsetTop;
-      var scrollTop = (0, _getScroll["default"])(targetNode, true);
-      var affixNode = ReactDOM.findDOMNode(this);
-      var elemOffset = getOffset(affixNode, targetNode);
-      var elemSize = {
-        width: this.fixedNode.offsetWidth,
-        height: this.fixedNode.offsetHeight
-      };
-      var offsetMode = {
-        top: false,
-        bottom: false
-      }; // Default to `offsetTop=0`.
-
-      if (typeof offsetTop !== 'number' && typeof offsetBottom !== 'number') {
-        offsetMode.top = true;
-        offsetTop = 0;
-      } else {
-        offsetMode.top = typeof offsetTop === 'number';
-        offsetMode.bottom = typeof offsetBottom === 'number';
-      }
-
-      var targetRect = getTargetRect(targetNode);
-      var targetInnerHeight = targetNode.innerHeight || targetNode.clientHeight; // ref: https://github.com/ant-design/ant-design/issues/13662
-
-      if (scrollTop >= elemOffset.top - offsetTop && offsetMode.top) {
-        // Fixed Top
-        var width = elemOffset.width;
-        var top = targetRect.top + offsetTop;
-        this.setAffixStyle(e, {
-          position: 'fixed',
-          top: top,
-          left: targetRect.left + elemOffset.left,
-          width: width
-        });
-        this.setPlaceholderStyle({
-          width: width,
-          height: elemSize.height
-        });
-      } else if (scrollTop <= elemOffset.top + elemSize.height + offsetBottom - targetInnerHeight && offsetMode.bottom) {
-        // Fixed Bottom
-        var targetBottomOffet = targetNode === window ? 0 : window.innerHeight - targetRect.bottom;
-        var _width = elemOffset.width;
-        this.setAffixStyle(e, {
-          position: 'fixed',
-          bottom: targetBottomOffet + offsetBottom,
-          left: targetRect.left + elemOffset.left,
-          width: _width
-        });
-        this.setPlaceholderStyle({
-          width: _width,
-          height: elemOffset.height
-        });
-      } else {
-        var affixStyle = this.state.affixStyle;
-
-        if (e.type === 'resize' && affixStyle && affixStyle.position === 'fixed' && affixNode.offsetWidth) {
-          this.setAffixStyle(e, _extends({}, affixStyle, {
-            width: affixNode.offsetWidth
-          }));
-        } else {
-          this.setAffixStyle(e, null);
-        }
-
-        this.setPlaceholderStyle(null);
-      }
-
-      if (e.type === 'resize') {
-        this.syncPlaceholderStyle(e);
-      }
-    }
-  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this3 = this;
+      var _this2 = this;
 
-      var target = this.props.target || getDefaultTarget; // Wait for parent component ref has its value
+      var target = this.props.target;
 
-      this.timeout = setTimeout(function () {
-        _this3.setTargetEventListeners(target); // Mock Event object.
+      if (target) {
+        // [Legacy] Wait for parent component ref has its value.
+        // We should use target as directly element instead of function which makes element check hard.
+        this.timeout = setTimeout(function () {
+          (0, _utils.addObserveTarget)(target(), _this2); // Mock Event object.
 
-
-        _this3.updatePosition({});
-      });
+          _this2.updatePosition({});
+        });
+      }
     }
   }, {
-    key: "componentWillReceiveProps",
-    value: function componentWillReceiveProps(nextProps) {
-      if (this.props.target !== nextProps.target) {
-        this.clearEventListeners();
-        this.setTargetEventListeners(nextProps.target); // Mock Event object.
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      var prevTarget = this.state.prevTarget;
+      var target = this.props.target;
+      var newTarget = null;
 
+      if (target) {
+        newTarget = target() || null;
+      }
+
+      if (prevTarget !== newTarget) {
+        (0, _utils.removeObserveTarget)(this);
+
+        if (newTarget) {
+          (0, _utils.addObserveTarget)(newTarget, this); // Mock Event object.
+
+          this.updatePosition({});
+        }
+
+        this.setState({
+          prevTarget: newTarget
+        });
+      }
+
+      if (prevProps.offsetTop !== this.props.offsetTop || prevProps.offsetBottom !== this.props.offsetBottom) {
         this.updatePosition({});
       }
 
-      if (this.props.offsetTop !== nextProps.offsetTop || this.props.offsetBottom !== nextProps.offsetBottom) {
-        this.updatePosition({});
-      }
+      this.measure();
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      this.clearEventListeners();
       clearTimeout(this.timeout);
+      (0, _utils.removeObserveTarget)(this);
       this.updatePosition.cancel();
+    } // =================== Measure ===================
+    // Handle realign logic
+
+  }, {
+    key: "updatePosition",
+    value: function updatePosition(event) {
+      this.prepareMeasure(event);
     }
   }, {
-    key: "setTargetEventListeners",
-    value: function setTargetEventListeners(getTarget) {
-      var _this4 = this;
+    key: "lazyUpdatePosition",
+    value: function lazyUpdatePosition(event) {
+      var target = this.props.target;
+      var affixStyle = this.state.affixStyle; // Check position change before measure to make Safari smooth
 
-      var target = getTarget();
+      if (target && affixStyle) {
+        var offsetTop = this.getOffsetTop();
+        var offsetBottom = this.getOffsetBottom();
+        var targetNode = target();
 
-      if (!target) {
-        return;
-      }
+        if (targetNode) {
+          var targetRect = (0, _utils.getTargetRect)(targetNode);
+          var placeholderReact = (0, _utils.getTargetRect)(this.placeholderNode);
+          var fixedTop = (0, _utils.getFixedTop)(placeholderReact, targetRect, offsetTop);
+          var fixedBottom = (0, _utils.getFixedBottom)(placeholderReact, targetRect, offsetBottom);
 
-      this.clearEventListeners();
-      this.events.forEach(function (eventName) {
-        _this4.eventHandlers[eventName] = (0, _addEventListener["default"])(target, eventName, _this4.updatePosition);
-      });
-    }
-  }, {
-    key: "clearEventListeners",
-    value: function clearEventListeners() {
-      var _this5 = this;
-
-      this.events.forEach(function (eventName) {
-        var handler = _this5.eventHandlers[eventName];
-
-        if (handler && handler.remove) {
-          handler.remove();
+          if (fixedTop !== undefined && affixStyle.top === fixedTop || fixedBottom !== undefined && affixStyle.bottom === fixedBottom) {
+            return;
+          }
         }
-      });
+      } // Directly call prepare measure since it's already throttled.
+
+
+      this.prepareMeasure(event);
     }
   }, {
     key: "render",
@@ -356,11 +337,15 @@ function (_React$Component) {
   return Affix;
 }(React.Component);
 
-exports["default"] = Affix;
-Affix.propTypes = {
-  offsetTop: PropTypes.number,
-  offsetBottom: PropTypes.number,
-  target: PropTypes.func
+Affix.defaultProps = {
+  target: getDefaultTarget
 };
 
 __decorate([(0, _throttleByAnimationFrame.throttleByAnimationFrameDecorator)()], Affix.prototype, "updatePosition", null);
+
+__decorate([(0, _throttleByAnimationFrame.throttleByAnimationFrameDecorator)()], Affix.prototype, "lazyUpdatePosition", null);
+
+(0, _reactLifecyclesCompat.polyfill)(Affix);
+var _default = Affix;
+exports["default"] = _default;
+//# sourceMappingURL=index.js.map

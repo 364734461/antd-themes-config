@@ -34,7 +34,7 @@
   height: 1px;
   margin: 24px 0;
 }
-.ant-divider-horizontal.ant-divider-with-text,
+.ant-divider-horizontal.ant-divider-with-text-center,
 .ant-divider-horizontal.ant-divider-with-text-left,
 .ant-divider-horizontal.ant-divider-with-text-right {
   display: table;
@@ -46,10 +46,10 @@
   text-align: center;
   background: transparent;
 }
-.ant-divider-horizontal.ant-divider-with-text::before,
+.ant-divider-horizontal.ant-divider-with-text-center::before,
 .ant-divider-horizontal.ant-divider-with-text-left::before,
 .ant-divider-horizontal.ant-divider-with-text-right::before,
-.ant-divider-horizontal.ant-divider-with-text::after,
+.ant-divider-horizontal.ant-divider-with-text-center::after,
 .ant-divider-horizontal.ant-divider-with-text-left::after,
 .ant-divider-horizontal.ant-divider-with-text-right::after {
   position: relative;
@@ -89,18 +89,23 @@
 }
 .ant-divider-dashed {
   background: none;
-  border-top: 1px dashed #e8e8e8;
+  border-color: #e8e8e8;
+  border-style: dashed;
+  border-width: 1px 0 0;
 }
-.ant-divider-horizontal.ant-divider-with-text.ant-divider-dashed,
+.ant-divider-horizontal.ant-divider-with-text-center.ant-divider-dashed,
 .ant-divider-horizontal.ant-divider-with-text-left.ant-divider-dashed,
 .ant-divider-horizontal.ant-divider-with-text-right.ant-divider-dashed {
   border-top: 0;
 }
-.ant-divider-horizontal.ant-divider-with-text.ant-divider-dashed::before,
+.ant-divider-horizontal.ant-divider-with-text-center.ant-divider-dashed::before,
 .ant-divider-horizontal.ant-divider-with-text-left.ant-divider-dashed::before,
 .ant-divider-horizontal.ant-divider-with-text-right.ant-divider-dashed::before,
-.ant-divider-horizontal.ant-divider-with-text.ant-divider-dashed::after,
+.ant-divider-horizontal.ant-divider-with-text-center.ant-divider-dashed::after,
 .ant-divider-horizontal.ant-divider-with-text-left.ant-divider-dashed::after,
 .ant-divider-horizontal.ant-divider-with-text-right.ant-divider-dashed::after {
   border-style: dashed none none;
+}
+.ant-divider-vertical.ant-divider-dashed {
+  border-width: 0 0 0 1px;
 }

@@ -22,6 +22,7 @@ declare const _default: {
         filterReset: string;
         selectAll: string;
         selectInvert: string;
+        sortTitle: string;
     };
     Modal: {
         okText: string;
@@ -45,6 +46,15 @@ declare const _default: {
     };
     Empty: {
         description: string;
+    };
+    Text: {
+        edit: string;
+        copy: string;
+        copied: string;
+        expand: string;
+    };
+    PageHeader: {
+        back: string;
     };
 };
 export default _default;

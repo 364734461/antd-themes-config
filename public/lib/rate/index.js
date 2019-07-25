@@ -51,7 +51,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -131,3 +131,4 @@ Rate.defaultProps = {
     theme: "filled"
   })
 };
+//# sourceMappingURL=index.js.map

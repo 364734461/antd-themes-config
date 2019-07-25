@@ -15,6 +15,8 @@ var _classnames = _interopRequireDefault(require("classnames"));
 
 var _icon = _interopRequireDefault(require("../icon"));
 
+var _warning = _interopRequireDefault(require("../_util/warning"));
+
 var _configProvider = require("../config-provider");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -133,6 +135,7 @@ function (_React$Component) {
       filteredSuggestions: props.defaultSuggestions,
       focus: false
     };
+    (0, _warning["default"])(false, 'Mention', 'Mention component is deprecated. Please use Mentions component instead.');
     return _this;
   }
 
@@ -141,11 +144,11 @@ function (_React$Component) {
     value: function defaultSearchChange(value) {
       var searchValue = value.toLowerCase();
       var filteredSuggestions = (this.props.defaultSuggestions || []).filter(function (suggestion) {
-        if (suggestion.type && suggestion.type === _rcEditorMention.Nav) {
+        if (typeof suggestion === 'string') {
+          return suggestion.toLowerCase().indexOf(searchValue) !== -1;
+        } else if (suggestion.type && suggestion.type === _rcEditorMention.Nav) {
           return suggestion.props.value ? suggestion.props.value.toLowerCase().indexOf(searchValue) !== -1 : true;
         }
-
-        return suggestion.toLowerCase().indexOf(searchValue) !== -1;
       });
       this.setState({
         filteredSuggestions: filteredSuggestions
@@ -163,7 +166,7 @@ function (_React$Component) {
 
 Mention.getMentions = _rcEditorMention.getMentions;
 Mention.defaultProps = {
-  notFoundContent: '无匹配结果，轻敲空格完成输入',
+  notFoundContent: 'No matches found',
   loading: false,
   multiLines: false,
   placement: 'bottom'
@@ -174,3 +177,4 @@ Mention.toContentState = _rcEditorMention.toEditorState;
 (0, _reactLifecyclesCompat.polyfill)(Mention);
 var _default = Mention;
 exports["default"] = _default;
+//# sourceMappingURL=index.js.map

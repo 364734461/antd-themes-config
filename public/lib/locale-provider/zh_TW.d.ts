@@ -46,5 +46,8 @@ declare const _default: {
     Empty: {
         description: string;
     };
+    PageHeader: {
+        back: string;
+    };
 };
 export default _default;

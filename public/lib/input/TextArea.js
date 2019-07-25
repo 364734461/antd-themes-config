@@ -13,11 +13,11 @@ var _classnames = _interopRequireDefault(require("classnames"));
 
 var _reactLifecyclesCompat = require("react-lifecycles-compat");
 
-var _resizeObserverPolyfill = _interopRequireDefault(require("resize-observer-polyfill"));
-
 var _calculateNodeHeight = _interopRequireDefault(require("./calculateNodeHeight"));
 
 var _configProvider = require("../config-provider");
+
+var _resizeObserver = _interopRequireDefault(require("../_util/resizeObserver"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -53,7 +53,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -148,7 +148,8 @@ function (_React$Component) {
       var _this$props2 = _this.props,
           customizePrefixCls = _this$props2.prefixCls,
           className = _this$props2.className,
-          disabled = _this$props2.disabled;
+          disabled = _this$props2.disabled,
+          autosize = _this$props2.autosize;
 
       var props = __rest(_this.props, []);
 
@@ -164,13 +165,16 @@ function (_React$Component) {
         otherProps.value = otherProps.value || '';
       }
 
-      return React.createElement("textarea", _extends({}, otherProps, {
+      return React.createElement(_resizeObserver["default"], {
+        onResize: _this.resizeOnNextFrame,
+        disabled: !autosize
+      }, React.createElement("textarea", _extends({}, otherProps, {
         className: cls,
         style: style,
         onKeyDown: _this.handleKeyDown,
         onChange: _this.handleTextareaChange,
         ref: _this.saveTextAreaRef
-      }));
+      })));
     };
 
     return _this;
@@ -180,7 +184,6 @@ function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.resizeTextarea();
-      this.updateResizeObserverHook();
     }
   }, {
     key: "componentDidUpdate",
@@ -188,29 +191,6 @@ function (_React$Component) {
       // Re-render with the new content then recalculate the height as required.
       if (prevProps.value !== this.props.value) {
         this.resizeOnNextFrame();
-      }
-
-      this.updateResizeObserverHook();
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      if (this.resizeObserver) {
-        this.resizeObserver.disconnect();
-      }
-    } // We will update hooks if `autosize` prop change
-
-  }, {
-    key: "updateResizeObserverHook",
-    value: function updateResizeObserverHook() {
-      if (!this.resizeObserver && this.props.autosize) {
-        // Add resize observer
-        this.resizeObserver = new _resizeObserverPolyfill["default"](this.resizeOnNextFrame);
-        this.resizeObserver.observe(this.textAreaRef);
-      } else if (this.resizeObserver && !this.props.autosize) {
-        // Remove resize observer
-        this.resizeObserver.disconnect();
-        this.resizeObserver = null;
       }
     }
   }, {
@@ -236,3 +216,4 @@ function (_React$Component) {
 (0, _reactLifecyclesCompat.polyfill)(TextArea);
 var _default = TextArea;
 exports["default"] = _default;
+//# sourceMappingURL=TextArea.js.map

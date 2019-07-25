@@ -6,7 +6,7 @@ export interface AnchorLinkProps {
     prefixCls?: string;
     href: string;
     title: React.ReactNode;
-    children?: any;
+    children?: React.ReactNode;
     className?: string;
 }
 declare class AnchorLink extends React.Component<AnchorLinkProps, any> {

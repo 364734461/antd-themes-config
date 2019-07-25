@@ -18,21 +18,23 @@ export interface ListGridType {
     xxl?: ColumnCount;
 }
 export declare type ListSize = 'small' | 'default' | 'large';
-export interface ListProps {
+export declare type ListItemLayout = 'horizontal' | 'vertical';
+export interface ListProps<T> {
     bordered?: boolean;
     className?: string;
+    style?: React.CSSProperties;
     children?: React.ReactNode;
-    dataSource: any;
+    dataSource?: T[];
     extra?: React.ReactNode;
     grid?: ListGridType;
     id?: string;
-    itemLayout?: string;
+    itemLayout?: ListItemLayout;
     loading?: boolean | SpinProps;
     loadMore?: React.ReactNode;
     pagination?: PaginationConfig | false;
     prefixCls?: string;
-    rowKey?: any;
-    renderItem: any;
+    rowKey?: ((item: T) => string) | string;
+    renderItem?: (item: T, index: number) => React.ReactNode;
     size?: ListSize;
     split?: boolean;
     header?: React.ReactNode;
@@ -40,12 +42,17 @@ export interface ListProps {
     locale?: ListLocale;
 }
 export interface ListLocale {
-    emptyText: string;
+    emptyText: React.ReactNode | (() => React.ReactNode);
 }
-export default class List extends React.Component<ListProps> {
+interface ListState {
+    paginationCurrent: number;
+    paginationSize: number;
+}
+export default class List<T> extends React.Component<ListProps<T>, ListState> {
     static Item: typeof Item;
     static childContextTypes: {
         grid: PropTypes.Requireable<any>;
+        itemLayout: PropTypes.Requireable<string>;
     };
     static defaultProps: {
         dataSource: never[];
@@ -54,20 +61,20 @@ export default class List extends React.Component<ListProps> {
         loading: boolean;
         pagination: false | PaginationConfig | undefined;
     };
-    state: {
-        paginationCurrent: number;
-    };
     defaultPaginationProps: {
         current: number;
-        pageSize: number;
-        onChange: (page: number, pageSize: number) => void;
         total: number;
     };
     private keys;
+    private onPaginationChange;
+    private onPaginationShowSizeChange;
+    constructor(props: ListProps<T>);
     getChildContext(): {
         grid: ListGridType | undefined;
+        itemLayout: "horizontal" | "vertical" | undefined;
     };
-    renderItem: (item: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>, index: number) => any;
+    triggerPaginationEvent(eventName: string): (page: number, pageSize: number) => void;
+    renderItem: (item: any, index: number) => {} | null | undefined;
     isSomethingAfterLastItem(): boolean;
     renderEmpty: (prefixCls: string, renderEmpty: (componentName?: string | undefined) => React.ReactNode) => JSX.Element;
     renderList: ({ getPrefixCls, renderEmpty }: ConfigConsumerProps) => JSX.Element;

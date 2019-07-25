@@ -1,12 +1,12 @@
 import * as React from 'react';
-declare type EventType = React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLButtonElement>;
+declare type EventType = React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement | HTMLButtonElement>;
 declare type getContainerFunc = () => HTMLElement;
 declare const PlacementTypes: ["top", "right", "bottom", "left"];
 declare type placementType = (typeof PlacementTypes)[number];
 export interface DrawerProps {
     closable?: boolean;
     destroyOnClose?: boolean;
-    getContainer?: string | HTMLElement | getContainerFunc;
+    getContainer?: string | HTMLElement | getContainerFunc | false;
     maskClosable?: boolean;
     mask?: boolean;
     maskStyle?: React.CSSProperties;
@@ -22,7 +22,10 @@ export interface DrawerProps {
     push?: boolean;
     placement?: placementType;
     onClose?: (e: EventType) => void;
+    afterVisibleChange?: (visible: boolean) => void;
     className?: string;
+    handler?: React.ReactNode;
+    keyboard?: boolean;
 }
 export interface IDrawerState {
     push?: boolean;

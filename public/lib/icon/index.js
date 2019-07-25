@@ -47,7 +47,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -77,7 +77,7 @@ var Icon = function Icon(props) {
       twoToneColor = props.twoToneColor,
       restProps = __rest(props, ["className", "type", "component", "viewBox", "spin", "rotate", "tabIndex", "onClick", "children", "theme", "twoToneColor"]);
 
-  (0, _warning["default"])(Boolean(type || Component || children), 'Icon should have `type` prop or `component` prop or `children`.');
+  (0, _warning["default"])(Boolean(type || Component || children), 'Icon', 'Should have `type` prop or `component` prop or `children`.');
   var classString = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "anticon", true), _defineProperty(_classNames, "anticon-".concat(type), Boolean(type)), _classNames), className);
   var svgClassString = (0, _classnames["default"])(_defineProperty({}, "anticon-spin", !!spin || type === 'loading'));
   var innerNode;
@@ -102,7 +102,7 @@ var Icon = function Icon(props) {
   }
 
   if (children) {
-    (0, _warning["default"])(Boolean(viewBox) || React.Children.count(children) === 1 && React.isValidElement(children) && React.Children.only(children).type === 'use', 'Make sure that you provide correct `viewBox`' + ' prop (default `0 0 1024 1024`) to the icon.');
+    (0, _warning["default"])(Boolean(viewBox) || React.Children.count(children) === 1 && React.isValidElement(children) && React.Children.only(children).type === 'use', 'Icon', 'Make sure that you provide correct `viewBox`' + ' prop (default `0 0 1024 1024`) to the icon.');
     innerNode = React.createElement("svg", _extends({}, innerSvgProps, {
       viewBox: viewBox
     }), children);
@@ -113,7 +113,7 @@ var Icon = function Icon(props) {
 
     if (theme) {
       var themeInName = (0, _utils.getThemeFromTypeName)(type);
-      (0, _warning["default"])(!themeInName || theme === themeInName, "The icon name '".concat(type, "' already specify a theme '").concat(themeInName, "',") + " the 'theme' prop '".concat(theme, "' will be ignored."));
+      (0, _warning["default"])(!themeInName || theme === themeInName, 'Icon', "The icon name '".concat(type, "' already specify a theme '").concat(themeInName, "',") + " the 'theme' prop '".concat(theme, "' will be ignored."));
     }
 
     computedType = (0, _utils.withThemeSuffix)((0, _utils.removeTypeTheme)((0, _utils.alias)(computedType)), dangerousTheme || theme || defaultTheme);
@@ -135,7 +135,7 @@ var Icon = function Icon(props) {
     componentName: "Icon"
   }, function (locale) {
     return React.createElement("i", _extends({
-      "aria-label": "".concat(locale.icon, ": ").concat(type)
+      "aria-label": type && "".concat(locale.icon, ": ").concat(type)
     }, restProps, {
       tabIndex: iconTabIndex,
       onClick: onClick,
@@ -145,12 +145,12 @@ var Icon = function Icon(props) {
 };
 
 function unstable_ChangeThemeOfIconsDangerously(theme) {
-  (0, _warning["default"])(false, "You are using the unstable method 'Icon.unstable_ChangeThemeOfAllIconsDangerously', " + "make sure that all the icons with theme '".concat(theme, "' display correctly."));
+  (0, _warning["default"])(false, 'Icon', "You are using the unstable method 'Icon.unstable_ChangeThemeOfAllIconsDangerously', " + "make sure that all the icons with theme '".concat(theme, "' display correctly."));
   dangerousTheme = theme;
 }
 
 function unstable_ChangeDefaultThemeOfIcons(theme) {
-  (0, _warning["default"])(false, "You are using the unstable method 'Icon.unstable_ChangeDefaultThemeOfIcons', " + "make sure that all the icons with theme '".concat(theme, "' display correctly."));
+  (0, _warning["default"])(false, 'Icon', "You are using the unstable method 'Icon.unstable_ChangeDefaultThemeOfIcons', " + "make sure that all the icons with theme '".concat(theme, "' display correctly."));
   defaultTheme = theme;
 }
 
@@ -159,3 +159,4 @@ Icon.getTwoToneColor = _twoTonePrimaryColor.getTwoToneColor;
 Icon.setTwoToneColor = _twoTonePrimaryColor.setTwoToneColor;
 var _default = Icon;
 exports["default"] = _default;
+//# sourceMappingURL=index.js.map

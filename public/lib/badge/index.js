@@ -15,6 +15,8 @@ var _classnames = _interopRequireDefault(require("classnames"));
 
 var _ScrollNumber = _interopRequireDefault(require("./ScrollNumber"));
 
+var _colors = require("../_util/colors");
+
 var _configProvider = require("../config-provider");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -51,10 +53,14 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
+
+function isPresetColor(color) {
+  return _colors.PresetColorTypes.indexOf(color) !== -1;
+}
 
 var Badge =
 /*#__PURE__*/
@@ -87,7 +93,8 @@ function (_React$Component) {
           text = _a.text,
           offset = _a.offset,
           title = _a.title,
-          restProps = __rest(_a, ["count", "showZero", "prefixCls", "scrollNumberPrefixCls", "overflowCount", "className", "style", "children", "dot", "status", "text", "offset", "title"]);
+          color = _a.color,
+          restProps = __rest(_a, ["count", "showZero", "prefixCls", "scrollNumberPrefixCls", "overflowCount", "className", "style", "children", "dot", "status", "text", "offset", "title", "color"]);
 
       var prefixCls = getPrefixCls('badge', customizePrefixCls);
       var scrollNumberPrefixCls = getPrefixCls('scroll-number', customizeScrollNumberPrefixCls);
@@ -96,15 +103,28 @@ function (_React$Component) {
 
       var statusText = _this.renderStatusText(prefixCls);
 
-      var statusCls = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-status-dot"), !!status), _defineProperty(_classNames, "".concat(prefixCls, "-status-").concat(status), !!status), _classNames)); // <Badge status="success" />
+      var statusCls = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-status-dot"), _this.hasStatus()), _defineProperty(_classNames, "".concat(prefixCls, "-status-").concat(status), !!status), _defineProperty(_classNames, "".concat(prefixCls, "-status-").concat(color), isPresetColor(color)), _classNames));
+      var statusStyle = {};
 
-      if (!children && status) {
+      if (color && !isPresetColor(color)) {
+        statusStyle.background = color;
+      } // <Badge status="success" />
+
+
+      if (!children && _this.hasStatus()) {
+        var styleWithOffset = _this.getStyleWithOffset();
+
+        var statusTextColor = styleWithOffset && styleWithOffset.color;
         return React.createElement("span", _extends({}, restProps, {
           className: _this.getBadgeClassName(prefixCls),
-          style: _this.getStyleWithOffset()
+          style: styleWithOffset
         }), React.createElement("span", {
-          className: statusCls
+          className: statusCls,
+          style: statusStyle
         }), React.createElement("span", {
+          style: {
+            color: statusTextColor
+          },
           className: "".concat(prefixCls, "-status-text")
         }, text));
       }
@@ -129,9 +149,16 @@ function (_React$Component) {
 
       var _this$props = this.props,
           className = _this$props.className,
-          status = _this$props.status,
           children = _this$props.children;
-      return (0, _classnames["default"])(className, prefixCls, (_classNames2 = {}, _defineProperty(_classNames2, "".concat(prefixCls, "-status"), !!status), _defineProperty(_classNames2, "".concat(prefixCls, "-not-a-wrapper"), !children), _classNames2));
+      return (0, _classnames["default"])(className, prefixCls, (_classNames2 = {}, _defineProperty(_classNames2, "".concat(prefixCls, "-status"), this.hasStatus()), _defineProperty(_classNames2, "".concat(prefixCls, "-not-a-wrapper"), !children), _classNames2));
+    }
+  }, {
+    key: "hasStatus",
+    value: function hasStatus() {
+      var _this$props2 = this.props,
+          status = _this$props2.status,
+          color = _this$props2.color;
+      return !!status || !!color;
     }
   }, {
     key: "isZero",
@@ -142,11 +169,9 @@ function (_React$Component) {
   }, {
     key: "isDot",
     value: function isDot() {
-      var _this$props2 = this.props,
-          dot = _this$props2.dot,
-          status = _this$props2.status;
+      var dot = this.props.dot;
       var isZero = this.isZero();
-      return dot && !isZero || status;
+      return dot && !isZero || this.hasStatus();
     }
   }, {
     key: "isHidden",
@@ -231,12 +256,12 @@ function (_React$Component) {
       var _classNames3;
 
       var _this$props6 = this.props,
-          count = _this$props6.count,
-          status = _this$props6.status;
+          status = _this$props6.status,
+          count = _this$props6.count;
       var displayCount = this.getDispayCount();
       var isDot = this.isDot();
       var hidden = this.isHidden();
-      var scrollNumberCls = (0, _classnames["default"])((_classNames3 = {}, _defineProperty(_classNames3, "".concat(prefixCls, "-dot"), isDot), _defineProperty(_classNames3, "".concat(prefixCls, "-count"), !isDot), _defineProperty(_classNames3, "".concat(prefixCls, "-multiple-words"), !isDot && count && count.toString && count.toString().length > 1), _defineProperty(_classNames3, "".concat(prefixCls, "-status-").concat(status), !!status), _classNames3));
+      var scrollNumberCls = (0, _classnames["default"])((_classNames3 = {}, _defineProperty(_classNames3, "".concat(prefixCls, "-dot"), isDot), _defineProperty(_classNames3, "".concat(prefixCls, "-count"), !isDot), _defineProperty(_classNames3, "".concat(prefixCls, "-multiple-words"), !isDot && count && count.toString && count.toString().length > 1), _defineProperty(_classNames3, "".concat(prefixCls, "-status-").concat(status), this.hasStatus()), _classNames3));
       return hidden ? null : React.createElement(_ScrollNumber["default"], {
         prefixCls: scrollNumberPrefixCls,
         "data-show": !hidden,
@@ -272,3 +297,4 @@ Badge.propTypes = {
   dot: PropTypes.bool,
   overflowCount: PropTypes.number
 };
+//# sourceMappingURL=index.js.map

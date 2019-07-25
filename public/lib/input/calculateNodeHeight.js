@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.calculateNodeStyling = calculateNodeStyling;
 exports["default"] = calculateNodeHeight;
 // Thanks to https://github.com/andreypopp/react-textarea-autosize/
 
@@ -121,3 +122,4 @@ function calculateNodeHeight(uiTextNode) {
     overflowY: overflowY
   };
 }
+//# sourceMappingURL=calculateNodeHeight.js.map

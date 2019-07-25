@@ -16,6 +16,9 @@ declare const _default: {
             placeholder: string;
         };
     };
+    global: {
+        placeholder: string;
+    };
     Table: {
         filterTitle: string;
         filterConfirm: string;
@@ -46,6 +49,15 @@ declare const _default: {
     };
     Empty: {
         description: string;
+    };
+    Icon: {
+        icon: string;
+    };
+    Text: {
+        edit: string;
+        copy: string;
+        copied: string;
+        expand: string;
     };
 };
 export default _default;

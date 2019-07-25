@@ -8,6 +8,8 @@ exports.fileToObject = fileToObject;
 exports.genPercentAdd = genPercentAdd;
 exports.getFileItem = getFileItem;
 exports.removeFileItem = removeFileItem;
+exports.previewImage = previewImage;
+exports.isImageUrl = void 0;
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -75,4 +77,86 @@ function removeFileItem(file, fileList) {
   }
 
   return removed;
+} // ==================== Default Image Preview ====================
+
+
+var extname = function extname(url) {
+  if (!url) {
+    return '';
+  }
+
+  var temp = url.split('/');
+  var filename = temp[temp.length - 1];
+  var filenameWithoutSuffix = filename.split(/#|\?/)[0];
+  return (/\.[^./\\]*$/.exec(filenameWithoutSuffix) || [''])[0];
+};
+
+var isImageFileType = function isImageFileType(type) {
+  return !!type && type.indexOf('image/') === 0;
+};
+
+var isImageUrl = function isImageUrl(file) {
+  if (isImageFileType(file.type)) {
+    return true;
+  }
+
+  var url = file.thumbUrl || file.url;
+  var extension = extname(url);
+
+  if (/^data:image\//.test(url) || /(webp|svg|png|gif|jpg|jpeg|bmp|dpg)$/i.test(extension)) {
+    return true;
+  } else if (/^data:/.test(url)) {
+    // other file types of base64
+    return false;
+  } else if (extension) {
+    // other file types which have extension
+    return false;
+  }
+
+  return true;
+};
+
+exports.isImageUrl = isImageUrl;
+var MEASURE_SIZE = 200;
+
+function previewImage(file) {
+  return new Promise(function (resolve) {
+    if (!isImageFileType(file.type)) {
+      resolve('');
+      return;
+    }
+
+    var canvas = document.createElement('canvas');
+    canvas.width = MEASURE_SIZE;
+    canvas.height = MEASURE_SIZE;
+    canvas.style.cssText = "position: fixed; left: 0; top: 0; width: ".concat(MEASURE_SIZE, "px; height: ").concat(MEASURE_SIZE, "px; z-index: 9999; display: none;");
+    document.body.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+    var img = new Image();
+
+    img.onload = function () {
+      var width = img.width,
+          height = img.height;
+      var drawWidth = MEASURE_SIZE;
+      var drawHeight = MEASURE_SIZE;
+      var offsetX = 0;
+      var offsetY = 0;
+
+      if (width < height) {
+        drawHeight = height * (MEASURE_SIZE / width);
+        offsetY = -(drawHeight - drawWidth) / 2;
+      } else {
+        drawWidth = width * (MEASURE_SIZE / height);
+        offsetX = -(drawWidth - drawHeight) / 2;
+      }
+
+      ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+      var dataURL = canvas.toDataURL();
+      document.body.removeChild(canvas);
+      resolve(dataURL);
+    };
+
+    img.src = window.URL.createObjectURL(file);
+  });
 }
+//# sourceMappingURL=utils.js.map

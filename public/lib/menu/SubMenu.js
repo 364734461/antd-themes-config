@@ -13,6 +13,8 @@ var _rcMenu = require("rc-menu");
 
 var _classnames = _interopRequireDefault(require("classnames"));
 
+var _index = require("./index");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -63,14 +65,18 @@ function (_React$Component) {
   _createClass(SubMenu, [{
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       var _this$props = this.props,
           rootPrefixCls = _this$props.rootPrefixCls,
           className = _this$props.className;
-      var theme = this.context.antdMenuTheme;
-      return React.createElement(_rcMenu.SubMenu, _extends({}, this.props, {
-        ref: this.saveSubMenu,
-        popupClassName: (0, _classnames["default"])("".concat(rootPrefixCls, "-").concat(theme), className)
-      }));
+      return React.createElement(_index.MenuContext.Consumer, null, function (_ref) {
+        var antdMenuTheme = _ref.antdMenuTheme;
+        return React.createElement(_rcMenu.SubMenu, _extends({}, _this2.props, {
+          ref: _this2.saveSubMenu,
+          popupClassName: (0, _classnames["default"])("".concat(rootPrefixCls, "-").concat(antdMenuTheme), className)
+        }));
+      });
     }
   }]);
 
@@ -84,3 +90,4 @@ SubMenu.contextTypes = {
 SubMenu.isSubMenu = 1;
 var _default = SubMenu;
 exports["default"] = _default;
+//# sourceMappingURL=SubMenu.js.map

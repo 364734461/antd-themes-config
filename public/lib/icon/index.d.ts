@@ -13,7 +13,7 @@ export interface CustomIconComponentProps {
     style?: React.CSSProperties;
     spin?: boolean;
     rotate?: number;
-    ['aria-hidden']?: string;
+    ['aria-hidden']?: React.AriaAttributes['aria-hidden'];
 }
 export declare type ThemeType = 'filled' | 'outlined' | 'twoTone';
 export interface IconProps {
@@ -22,6 +22,7 @@ export interface IconProps {
     className?: string;
     theme?: ThemeType;
     title?: string;
+    onKeyUp?: React.KeyboardEventHandler<HTMLElement>;
     onClick?: React.MouseEventHandler<HTMLElement>;
     component?: React.ComponentType<CustomIconComponentProps>;
     twoToneColor?: string;

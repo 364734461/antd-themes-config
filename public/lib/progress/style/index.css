@@ -55,6 +55,7 @@
 .ant-progress-bg {
   position: relative;
   background-color: #1890ff;
+  border-radius: 100px;
   -webkit-transition: all 0.4s cubic-bezier(0.08, 0.82, 0.17, 1) 0s;
   transition: all 0.4s cubic-bezier(0.08, 0.82, 0.17, 1) 0s;
 }
@@ -138,6 +139,9 @@
 }
 .ant-progress-circle.ant-progress-status-success .ant-progress-text {
   color: #52c41a;
+}
+.ant-progress-circle-gradient .ant-progress-circle-path {
+  stroke: url(#gradient);
 }
 @-webkit-keyframes ant-progress-active {
   0% {

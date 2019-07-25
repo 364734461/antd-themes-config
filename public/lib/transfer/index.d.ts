@@ -3,16 +3,23 @@ import * as PropTypes from 'prop-types';
 import List, { TransferListProps } from './list';
 import Operation from './operation';
 import Search from './search';
+import { TransferListBodyProps } from './renderListBody';
 export { TransferListProps } from './list';
 export { TransferOperationProps } from './operation';
 export { TransferSearchProps } from './search';
 export declare type TransferDirection = 'left' | 'right';
-declare type TransferRender = (record: TransferItem) => React.ReactNode;
+export interface RenderResultObject {
+    label: React.ReactElement;
+    value: string;
+}
+export declare type RenderResult = React.ReactElement | RenderResultObject | string | null;
+declare type TransferRender = (item: TransferItem) => RenderResult;
 export interface TransferItem {
     key: string;
     title: string;
     description?: string;
     disabled?: boolean;
+    [name: string]: any;
 }
 export interface TransferProps {
     prefixCls?: string;
@@ -22,7 +29,7 @@ export interface TransferProps {
     targetKeys?: string[];
     selectedKeys?: string[];
     render?: TransferRender;
-    onChange?: (targetKeys: string[], direction: string, moveKeys: any) => void;
+    onChange?: (targetKeys: string[], direction: string, moveKeys: string[]) => void;
     onSelectChange?: (sourceSelectedKeys: string[], targetSelectedKeys: string[]) => void;
     style?: React.CSSProperties;
     listStyle?: React.CSSProperties;
@@ -30,7 +37,7 @@ export interface TransferProps {
     titles?: string[];
     operations?: string[];
     showSearch?: boolean;
-    filterOption?: (inputValue: any, item: any) => boolean;
+    filterOption?: (inputValue: string, item: TransferItem) => boolean;
     searchPlaceholder?: string;
     notFoundContent?: React.ReactNode;
     locale?: {};
@@ -41,6 +48,8 @@ export interface TransferProps {
     onSearch?: (direction: TransferDirection, value: string) => void;
     lazy?: {} | boolean;
     onScroll?: (direction: TransferDirection, e: React.SyntheticEvent<HTMLDivElement>) => void;
+    children?: (props: TransferListBodyProps) => React.ReactNode;
+    showSelectAll?: boolean;
 }
 export interface TransferLocale {
     titles: string[];
@@ -49,13 +58,12 @@ export interface TransferLocale {
     itemUnit: string;
     itemsUnit: string;
 }
-export default class Transfer extends React.Component<TransferProps, any> {
+declare class Transfer extends React.Component<TransferProps, any> {
     static List: typeof List;
     static Operation: typeof Operation;
     static Search: typeof Search;
     static defaultProps: {
         dataSource: never[];
-        render: TransferRender;
         locale: {};
         showSearch: boolean;
     };
@@ -83,33 +91,42 @@ export default class Transfer extends React.Component<TransferProps, any> {
         rowKey: PropTypes.Requireable<(...args: any[]) => any>;
         lazy: PropTypes.Requireable<boolean | object>;
     };
+    static getDerivedStateFromProps(nextProps: TransferProps): {
+        sourceSelectedKeys: string[];
+        targetSelectedKeys: string[];
+    } | null;
     separatedDataSource: {
         leftDataSource: TransferItem[];
         rightDataSource: TransferItem[];
     } | null;
     constructor(props: TransferProps);
-    componentWillReceiveProps(nextProps: TransferProps): void;
     separateDataSource(props: TransferProps): {
         leftDataSource: TransferItem[];
         rightDataSource: TransferItem[];
     };
-    moveTo: (direction: "left" | "right") => void;
+    moveTo: (direction: import("../collapse/Collapse").ExpandIconPosition) => void;
     moveToLeft: () => void;
     moveToRight: () => void;
     handleSelectChange(direction: TransferDirection, holder: string[]): void;
-    handleSelectAll: (direction: "left" | "right", filteredDataSource: TransferItem[], checkAll: boolean) => void;
+    onItemSelectAll: (direction: import("../collapse/Collapse").ExpandIconPosition, selectedKeys: string[], checkAll: boolean) => void;
+    handleSelectAll: (direction: import("../collapse/Collapse").ExpandIconPosition, filteredDataSource: TransferItem[], checkAll: boolean) => void;
     handleLeftSelectAll: (filteredDataSource: TransferItem[], checkAll: boolean) => void;
     handleRightSelectAll: (filteredDataSource: TransferItem[], checkAll: boolean) => void;
-    handleFilter: (direction: "left" | "right", e: React.ChangeEvent<HTMLInputElement>) => void;
+    onLeftItemSelectAll: (selectedKeys: string[], checkAll: boolean) => void;
+    onRightItemSelectAll: (selectedKeys: string[], checkAll: boolean) => void;
+    handleFilter: (direction: import("../collapse/Collapse").ExpandIconPosition, e: React.ChangeEvent<HTMLInputElement>) => void;
     handleLeftFilter: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleRightFilter: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleClear: (direction: "left" | "right") => void;
+    handleClear: (direction: import("../collapse/Collapse").ExpandIconPosition) => void;
     handleLeftClear: () => void;
     handleRightClear: () => void;
-    handleSelect: (direction: "left" | "right", selectedItem: TransferItem, checked: boolean) => void;
+    onItemSelect: (direction: import("../collapse/Collapse").ExpandIconPosition, selectedKey: string, checked: boolean) => void;
+    handleSelect: (direction: import("../collapse/Collapse").ExpandIconPosition, selectedItem: TransferItem, checked: boolean) => void;
     handleLeftSelect: (selectedItem: TransferItem, checked: boolean) => void;
     handleRightSelect: (selectedItem: TransferItem, checked: boolean) => void;
-    handleScroll: (direction: "left" | "right", e: React.SyntheticEvent<HTMLDivElement, Event>) => void;
+    onLeftItemSelect: (selectedKey: string, checked: boolean) => void;
+    onRightItemSelect: (selectedKey: string, checked: boolean) => void;
+    handleScroll: (direction: import("../collapse/Collapse").ExpandIconPosition, e: React.SyntheticEvent<HTMLDivElement, Event>) => void;
     handleLeftScroll: (e: React.SyntheticEvent<HTMLDivElement, Event>) => void;
     handleRightScroll: (e: React.SyntheticEvent<HTMLDivElement, Event>) => void;
     getTitles(transferLocale: TransferLocale): string[];
@@ -130,3 +147,4 @@ export default class Transfer extends React.Component<TransferProps, any> {
     renderTransfer: (transferLocale: TransferLocale) => JSX.Element;
     render(): JSX.Element;
 }
+export default Transfer;

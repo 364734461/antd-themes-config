@@ -17,7 +17,7 @@ var _icon = _interopRequireDefault(require("../icon"));
 
 var _configProvider = require("../config-provider");
 
-var _openAnimation = _interopRequireDefault(require("../_util/openAnimation"));
+var _motion = require("../_util/motion");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -26,6 +26,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -89,7 +91,7 @@ function (_React$Component) {
         } else if (switcherIcon) {
           var switcherOriginCls = switcherIcon.props.className || '';
           return React.cloneElement(switcherIcon, {
-            className: [switcherOriginCls, switcherCls]
+            className: (0, _classnames["default"])(switcherOriginCls, switcherCls)
           });
         } else {
           return React.createElement(_icon["default"], {
@@ -106,19 +108,22 @@ function (_React$Component) {
     };
 
     _this.renderTree = function (_ref2) {
+      var _classNames;
+
       var getPrefixCls = _ref2.getPrefixCls;
       var props = _this.props;
       var customizePrefixCls = props.prefixCls,
           className = props.className,
           showIcon = props.showIcon,
-          _switcherIcon = props.switcherIcon;
+          _switcherIcon = props.switcherIcon,
+          blockNode = props.blockNode;
       var checkable = props.checkable;
       var prefixCls = getPrefixCls('tree', customizePrefixCls);
       return React.createElement(_rcTree["default"], _extends({
         ref: _this.setTreeRef
       }, props, {
         prefixCls: prefixCls,
-        className: (0, _classnames["default"])(!showIcon && "".concat(prefixCls, "-icon-hide"), className),
+        className: (0, _classnames["default"])(className, (_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-icon-hide"), !showIcon), _defineProperty(_classNames, "".concat(prefixCls, "-block-node"), blockNode), _classNames)),
         checkable: checkable ? React.createElement("span", {
           className: "".concat(prefixCls, "-checkbox-inner")
         }) : checkable,
@@ -147,7 +152,9 @@ Tree.DirectoryTree = _DirectoryTree["default"];
 Tree.defaultProps = {
   checkable: false,
   showIcon: false,
-  openAnimation: _extends({}, _openAnimation["default"], {
-    appear: null
-  })
+  motion: _extends({}, _motion.collapseMotion, {
+    motionAppear: false
+  }),
+  blockNode: false
 };
+//# sourceMappingURL=Tree.js.map

@@ -5,6 +5,16 @@ declare const ProgressTypes: ["line", "circle", "dashboard"];
 export declare type ProgressType = (typeof ProgressTypes)[number];
 declare const ProgressStatuses: ["normal", "exception", "active", "success"];
 export declare type ProgressSize = 'default' | 'small';
+export declare type StringGradients = {
+    [percentage: string]: string;
+};
+declare type FromToGradients = {
+    from: string;
+    to: string;
+};
+export declare type ProgressGradient = {
+    direction?: string;
+} & (StringGradients | FromToGradients);
 export interface ProgressProps {
     prefixCls?: string;
     className?: string;
@@ -15,8 +25,8 @@ export interface ProgressProps {
     status?: (typeof ProgressStatuses)[number];
     showInfo?: boolean;
     strokeWidth?: number;
-    strokeLinecap?: string;
-    strokeColor?: string;
+    strokeLinecap?: 'butt' | 'square' | 'round';
+    strokeColor?: string | ProgressGradient;
     trailColor?: string;
     width?: number;
     style?: React.CSSProperties;
@@ -24,7 +34,7 @@ export interface ProgressProps {
     gapPosition?: 'top' | 'bottom' | 'left' | 'right';
     size?: ProgressSize;
 }
-export default class Progress extends React.Component<ProgressProps, {}> {
+export default class Progress extends React.Component<ProgressProps> {
     static defaultProps: {
         type: string;
         percent: number;
@@ -42,12 +52,13 @@ export default class Progress extends React.Component<ProgressProps, {}> {
         width: PropTypes.Requireable<number>;
         strokeWidth: PropTypes.Requireable<number>;
         strokeLinecap: PropTypes.Requireable<string>;
-        strokeColor: PropTypes.Requireable<string>;
+        strokeColor: PropTypes.Requireable<string | object>;
         trailColor: PropTypes.Requireable<string>;
         format: PropTypes.Requireable<(...args: any[]) => any>;
         gapDegree: PropTypes.Requireable<number>;
-        default: PropTypes.Requireable<string>;
     };
+    getPercentNumber(): number;
+    getProgressStatus(): "normal" | "active" | "success" | "exception";
     renderProcessInfo(prefixCls: string, progressStatus: (typeof ProgressStatuses)[number]): JSX.Element | null;
     renderProgress: ({ getPrefixCls }: ConfigConsumerProps) => JSX.Element;
     render(): JSX.Element;

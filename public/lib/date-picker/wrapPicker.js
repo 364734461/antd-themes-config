@@ -7,17 +7,25 @@ exports["default"] = wrapPicker;
 
 var React = _interopRequireWildcard(require("react"));
 
+var _reactLifecyclesCompat = require("react-lifecycles-compat");
+
 var _Panel = _interopRequireDefault(require("rc-time-picker/lib/Panel"));
 
 var _classnames = _interopRequireDefault(require("classnames"));
 
+var moment = _interopRequireWildcard(require("moment"));
+
 var _en_US = _interopRequireDefault(require("./locale/en_US"));
+
+var _interopDefault = _interopRequireDefault(require("../_util/interopDefault"));
 
 var _LocaleReceiver = _interopRequireDefault(require("../locale-provider/LocaleReceiver"));
 
 var _timePicker = require("../time-picker");
 
 var _configProvider = require("../config-provider");
+
+var _warning = _interopRequireDefault(require("../_util/warning"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -84,10 +92,16 @@ function getColumns(_ref) {
   return column;
 }
 
-function wrapPicker(Picker, pickerType) {
-  var _a;
+function checkValidate(value, propName) {
+  var values = Array.isArray(value) ? value : [value];
+  values.forEach(function (val) {
+    if (!val) return;
+    (0, _warning["default"])(!(0, _interopDefault["default"])(moment).isMoment(val) || val.isValid(), 'DatePicker', "`".concat(propName, "` provides invalidate moment time. If you want to set empty value, use `null` instead."));
+  });
+}
 
-  return _a =
+function wrapPicker(Picker, pickerType) {
+  var PickerWrapper =
   /*#__PURE__*/
   function (_React$Component) {
     _inherits(PickerWrapper, _React$Component);
@@ -97,7 +111,9 @@ function wrapPicker(Picker, pickerType) {
 
       _classCallCheck(this, PickerWrapper);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(PickerWrapper).apply(this, arguments));
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(PickerWrapper).apply(this, arguments)); // Since we need call `getDerivedStateFromProps` for check. Need leave an empty `state` here.
+
+      _this.state = {};
 
       _this.handleOpenChange = function (open) {
         var onOpenChange = _this.props.onOpenChange;
@@ -156,12 +172,15 @@ function wrapPicker(Picker, pickerType) {
         return React.createElement(_configProvider.ConfigConsumer, null, function (_ref2) {
           var _classNames2;
 
-          var getPrefixCls = _ref2.getPrefixCls;
+          var getPrefixCls = _ref2.getPrefixCls,
+              getContextPopupContainer = _ref2.getPopupContainer;
           var _this$props2 = _this.props,
               customizePrefixCls = _this$props2.prefixCls,
               customizeInputPrefixCls = _this$props2.inputPrefixCls,
+              getCalendarContainer = _this$props2.getCalendarContainer,
               size = _this$props2.size,
               disabled = _this$props2.disabled;
+          var getPopupContainer = getCalendarContainer || getContextPopupContainer;
           var prefixCls = getPrefixCls('calendar', customizePrefixCls);
           var inputPrefixCls = getPrefixCls('input', customizeInputPrefixCls);
           var pickerClass = (0, _classnames["default"])("".concat(prefixCls, "-picker"), _defineProperty({}, "".concat(prefixCls, "-picker-").concat(size), !!size));
@@ -182,6 +201,7 @@ function wrapPicker(Picker, pickerType) {
             transitionName: "slide-up"
           })) : null;
           return React.createElement(Picker, _extends({}, _this.props, {
+            getCalendarContainer: getPopupContainer,
             format: mergedFormat,
             ref: _this.savePicker,
             pickerClass: pickerClass,
@@ -230,15 +250,29 @@ function wrapPicker(Picker, pickerType) {
           defaultLocale: this.getDefaultLocale
         }, this.renderPicker);
       }
+    }], [{
+      key: "getDerivedStateFromProps",
+      value: function getDerivedStateFromProps(_ref3) {
+        var value = _ref3.value,
+            defaultValue = _ref3.defaultValue;
+        checkValidate(defaultValue, 'defaultValue');
+        checkValidate(value, 'value');
+        return {};
+      }
     }]);
 
     return PickerWrapper;
-  }(React.Component), _a.defaultProps = {
+  }(React.Component);
+
+  PickerWrapper.defaultProps = {
     transitionName: 'slide-up',
     popupStyle: {},
     onChange: function onChange() {},
     onOk: function onOk() {},
     onOpenChange: function onOpenChange() {},
     locale: {}
-  }, _a;
+  };
+  (0, _reactLifecyclesCompat.polyfill)(PickerWrapper);
+  return PickerWrapper;
 }
+//# sourceMappingURL=wrapPicker.js.map

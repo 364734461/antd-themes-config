@@ -7,6 +7,7 @@ exports.flatArray = flatArray;
 exports.treeMap = treeMap;
 exports.flatFilter = flatFilter;
 exports.normalizeColumns = normalizeColumns;
+exports.generateValueMaps = generateValueMaps;
 
 var React = _interopRequireWildcard(require("react"));
 
@@ -97,3 +98,15 @@ function normalizeColumns(elements) {
   });
   return columns;
 }
+
+function generateValueMaps(items) {
+  var maps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  (items || []).forEach(function (_ref) {
+    var value = _ref.value,
+        children = _ref.children;
+    maps[value.toString()] = value;
+    generateValueMaps(children, maps);
+  });
+  return maps;
+}
+//# sourceMappingURL=util.js.map

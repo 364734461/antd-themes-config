@@ -9,9 +9,9 @@ var React = _interopRequireWildcard(require("react"));
 
 var ReactDOM = _interopRequireWildcard(require("react-dom"));
 
-var _classnames = _interopRequireDefault(require("classnames"));
+var _omit = _interopRequireDefault(require("omit.js"));
 
-var _rcAnimate = _interopRequireDefault(require("rc-animate"));
+var _classnames = _interopRequireDefault(require("classnames"));
 
 var _PureRenderMixin = _interopRequireDefault(require("rc-util/lib/PureRenderMixin"));
 
@@ -19,7 +19,7 @@ var _checkbox = _interopRequireDefault(require("../checkbox"));
 
 var _search = _interopRequireDefault(require("./search"));
 
-var _item = _interopRequireDefault(require("./item"));
+var _renderListBody = _interopRequireWildcard(require("./renderListBody"));
 
 var _triggerEvent = _interopRequireDefault(require("../_util/triggerEvent"));
 
@@ -30,6 +30,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -47,10 +49,26 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function noop() {}
+var defaultRender = function defaultRender() {
+  return null;
+};
 
 function isRenderResultPlainObject(result) {
   return result && !React.isValidElement(result) && Object.prototype.toString.call(result) === '[object Object]';
+}
+
+function renderListNode(renderList, props) {
+  var bodyContent = renderList ? renderList(props) : null;
+  var customize = !!bodyContent;
+
+  if (!customize) {
+    bodyContent = (0, _renderListBody["default"])(props);
+  }
+
+  return {
+    customize: customize,
+    bodyContent: bodyContent
+  };
 }
 
 var TransferList =
@@ -65,19 +83,16 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(TransferList).call(this, props));
 
-    _this.handleSelect = function (selectedItem) {
-      var checkedKeys = _this.props.checkedKeys;
-      var result = checkedKeys.some(function (key) {
-        return key === selectedItem.key;
+    _this.handleFilter = function (e) {
+      var filterValue = e.target.value;
+
+      _this.setState({
+        filterValue: filterValue
       });
 
-      _this.props.handleSelect(selectedItem, !result);
-    };
-
-    _this.handleFilter = function (e) {
       _this.props.handleFilter(e);
 
-      if (!e.target.value) {
+      if (!filterValue) {
         return;
       } // Manually trigger scroll event for lazy search bug
       // https://github.com/ant-design/ant-design/issues/5631
@@ -94,53 +109,45 @@ function (_React$Component) {
     };
 
     _this.handleClear = function () {
+      _this.setState({
+        filterValue: ''
+      });
+
       _this.props.handleClear();
     };
 
     _this.matchFilter = function (text, item) {
-      var _this$props = _this.props,
-          filter = _this$props.filter,
-          filterOption = _this$props.filterOption;
+      var filterValue = _this.state.filterValue;
+      var filterOption = _this.props.filterOption;
 
       if (filterOption) {
-        return filterOption(filter, item);
+        return filterOption(filterValue, item);
       }
 
-      return text.indexOf(filter) >= 0;
+      return text.indexOf(filterValue) >= 0;
     };
 
     _this.renderItem = function (item) {
       var _this$props$render = _this.props.render,
-          render = _this$props$render === void 0 ? noop : _this$props$render;
+          render = _this$props$render === void 0 ? defaultRender : _this$props$render;
       var renderResult = render(item);
       var isRenderResultPlain = isRenderResultPlainObject(renderResult);
       return {
         renderedText: isRenderResultPlain ? renderResult.value : renderResult,
-        renderedEl: isRenderResultPlain ? renderResult.label : renderResult
+        renderedEl: isRenderResultPlain ? renderResult.label : renderResult,
+        item: item
       };
     };
 
     _this.state = {
-      mounted: false
+      filterValue: ''
     };
     return _this;
   }
 
   _createClass(TransferList, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      this.timer = window.setTimeout(function () {
-        _this2.setState({
-          mounted: true
-        });
-      }, 0);
-    }
-  }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      clearTimeout(this.timer);
       clearTimeout(this.triggerScrollTimer);
     }
   }, {
@@ -154,13 +161,13 @@ function (_React$Component) {
     }
   }, {
     key: "getCheckStatus",
-    value: function getCheckStatus(filteredDataSource) {
+    value: function getCheckStatus(filteredItems) {
       var checkedKeys = this.props.checkedKeys;
 
       if (checkedKeys.length === 0) {
         return 'none';
-      } else if (filteredDataSource.every(function (item) {
-        return checkedKeys.indexOf(item.key) >= 0;
+      } else if (filteredItems.every(function (item) {
+        return checkedKeys.indexOf(item.key) >= 0 || !!item.disabled;
       })) {
         return 'all';
       }
@@ -168,64 +175,32 @@ function (_React$Component) {
       return 'part';
     }
   }, {
-    key: "render",
-    value: function render() {
-      var _this3 = this;
+    key: "getFilteredItems",
+    value: function getFilteredItems(dataSource, filterValue) {
+      var _this2 = this;
 
-      var _this$props2 = this.props,
-          prefixCls = _this$props2.prefixCls,
-          dataSource = _this$props2.dataSource,
-          titleText = _this$props2.titleText,
-          checkedKeys = _this$props2.checkedKeys,
-          lazy = _this$props2.lazy,
-          disabled = _this$props2.disabled,
-          body = _this$props2.body,
-          footer = _this$props2.footer,
-          showSearch = _this$props2.showSearch,
-          style = _this$props2.style,
-          filter = _this$props2.filter,
-          searchPlaceholder = _this$props2.searchPlaceholder,
-          notFoundContent = _this$props2.notFoundContent,
-          itemUnit = _this$props2.itemUnit,
-          itemsUnit = _this$props2.itemsUnit,
-          onScroll = _this$props2.onScroll; // Custom Layout
+      var filteredItems = [];
+      var filteredRenderItems = [];
+      dataSource.forEach(function (item) {
+        var renderedItem = _this2.renderItem(item);
 
-      var footerDom = footer && footer(this.props);
-      var bodyDom = body && body(this.props);
-      var listCls = (0, _classnames["default"])(prefixCls, _defineProperty({}, "".concat(prefixCls, "-with-footer"), !!footerDom));
-      var filteredDataSource = [];
-      var totalDataSource = [];
-      var showItems = dataSource.map(function (item) {
-        var _this3$renderItem = _this3.renderItem(item),
-            renderedText = _this3$renderItem.renderedText,
-            renderedEl = _this3$renderItem.renderedEl;
+        var renderedText = renderedItem.renderedText; // Filter skip
 
-        if (filter && filter.trim() && !_this3.matchFilter(renderedText, item)) {
+        if (filterValue && filterValue.trim() && !_this2.matchFilter(renderedText, item)) {
           return null;
-        } // all show items
-
-
-        totalDataSource.push(item);
-
-        if (!item.disabled) {
-          // response to checkAll items
-          filteredDataSource.push(item);
         }
 
-        var checked = checkedKeys.indexOf(item.key) >= 0;
-        return React.createElement(_item["default"], {
-          disabled: disabled,
-          key: item.key,
-          item: item,
-          lazy: lazy,
-          renderedText: renderedText,
-          renderedEl: renderedEl,
-          checked: checked,
-          prefixCls: prefixCls,
-          onClick: _this3.handleSelect
-        });
+        filteredItems.push(item);
+        filteredRenderItems.push(renderedItem);
       });
-      var unit = dataSource.length > 1 ? itemsUnit : itemUnit;
+      return {
+        filteredItems: filteredItems,
+        filteredRenderItems: filteredRenderItems
+      };
+    }
+  }, {
+    key: "getListBody",
+    value: function getListBody(prefixCls, searchPlaceholder, filterValue, filteredItems, notFoundContent, bodyDom, filteredRenderItems, checkedKeys, renderList, showSearch, disabled) {
       var search = showSearch ? React.createElement("div", {
         className: "".concat(prefixCls, "-body-search-wrapper")
       }, React.createElement(_search["default"], {
@@ -233,38 +208,100 @@ function (_React$Component) {
         onChange: this.handleFilter,
         handleClear: this.handleClear,
         placeholder: searchPlaceholder,
-        value: filter,
+        value: filterValue,
         disabled: disabled
       })) : null;
-      var searchNotFound = showItems.every(function (item) {
-        return item === null;
-      }) && React.createElement("div", {
-        className: "".concat(prefixCls, "-body-not-found")
-      }, notFoundContent);
-      var listBody = bodyDom || React.createElement("div", {
-        className: (0, _classnames["default"])(showSearch ? "".concat(prefixCls, "-body ").concat(prefixCls, "-body-with-search") : "".concat(prefixCls, "-body"))
-      }, search, !searchNotFound && React.createElement(_rcAnimate["default"], {
-        component: "ul",
-        componentProps: {
-          onScroll: onScroll
-        },
-        className: "".concat(prefixCls, "-content"),
-        transitionName: this.state.mounted ? "".concat(prefixCls, "-content-item-highlight") : '',
-        transitionLeave: false
-      }, showItems), searchNotFound);
-      var listFooter = footerDom ? React.createElement("div", {
-        className: "".concat(prefixCls, "-footer")
-      }, footerDom) : null;
-      var checkStatus = this.getCheckStatus(filteredDataSource);
+      var listBody = bodyDom;
+
+      if (!listBody) {
+        var bodyNode;
+
+        var _renderListNode = renderListNode(renderList, _extends({}, (0, _omit["default"])(this.props, _renderListBody.OmitProps), {
+          filteredItems: filteredItems,
+          filteredRenderItems: filteredRenderItems,
+          selectedKeys: checkedKeys
+        })),
+            bodyContent = _renderListNode.bodyContent,
+            customize = _renderListNode.customize; // We should wrap customize list body in a classNamed div to use flex layout.
+
+
+        if (customize) {
+          bodyNode = React.createElement("div", {
+            className: "".concat(prefixCls, "-body-customize-wrapper")
+          }, bodyContent);
+        } else {
+          bodyNode = filteredItems.length ? bodyContent : React.createElement("div", {
+            className: "".concat(prefixCls, "-body-not-found")
+          }, notFoundContent);
+        }
+
+        listBody = React.createElement("div", {
+          className: (0, _classnames["default"])(showSearch ? "".concat(prefixCls, "-body ").concat(prefixCls, "-body-with-search") : "".concat(prefixCls, "-body"))
+        }, search, bodyNode);
+      }
+
+      return listBody;
+    }
+  }, {
+    key: "getCheckBox",
+    value: function getCheckBox(filteredItems, onItemSelectAll, showSelectAll, disabled) {
+      var checkStatus = this.getCheckStatus(filteredItems);
       var checkedAll = checkStatus === 'all';
-      var checkAllCheckbox = React.createElement(_checkbox["default"], {
+      var checkAllCheckbox = showSelectAll !== false && React.createElement(_checkbox["default"], {
         disabled: disabled,
         checked: checkedAll,
         indeterminate: checkStatus === 'part',
         onChange: function onChange() {
-          return _this3.props.handleSelectAll(filteredDataSource, checkedAll);
+          // Only select enabled items
+          onItemSelectAll(filteredItems.filter(function (item) {
+            return !item.disabled;
+          }).map(function (_ref) {
+            var key = _ref.key;
+            return key;
+          }), !checkedAll);
         }
       });
+      return checkAllCheckbox;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var filterValue = this.state.filterValue;
+      var _this$props = this.props,
+          prefixCls = _this$props.prefixCls,
+          dataSource = _this$props.dataSource,
+          titleText = _this$props.titleText,
+          checkedKeys = _this$props.checkedKeys,
+          disabled = _this$props.disabled,
+          body = _this$props.body,
+          footer = _this$props.footer,
+          showSearch = _this$props.showSearch,
+          style = _this$props.style,
+          searchPlaceholder = _this$props.searchPlaceholder,
+          notFoundContent = _this$props.notFoundContent,
+          itemUnit = _this$props.itemUnit,
+          itemsUnit = _this$props.itemsUnit,
+          renderList = _this$props.renderList,
+          onItemSelectAll = _this$props.onItemSelectAll,
+          showSelectAll = _this$props.showSelectAll; // Custom Layout
+
+      var footerDom = footer && footer(this.props);
+      var bodyDom = body && body(this.props);
+      var listCls = (0, _classnames["default"])(prefixCls, _defineProperty({}, "".concat(prefixCls, "-with-footer"), !!footerDom)); // ====================== Get filtered, checked item list ======================
+
+      var _this$getFilteredItem = this.getFilteredItems(dataSource, filterValue),
+          filteredItems = _this$getFilteredItem.filteredItems,
+          filteredRenderItems = _this$getFilteredItem.filteredRenderItems; // ================================= List Body =================================
+
+
+      var unit = dataSource.length > 1 ? itemsUnit : itemUnit;
+      var listBody = this.getListBody(prefixCls, searchPlaceholder, filterValue, filteredItems, notFoundContent, bodyDom, filteredRenderItems, checkedKeys, renderList, showSearch, disabled); // ================================ List Footer ================================
+
+      var listFooter = footerDom ? React.createElement("div", {
+        className: "".concat(prefixCls, "-footer")
+      }, footerDom) : null;
+      var checkAllCheckbox = this.getCheckBox(filteredItems, onItemSelectAll, showSelectAll, disabled); // ================================== Render ===================================
+
       return React.createElement("div", {
         className: listCls,
         style: style
@@ -272,7 +309,7 @@ function (_React$Component) {
         className: "".concat(prefixCls, "-header")
       }, checkAllCheckbox, React.createElement("span", {
         className: "".concat(prefixCls, "-header-selected")
-      }, React.createElement("span", null, (checkedKeys.length > 0 ? "".concat(checkedKeys.length, "/") : '') + totalDataSource.length, ' ', unit), React.createElement("span", {
+      }, React.createElement("span", null, (checkedKeys.length > 0 ? "".concat(checkedKeys.length, "/") : '') + filteredItems.length, ' ', unit), React.createElement("span", {
         className: "".concat(prefixCls, "-header-title")
       }, titleText))), listBody, listFooter);
     }
@@ -286,6 +323,6 @@ TransferList.defaultProps = {
   dataSource: [],
   titleText: '',
   showSearch: false,
-  render: noop,
   lazy: {}
 };
+//# sourceMappingURL=list.js.map

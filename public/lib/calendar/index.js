@@ -23,6 +23,8 @@ var _configProvider = require("../config-provider");
 
 var _interopDefault = _interopRequireDefault(require("../_util/interopDefault"));
 
+var _reactLifecyclesCompat = require("react-lifecycles-compat");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -112,6 +114,9 @@ function (_React$Component) {
     };
 
     _this.setValue = function (value, way) {
+      var prevValue = _this.props.value || _this.state.value;
+      var mode = _this.state.mode;
+
       if (!('value' in _this.props)) {
         _this.setState({
           value: value
@@ -119,23 +124,15 @@ function (_React$Component) {
       }
 
       if (way === 'select') {
+        if (prevValue && prevValue.month() !== value.month()) {
+          _this.onPanelChange(value, mode);
+        }
+
         if (_this.props.onSelect) {
           _this.props.onSelect(value);
         }
       } else if (way === 'changePanel') {
-        _this.onPanelChange(value, _this.state.mode);
-      }
-    };
-
-    _this.setType = function (type) {
-      var mode = type === 'date' ? 'month' : 'year';
-
-      if (_this.state.mode !== mode) {
-        _this.setState({
-          mode: mode
-        });
-
-        _this.onPanelChange(_this.state.value, mode);
+        _this.onPanelChange(value, mode);
       }
     };
 
@@ -143,8 +140,12 @@ function (_React$Component) {
       _this.setValue(value, 'changePanel');
     };
 
-    _this.onHeaderTypeChange = function (type) {
-      _this.setType(type);
+    _this.onHeaderTypeChange = function (mode) {
+      _this.setState({
+        mode: mode
+      });
+
+      _this.onPanelChange(_this.state.value, mode);
     };
 
     _this.onSelect = function (value) {
@@ -194,9 +195,9 @@ function (_React$Component) {
           style = props.style,
           className = props.className,
           fullscreen = props.fullscreen,
+          headerRender = props.headerRender,
           dateFullCellRender = props.dateFullCellRender,
           monthFullCellRender = props.monthFullCellRender;
-      var type = mode === 'year' ? 'month' : 'date';
       var monthCellRender = monthFullCellRender || _this.monthCellRender;
       var dateCellRender = dateFullCellRender || _this.dateCellRender;
       var disabledDate = props.disabledDate;
@@ -223,7 +224,8 @@ function (_React$Component) {
           style: style
         }, React.createElement(_Header["default"], {
           fullscreen: fullscreen,
-          type: type,
+          type: mode,
+          headerRender: headerRender,
           value: value,
           locale: locale.lang,
           prefixCls: prefixCls,
@@ -234,7 +236,7 @@ function (_React$Component) {
           disabledDate: disabledDate,
           Select: noop,
           locale: locale.lang,
-          type: type,
+          type: mode === 'year' ? 'month' : 'date',
           prefixCls: prefixCls,
           showHeader: false,
           value: value,
@@ -253,27 +255,12 @@ function (_React$Component) {
 
     _this.state = {
       value: value,
-      mode: props.mode
+      mode: props.mode || 'month'
     };
     return _this;
   }
 
   _createClass(Calendar, [{
-    key: "componentWillReceiveProps",
-    value: function componentWillReceiveProps(nextProps) {
-      if ('value' in nextProps) {
-        this.setState({
-          value: nextProps.value
-        });
-      }
-
-      if ('mode' in nextProps && nextProps.mode !== this.props.mode) {
-        this.setState({
-          mode: nextProps.mode
-        });
-      }
-    }
-  }, {
     key: "onPanelChange",
     value: function onPanelChange(value, mode) {
       var _this$props = this.props,
@@ -296,16 +283,29 @@ function (_React$Component) {
         defaultLocale: this.getDefaultLocale
       }, this.renderCalendar);
     }
+  }], [{
+    key: "getDerivedStateFromProps",
+    value: function getDerivedStateFromProps(nextProps) {
+      var newState = {};
+
+      if ('value' in nextProps) {
+        newState.value = nextProps.value;
+      }
+
+      if ('mode' in nextProps) {
+        newState.mode = nextProps.mode;
+      }
+
+      return Object.keys(newState).length > 0 ? newState : null;
+    }
   }]);
 
   return Calendar;
 }(React.Component);
 
-exports["default"] = Calendar;
 Calendar.defaultProps = {
   locale: {},
   fullscreen: true,
-  mode: 'month',
   onSelect: noop,
   onPanelChange: noop,
   onChange: noop
@@ -323,5 +323,10 @@ Calendar.propTypes = {
   onPanelChange: PropTypes.func,
   value: PropTypes.object,
   onSelect: PropTypes.func,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  headerRender: PropTypes.func
 };
+(0, _reactLifecyclesCompat.polyfill)(Calendar);
+var _default = Calendar;
+exports["default"] = _default;
+//# sourceMappingURL=index.js.map

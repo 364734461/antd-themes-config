@@ -117,6 +117,12 @@ Object.defineProperty(exports, "DatePicker", {
     return _datePicker["default"];
   }
 });
+Object.defineProperty(exports, "Descriptions", {
+  enumerable: true,
+  get: function get() {
+    return _descriptions["default"];
+  }
+});
 Object.defineProperty(exports, "Divider", {
   enumerable: true,
   get: function get() {
@@ -195,6 +201,12 @@ Object.defineProperty(exports, "Menu", {
     return _menu["default"];
   }
 });
+Object.defineProperty(exports, "Mentions", {
+  enumerable: true,
+  get: function get() {
+    return _mentions["default"];
+  }
+});
 Object.defineProperty(exports, "Modal", {
   enumerable: true,
   get: function get() {
@@ -211,6 +223,12 @@ Object.defineProperty(exports, "notification", {
   enumerable: true,
   get: function get() {
     return _notification["default"];
+  }
+});
+Object.defineProperty(exports, "PageHeader", {
+  enumerable: true,
+  get: function get() {
+    return _pageHeader["default"];
   }
 });
 Object.defineProperty(exports, "Pagination", {
@@ -247,6 +265,12 @@ Object.defineProperty(exports, "Rate", {
   enumerable: true,
   get: function get() {
     return _rate["default"];
+  }
+});
+Object.defineProperty(exports, "Result", {
+  enumerable: true,
+  get: function get() {
+    return _result["default"];
   }
 });
 Object.defineProperty(exports, "Row", {
@@ -345,6 +369,12 @@ Object.defineProperty(exports, "Tooltip", {
     return _tooltip["default"];
   }
 });
+Object.defineProperty(exports, "Typography", {
+  enumerable: true,
+  get: function get() {
+    return _typography["default"];
+  }
+});
 Object.defineProperty(exports, "Mention", {
   enumerable: true,
   get: function get() {
@@ -402,6 +432,8 @@ var _configProvider = _interopRequireDefault(require("./config-provider"));
 
 var _datePicker = _interopRequireDefault(require("./date-picker"));
 
+var _descriptions = _interopRequireDefault(require("./descriptions"));
+
 var _divider = _interopRequireDefault(require("./divider"));
 
 var _dropdown = _interopRequireDefault(require("./dropdown"));
@@ -428,11 +460,15 @@ var _message = _interopRequireDefault(require("./message"));
 
 var _menu = _interopRequireDefault(require("./menu"));
 
+var _mentions = _interopRequireDefault(require("./mentions"));
+
 var _modal = _interopRequireDefault(require("./modal"));
 
 var _statistic = _interopRequireDefault(require("./statistic"));
 
 var _notification = _interopRequireDefault(require("./notification"));
+
+var _pageHeader = _interopRequireDefault(require("./page-header"));
 
 var _pagination = _interopRequireDefault(require("./pagination"));
 
@@ -445,6 +481,8 @@ var _progress = _interopRequireDefault(require("./progress"));
 var _radio = _interopRequireDefault(require("./radio"));
 
 var _rate = _interopRequireDefault(require("./rate"));
+
+var _result = _interopRequireDefault(require("./result"));
 
 var _row = _interopRequireDefault(require("./row"));
 
@@ -478,6 +516,8 @@ var _timeline = _interopRequireDefault(require("./timeline"));
 
 var _tooltip = _interopRequireDefault(require("./tooltip"));
 
+var _typography = _interopRequireDefault(require("./typography"));
+
 var _mention = _interopRequireDefault(require("./mention"));
 
 var _upload = _interopRequireDefault(require("./upload"));
@@ -494,3 +534,4 @@ if (ENV !== 'production' && ENV !== 'test' && typeof console !== 'undefined' && 
   console.warn('You are using a whole package of antd, ' + 'please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.');
 }
 /* @remove-on-es-build-end */
+//# sourceMappingURL=index.js.map

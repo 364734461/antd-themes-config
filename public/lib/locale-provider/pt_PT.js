@@ -26,7 +26,8 @@ var _default = {
     filterConfirm: 'Aplicar',
     filterReset: 'Reiniciar',
     selectAll: 'Selecionar página atual',
-    selectInvert: 'Inverter seleção'
+    selectInvert: 'Inverter seleção',
+    sortTitle: 'Ordenação'
   },
   Modal: {
     okText: 'OK',
@@ -53,3 +54,4 @@ var _default = {
   }
 };
 exports["default"] = _default;
+//# sourceMappingURL=pt_PT.js.map

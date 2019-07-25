@@ -108,7 +108,6 @@ function (_React$Component) {
               prefixCls: prefixCls,
               disabled: _this.props.disabled,
               value: option,
-              onChange: _this.onRadioChange,
               checked: _this.state.value === option
             }, option);
           } else {
@@ -118,7 +117,6 @@ function (_React$Component) {
               prefixCls: prefixCls,
               disabled: option.disabled || _this.props.disabled,
               value: option.value,
-              onChange: _this.onRadioChange,
               checked: _this.state.value === option.value
             }, option.label);
           }
@@ -198,7 +196,6 @@ function (_React$Component) {
 }(React.Component);
 
 RadioGroup.defaultProps = {
-  disabled: false,
   buttonStyle: 'outline'
 };
 RadioGroup.childContextTypes = {
@@ -207,3 +204,4 @@ RadioGroup.childContextTypes = {
 (0, _reactLifecyclesCompat.polyfill)(RadioGroup);
 var _default = RadioGroup;
 exports["default"] = _default;
+//# sourceMappingURL=group.js.map

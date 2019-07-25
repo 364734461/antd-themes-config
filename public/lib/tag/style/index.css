@@ -15,7 +15,7 @@
   -webkit-font-feature-settings: 'tnum';
           font-feature-settings: 'tnum';
   display: inline-block;
-  height: 22px;
+  height: auto;
   margin-right: 8px;
   padding: 0 7px;
   font-size: 12px;
@@ -24,10 +24,10 @@
   background: #fafafa;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
-  cursor: pointer;
+  cursor: default;
   opacity: 1;
-  -webkit-transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
-  transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  -webkit-transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+  transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 .ant-tag:hover {
   opacity: 0.85;
@@ -53,8 +53,8 @@
   color: rgba(0, 0, 0, 0.45);
   font-weight: bold;
   cursor: pointer;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
+  -webkit-transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+  transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 :root .ant-tag .anticon-close {
   font-size: 12px;
@@ -88,24 +88,6 @@
 }
 .ant-tag-checkable:active {
   background-color: #096dd9;
-}
-.ant-tag-close {
-  width: 0 !important;
-  margin: 0;
-  padding: 0;
-}
-.ant-tag-zoom-enter,
-.ant-tag-zoom-appear {
-  -webkit-animation: antFadeIn 0.2s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-          animation: antFadeIn 0.2s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-  -webkit-animation-fill-mode: both;
-          animation-fill-mode: both;
-}
-.ant-tag-zoom-leave {
-  -webkit-animation: antZoomOut 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-          animation: antZoomOut 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
-  -webkit-animation-fill-mode: both;
-          animation-fill-mode: both;
 }
 .ant-tag-hidden {
   display: none;

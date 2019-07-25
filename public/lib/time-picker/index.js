@@ -36,11 +36,9 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("Cannot destructure undefined"); }
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -66,7 +64,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -120,6 +118,12 @@ function (_React$Component) {
 
     _this.saveTimePicker = function (timePickerRef) {
       _this.timePickerRef = timePickerRef;
+    };
+
+    _this.getDefaultLocale = function () {
+      var defaultLocale = _extends({}, _en_US["default"], _this.props.locale);
+
+      return defaultLocale;
     };
 
     _this.renderTimePicker = function (locale) {
@@ -177,7 +181,7 @@ function (_React$Component) {
     _this.state = {
       value: value
     };
-    (0, _warning["default"])(!('allowEmpty' in props), '`allowEmpty` in TimePicker is deprecated. Please use `allowClear` instead.');
+    (0, _warning["default"])(!('allowEmpty' in props), 'TimePicker', '`allowEmpty` is deprecated. Please use `allowClear` instead.');
     return _this;
   }
 
@@ -223,11 +227,9 @@ function (_React$Component) {
     key: "renderInputIcon",
     value: function renderInputIcon(prefixCls) {
       var suffixIcon = this.props.suffixIcon;
-      var clockIcon = suffixIcon && (React.isValidElement(suffixIcon) ? React.cloneElement(suffixIcon, {
+      var clockIcon = suffixIcon && React.isValidElement(suffixIcon) && React.cloneElement(suffixIcon, {
         className: (0, _classnames["default"])(suffixIcon.props.className, "".concat(prefixCls, "-clock-icon"))
-      }) : React.createElement("span", {
-        className: "".concat(prefixCls, "-clock-icon")
-      }, suffixIcon)) || React.createElement(_icon["default"], {
+      }) || React.createElement(_icon["default"], {
         type: "clock-circle",
         className: "".concat(prefixCls, "-clock-icon")
       });
@@ -238,21 +240,27 @@ function (_React$Component) {
   }, {
     key: "renderClearIcon",
     value: function renderClearIcon(prefixCls) {
-      _objectDestructuringEmpty(this.props);
+      var clearIcon = this.props.clearIcon;
+      var clearIconPrefixCls = "".concat(prefixCls, "-clear");
 
-      var clearIcon = React.createElement(_icon["default"], {
+      if (clearIcon && React.isValidElement(clearIcon)) {
+        return React.cloneElement(clearIcon, {
+          className: (0, _classnames["default"])(clearIcon.props.className, clearIconPrefixCls)
+        });
+      }
+
+      return React.createElement(_icon["default"], {
         type: "close-circle",
-        className: "".concat(prefixCls, "-clear"),
+        className: clearIconPrefixCls,
         theme: "filled"
       });
-      return clearIcon;
     }
   }, {
     key: "render",
     value: function render() {
       return React.createElement(_LocaleReceiver["default"], {
         componentName: "TimePicker",
-        defaultLocale: _en_US["default"]
+        defaultLocale: this.getDefaultLocale()
       }, this.renderTimePicker);
     }
   }], [{
@@ -275,7 +283,6 @@ TimePicker.defaultProps = {
   align: {
     offset: [0, -2]
   },
-  disabled: false,
   disabledHours: undefined,
   disabledMinutes: undefined,
   disabledSeconds: undefined,
@@ -287,3 +294,4 @@ TimePicker.defaultProps = {
 (0, _reactLifecyclesCompat.polyfill)(TimePicker);
 var _default = TimePicker;
 exports["default"] = _default;
+//# sourceMappingURL=index.js.map

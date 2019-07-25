@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { ConfigConsumerProps } from '../config-provider';
 export declare type MentionPlacement = 'top' | 'bottom';
+declare type SuggestionItme = React.ReactElement<{
+    value?: string;
+}> | string;
 export interface MentionProps {
     prefixCls?: string;
     suggestionStyle?: React.CSSProperties;
-    defaultSuggestions?: Array<any>;
-    suggestions?: Array<any>;
+    defaultSuggestions?: Array<SuggestionItme>;
+    suggestions?: Array<React.ReactElement<any>>;
     onSearchChange?: (value: string, trigger: string) => any;
-    onChange?: (contentState: any) => any;
+    onChange?: (contentState: any) => void;
     notFoundContent?: any;
     loading?: boolean;
     style?: React.CSSProperties;
@@ -20,7 +23,7 @@ export interface MentionProps {
     getSuggestionContainer?: (triggerNode: Element) => HTMLElement;
     onFocus?: React.FocusEventHandler<HTMLElement>;
     onBlur?: React.FocusEventHandler<HTMLElement>;
-    onSelect?: (suggestion: string, data?: any) => any;
+    onSelect?: (suggestion: string, data?: any) => void;
     readOnly?: boolean;
     disabled?: boolean;
     placement?: MentionPlacement;

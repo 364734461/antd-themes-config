@@ -45,7 +45,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -96,7 +96,7 @@ function (_React$Component) {
       var _this$props = this.props,
           title = _this$props.title,
           content = _this$props.content;
-      (0, _warning["default"])(!('overlay' in this.props), 'Popover[overlay] is removed, please use Popover[content] instead, ' + 'see: https://u.ant.design/popover-content');
+      (0, _warning["default"])(!('overlay' in this.props), 'Popover', '`overlay` is removed, please use `content` instead, ' + 'see: https://u.ant.design/popover-content');
       return React.createElement("div", null, title && React.createElement("div", {
         className: "".concat(prefixCls, "-title")
       }, title), React.createElement("div", {
@@ -122,3 +122,4 @@ Popover.defaultProps = {
   mouseLeaveDelay: 0.1,
   overlayStyle: {}
 };
+//# sourceMappingURL=index.js.map

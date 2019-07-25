@@ -31,8 +31,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -40,6 +38,8 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -65,7 +65,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -151,7 +151,12 @@ function (_React$Component) {
           nativeEvent = event.nativeEvent;
       var _node$props$eventKey = node.props.eventKey,
           eventKey = _node$props$eventKey === void 0 ? '' : _node$props$eventKey;
-      var newState = {}; // Windows / Mac single pick
+      var newState = {}; // We need wrap this event since some value is not same
+
+      var newEvent = _extends({}, event, {
+        selected: true
+      }); // Windows / Mac single pick
+
 
       var ctrlPick = nativeEvent.ctrlKey || nativeEvent.metaKey;
       var shiftPick = nativeEvent.shiftKey; // Generate new selected keys
@@ -163,20 +168,23 @@ function (_React$Component) {
         newSelectedKeys = keys;
         _this.lastSelectedKey = eventKey;
         _this.cachedSelectedKeys = newSelectedKeys;
+        newEvent.selectedNodes = (0, _util2.convertDirectoryKeysToNodes)(children, newSelectedKeys);
       } else if (multiple && shiftPick) {
         // Shift click
         newSelectedKeys = Array.from(new Set([].concat(_toConsumableArray(_this.cachedSelectedKeys || []), _toConsumableArray((0, _util2.calcRangeKeys)(children, expandedKeys, eventKey, _this.lastSelectedKey)))));
+        newEvent.selectedNodes = (0, _util2.convertDirectoryKeysToNodes)(children, newSelectedKeys);
       } else {
         // Single click
         newSelectedKeys = [eventKey];
         _this.lastSelectedKey = eventKey;
         _this.cachedSelectedKeys = newSelectedKeys;
+        newEvent.selectedNodes = [event.node];
       }
 
       newState.selectedKeys = newSelectedKeys;
 
       if (onSelect) {
-        onSelect(newSelectedKeys, event);
+        onSelect(newSelectedKeys, newEvent);
       }
 
       _this.setUncontrolledState(newState);
@@ -272,19 +280,17 @@ function (_React$Component) {
   }], [{
     key: "getDerivedStateFromProps",
     value: function getDerivedStateFromProps(nextProps) {
+      var newState = {};
+
       if ('expandedKeys' in nextProps) {
-        return {
-          expandedKeys: nextProps.expandedKeys
-        };
+        newState.expandedKeys = nextProps.expandedKeys;
       }
 
       if ('selectedKeys' in nextProps) {
-        return {
-          selectedKeys: nextProps.selectedKeys
-        };
+        newState.selectedKeys = nextProps.selectedKeys;
       }
 
-      return null;
+      return newState;
     }
   }]);
 
@@ -298,3 +304,4 @@ DirectoryTree.defaultProps = {
 (0, _reactLifecyclesCompat.polyfill)(DirectoryTree);
 var _default = DirectoryTree;
 exports["default"] = _default;
+//# sourceMappingURL=DirectoryTree.js.map

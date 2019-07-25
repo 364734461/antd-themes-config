@@ -27,7 +27,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -44,8 +44,9 @@ var TimelineItem = function TimelineItem(props) {
         color = _props$color === void 0 ? '' : _props$color,
         children = props.children,
         pending = props.pending,
+        position = props.position,
         dot = props.dot,
-        restProps = __rest(props, ["prefixCls", "className", "color", "children", "pending", "dot"]);
+        restProps = __rest(props, ["prefixCls", "className", "color", "children", "pending", "position", "dot"]);
 
     var prefixCls = getPrefixCls('timeline', customizePrefixCls);
     var itemClassName = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-item"), true), _defineProperty(_classNames, "".concat(prefixCls, "-item-pending"), pending), _classNames), className);
@@ -67,7 +68,9 @@ var TimelineItem = function TimelineItem(props) {
 
 TimelineItem.defaultProps = {
   color: 'blue',
-  pending: false
+  pending: false,
+  position: ''
 };
 var _default = TimelineItem;
 exports["default"] = _default;
+//# sourceMappingURL=TimelineItem.js.map

@@ -63,7 +63,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -73,46 +73,33 @@ var List =
 function (_React$Component) {
   _inherits(List, _React$Component);
 
-  function List() {
+  function List(props) {
     var _this;
 
     _classCallCheck(this, List);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(List).apply(this, arguments));
-    _this.state = {
-      paginationCurrent: 1
-    };
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(List).call(this, props));
     _this.defaultPaginationProps = {
       current: 1,
-      pageSize: 10,
-      onChange: function onChange(page, pageSize) {
-        var pagination = _this.props.pagination;
-
-        _this.setState({
-          paginationCurrent: page
-        });
-
-        if (pagination && pagination.onChange) {
-          pagination.onChange(page, pageSize);
-        }
-      },
       total: 0
     };
     _this.keys = {};
+    _this.onPaginationChange = _this.triggerPaginationEvent('onChange');
+    _this.onPaginationShowSizeChange = _this.triggerPaginationEvent('onShowSizeChange');
 
     _this.renderItem = function (item, index) {
       var _this$props = _this.props,
-          dataSource = _this$props.dataSource,
           renderItem = _this$props.renderItem,
           rowKey = _this$props.rowKey;
+      if (!renderItem) return null;
       var key;
 
       if (typeof rowKey === 'function') {
-        key = rowKey(dataSource[index]);
+        key = rowKey(item);
       } else if (typeof rowKey === 'string') {
-        key = dataSource[rowKey];
+        key = item[rowKey];
       } else {
-        key = dataSource.key;
+        key = item.key;
       }
 
       if (!key) {
@@ -135,7 +122,9 @@ function (_React$Component) {
 
       var getPrefixCls = _ref.getPrefixCls,
           renderEmpty = _ref.renderEmpty;
-      var paginationCurrent = _this.state.paginationCurrent;
+      var _this$state = _this.state,
+          paginationCurrent = _this$state.paginationCurrent,
+          paginationSize = _this$state.paginationSize;
 
       var _a = _this.props,
           customizePrefixCls = _a.prefixCls,
@@ -147,7 +136,8 @@ function (_React$Component) {
           loadMore = _a.loadMore,
           pagination = _a.pagination,
           grid = _a.grid,
-          dataSource = _a.dataSource,
+          _a$dataSource = _a.dataSource,
+          dataSource = _a$dataSource === void 0 ? [] : _a$dataSource,
           size = _a.size,
           rowKey = _a.rowKey,
           renderItem = _a.renderItem,
@@ -187,7 +177,8 @@ function (_React$Component) {
 
       var paginationProps = _extends({}, _this.defaultPaginationProps, {
         total: dataSource.length,
-        current: paginationCurrent
+        current: paginationCurrent,
+        pageSize: paginationSize
       }, pagination || {});
 
       var largestPage = Math.ceil(paginationProps.total / paginationProps.pageSize);
@@ -199,7 +190,8 @@ function (_React$Component) {
       var paginationContent = pagination ? React.createElement("div", {
         className: "".concat(prefixCls, "-pagination")
       }, React.createElement(_pagination["default"], _extends({}, paginationProps, {
-        onChange: _this.defaultPaginationProps.onChange
+        onChange: _this.onPaginationChange,
+        onShowSizeChange: _this.onPaginationShowSizeChange
       }))) : null;
 
       var splitDataSource = _toConsumableArray(dataSource);
@@ -229,7 +221,9 @@ function (_React$Component) {
         });
         childrenContent = grid ? React.createElement(_grid.Row, {
           gutter: grid.gutter
-        }, childrenList) : childrenList;
+        }, childrenList) : React.createElement("ul", {
+          className: "".concat(prefixCls, "-items")
+        }, childrenList);
       } else if (!children && !isLoading) {
         childrenContent = _this.renderEmpty(prefixCls, renderEmpty);
       }
@@ -244,6 +238,12 @@ function (_React$Component) {
       }, footer), loadMore || (paginationPosition === 'bottom' || paginationPosition === 'both') && paginationContent);
     };
 
+    var pagination = props.pagination;
+    var paginationObj = pagination && _typeof(pagination) === 'object' ? pagination : {};
+    _this.state = {
+      paginationCurrent: paginationObj.defaultCurrent || 1,
+      paginationSize: paginationObj.defaultPageSize || 10
+    };
     return _this;
   }
 
@@ -251,7 +251,26 @@ function (_React$Component) {
     key: "getChildContext",
     value: function getChildContext() {
       return {
-        grid: this.props.grid
+        grid: this.props.grid,
+        itemLayout: this.props.itemLayout
+      };
+    }
+  }, {
+    key: "triggerPaginationEvent",
+    value: function triggerPaginationEvent(eventName) {
+      var _this2 = this;
+
+      return function (page, pageSize) {
+        var pagination = _this2.props.pagination;
+
+        _this2.setState({
+          paginationCurrent: page,
+          paginationSize: pageSize
+        });
+
+        if (pagination && pagination[eventName]) {
+          pagination[eventName](page, pageSize);
+        }
       };
     }
   }, {
@@ -276,7 +295,8 @@ function (_React$Component) {
 exports["default"] = List;
 List.Item = _Item["default"];
 List.childContextTypes = {
-  grid: PropTypes.any
+  grid: PropTypes.any,
+  itemLayout: PropTypes.string
 };
 List.defaultProps = {
   dataSource: [],
@@ -285,3 +305,4 @@ List.defaultProps = {
   loading: false,
   pagination: false
 };
+//# sourceMappingURL=index.js.map

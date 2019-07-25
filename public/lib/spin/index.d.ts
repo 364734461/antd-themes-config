@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types';
 import { ConfigConsumerProps } from '../config-provider';
 declare const SpinSizes: ["small", "default", "large"];
 export declare type SpinSize = (typeof SpinSizes)[number];
-export declare type SpinIndicator = React.ReactElement<any>;
+export declare type SpinIndicator = React.ReactElement<HTMLElement>;
 export interface SpinProps {
     prefixCls?: string;
     className?: string;
@@ -38,6 +38,7 @@ declare class Spin extends React.Component<SpinProps, SpinState> {
     constructor(props: SpinProps);
     isNestedPattern(): boolean;
     componentWillUnmount(): void;
+    cancelExistingSpin(): void;
     componentDidMount(): void;
     componentDidUpdate(): void;
     debouncifyUpdateSpinning: (props?: SpinProps | undefined) => void;

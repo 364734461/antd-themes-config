@@ -59,15 +59,33 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
 
 var mousePosition;
-var mousePositionEventBinded;
-var destroyFns = [];
+var destroyFns = []; // ref: https://github.com/ant-design/ant-design/issues/15795
+
 exports.destroyFns = destroyFns;
+
+var getClickPosition = function getClickPosition(e) {
+  mousePosition = {
+    x: e.pageX,
+    y: e.pageY
+  }; // 100ms 内发生过点击事件，则从点击位置动画展示
+  // 否则直接 zoom 展示
+  // 这样可以兼容非点击方式展开
+
+  setTimeout(function () {
+    return mousePosition = null;
+  }, 100);
+}; // 只有点击事件支持从鼠标位置动画展开
+
+
+if (typeof window !== 'undefined' && window.document && window.document.documentElement) {
+  (0, _addEventListener["default"])(document.documentElement, 'click', getClickPosition);
+}
 
 var Modal =
 /*#__PURE__*/
@@ -113,7 +131,8 @@ function (_React$Component) {
     };
 
     _this.renderModal = function (_ref) {
-      var getPrefixCls = _ref.getPrefixCls;
+      var getContextPopupContainer = _ref.getPopupContainer,
+          getPrefixCls = _ref.getPrefixCls;
 
       var _a = _this.props,
           customizePrefixCls = _a.prefixCls,
@@ -121,7 +140,8 @@ function (_React$Component) {
           visible = _a.visible,
           wrapClassName = _a.wrapClassName,
           centered = _a.centered,
-          restProps = __rest(_a, ["prefixCls", "footer", "visible", "wrapClassName", "centered"]);
+          getContainer = _a.getContainer,
+          restProps = __rest(_a, ["prefixCls", "footer", "visible", "wrapClassName", "centered", "getContainer"]);
 
       var prefixCls = getPrefixCls('modal', customizePrefixCls);
       var defaultFooter = React.createElement(_LocaleReceiver["default"], {
@@ -132,9 +152,10 @@ function (_React$Component) {
         className: "".concat(prefixCls, "-close-x")
       }, React.createElement(_icon["default"], {
         className: "".concat(prefixCls, "-close-icon"),
-        type: 'close'
+        type: "close"
       }));
       return React.createElement(_rcDialog["default"], _extends({}, restProps, {
+        getContainer: getContainer === undefined ? getContextPopupContainer : getContainer,
         prefixCls: prefixCls,
         wrapClassName: (0, _classnames["default"])(_defineProperty({}, "".concat(prefixCls, "-centered"), !!centered), wrapClassName),
         footer: footer === undefined ? defaultFooter : footer,
@@ -149,28 +170,6 @@ function (_React$Component) {
   }
 
   _createClass(Modal, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      if (mousePositionEventBinded) {
-        return;
-      } // 只有点击事件支持从鼠标位置动画展开
-
-
-      (0, _addEventListener["default"])(document.documentElement, 'click', function (e) {
-        mousePosition = {
-          x: e.pageX,
-          y: e.pageY
-        }; // 100ms 内发生过点击事件，则从点击位置动画展示
-        // 否则直接 zoom 展示
-        // 这样可以兼容非点击方式展开
-
-        setTimeout(function () {
-          return mousePosition = null;
-        }, 100);
-      });
-      mousePositionEventBinded = true;
-    }
-  }, {
     key: "render",
     value: function render() {
       return React.createElement(_configProvider.ConfigConsumer, null, this.renderModal);
@@ -187,9 +186,7 @@ Modal.defaultProps = {
   maskTransitionName: 'fade',
   confirmLoading: false,
   visible: false,
-  okType: 'primary',
-  okButtonDisabled: false,
-  cancelButtonDisabled: false
+  okType: 'primary'
 };
 Modal.propTypes = {
   prefixCls: PropTypes.string,
@@ -201,8 +198,8 @@ Modal.propTypes = {
   width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   confirmLoading: PropTypes.bool,
   visible: PropTypes.bool,
-  align: PropTypes.object,
   footer: PropTypes.node,
   title: PropTypes.node,
   closable: PropTypes.bool
 };
+//# sourceMappingURL=Modal.js.map

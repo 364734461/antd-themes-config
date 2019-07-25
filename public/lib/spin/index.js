@@ -53,7 +53,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -80,7 +80,15 @@ function renderIndicator(prefixCls, props) {
 
   return React.createElement("span", {
     className: (0, _classnames["default"])(dotClassName, "".concat(prefixCls, "-dot-spin"))
-  }, React.createElement("i", null), React.createElement("i", null), React.createElement("i", null), React.createElement("i", null));
+  }, React.createElement("i", {
+    className: "".concat(prefixCls, "-dot-item")
+  }), React.createElement("i", {
+    className: "".concat(prefixCls, "-dot-item")
+  }), React.createElement("i", {
+    className: "".concat(prefixCls, "-dot-item")
+  }), React.createElement("i", {
+    className: "".concat(prefixCls, "-dot-item")
+  }));
 }
 
 function shouldDelay(spinning, delay) {
@@ -104,6 +112,8 @@ function (_React$Component) {
           delay = _ref.delay;
 
       if (delay) {
+        _this.cancelExistingSpin();
+
         _this.updateSpinning = (0, _debounce["default"])(_this.originalUpdateSpinning, delay);
       }
     };
@@ -181,6 +191,11 @@ function (_React$Component) {
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
+      this.cancelExistingSpin();
+    }
+  }, {
+    key: "cancelExistingSpin",
+    value: function cancelExistingSpin() {
       var updateSpinning = this.updateSpinning;
 
       if (updateSpinning && updateSpinning.cancel) {
@@ -228,3 +243,4 @@ Spin.propTypes = {
 };
 var _default = Spin;
 exports["default"] = _default;
+//# sourceMappingURL=index.js.map

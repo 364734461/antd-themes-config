@@ -8,13 +8,13 @@ export interface TabsProps {
     hideAdd?: boolean;
     onChange?: (activeKey: string) => void;
     onTabClick?: Function;
-    onPrevClick?: React.MouseEventHandler<any>;
-    onNextClick?: React.MouseEventHandler<any>;
+    onPrevClick?: React.MouseEventHandler<HTMLElement>;
+    onNextClick?: React.MouseEventHandler<HTMLElement>;
     tabBarExtraContent?: React.ReactNode | null;
     tabBarStyle?: React.CSSProperties;
     type?: TabsType;
     tabPosition?: TabsPosition;
-    onEdit?: (targetKey: string | React.MouseEvent<HTMLElement>, action: any) => void;
+    onEdit?: (targetKey: string | React.MouseEvent<HTMLElement>, action: 'add' | 'remove') => void;
     size?: 'large' | 'default' | 'small';
     style?: React.CSSProperties;
     prefixCls?: string;
@@ -24,7 +24,8 @@ export interface TabsProps {
         tabPane: boolean;
     };
     tabBarGutter?: number;
-    renderTabBar?: (props: TabsProps, DefaultTabBar: React.ReactNode) => React.ReactElement<any>;
+    renderTabBar?: (props: TabsProps, DefaultTabBar: React.ComponentClass<any>) => React.ReactElement<any>;
+    destroyInactiveTabPane?: boolean;
 }
 export interface TabPaneProps {
     /** 选项卡头显示文字 */

@@ -14,20 +14,14 @@ declare class DirectoryTree extends React.Component<DirectoryTreeProps, Director
         showIcon: boolean;
         expandAction: string;
     };
-    static getDerivedStateFromProps(nextProps: DirectoryTreeProps): {
-        expandedKeys: string[] | undefined;
-        selectedKeys?: undefined;
-    } | {
-        selectedKeys: string[] | undefined;
-        expandedKeys?: undefined;
-    } | null;
+    static getDerivedStateFromProps(nextProps: DirectoryTreeProps): DirectoryTreeState;
     state: DirectoryTreeState;
     tree: Tree;
     onDebounceExpand: (event: React.MouseEvent<HTMLElement>, node: AntTreeNode) => void;
     lastSelectedKey?: string;
     cachedSelectedKeys?: string[];
     constructor(props: DirectoryTreeProps);
-    onExpand: (expandedKeys: string[], info: AntTreeNodeExpandedEvent) => void | PromiseLike<any>;
+    onExpand: (expandedKeys: string[], info: AntTreeNodeExpandedEvent) => void | PromiseLike<void>;
     onClick: (event: React.MouseEvent<HTMLElement, MouseEvent>, node: AntTreeNode) => void;
     onDoubleClick: (event: React.MouseEvent<HTMLElement, MouseEvent>, node: AntTreeNode) => void;
     onSelect: (keys: string[], event: AntTreeNodeSelectedEvent) => void;

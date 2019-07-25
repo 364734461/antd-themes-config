@@ -218,15 +218,18 @@ function (_React$Component) {
       var _this$props = _this.props,
           showUploadList = _this$props.showUploadList,
           listType = _this$props.listType,
-          onPreview = _this$props.onPreview;
+          onPreview = _this$props.onPreview,
+          previewFile = _this$props.previewFile,
+          disabled = _this$props.disabled;
       var showRemoveIcon = showUploadList.showRemoveIcon,
           showPreviewIcon = showUploadList.showPreviewIcon;
       return React.createElement(_UploadList["default"], {
         listType: listType,
         items: _this.state.fileList,
+        previewFile: previewFile,
         onPreview: onPreview,
         onRemove: _this.handleManualRemove,
-        showRemoveIcon: showRemoveIcon,
+        showRemoveIcon: !disabled && showRemoveIcon,
         showPreviewIcon: showPreviewIcon,
         locale: _extends({}, locale, _this.props.locale)
       });
@@ -285,8 +288,9 @@ function (_React$Component) {
 
       var uploadButtonCls = (0, _classnames["default"])(prefixCls, (_classNames2 = {}, _defineProperty(_classNames2, "".concat(prefixCls, "-select"), true), _defineProperty(_classNames2, "".concat(prefixCls, "-select-").concat(listType), true), _defineProperty(_classNames2, "".concat(prefixCls, "-disabled"), disabled), _classNames2)); // Remove id to avoid open by label when trigger is hidden
       // https://github.com/ant-design/ant-design/issues/14298
+      // https://github.com/ant-design/ant-design/issues/16478
 
-      if (!children) {
+      if (!children || disabled) {
         delete rcUploadProps.id;
       }
 
@@ -406,3 +410,4 @@ Upload.defaultProps = {
 (0, _reactLifecyclesCompat.polyfill)(Upload);
 var _default = Upload;
 exports["default"] = _default;
+//# sourceMappingURL=Upload.js.map

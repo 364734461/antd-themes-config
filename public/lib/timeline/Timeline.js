@@ -57,7 +57,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -99,7 +99,21 @@ function (_React$Component) {
           type: "loading"
         })
       }, pendingNode) : null;
-      var timeLineItems = !!reverse ? [pendingItem].concat(_toConsumableArray(React.Children.toArray(children).reverse())) : [].concat(_toConsumableArray(React.Children.toArray(children)), [pendingItem]); // Remove falsy items
+      var timeLineItems = !!reverse ? [pendingItem].concat(_toConsumableArray(React.Children.toArray(children).reverse())) : [].concat(_toConsumableArray(React.Children.toArray(children)), [pendingItem]);
+
+      var getPositionCls = function getPositionCls(ele, idx) {
+        if (mode === 'alternate') {
+          if (ele.props.position === 'right') return "".concat(prefixCls, "-item-right");
+          if (ele.props.position === 'left') return "".concat(prefixCls, "-item-left");
+          return idx % 2 === 0 ? "".concat(prefixCls, "-item-left") : "".concat(prefixCls, "-item-right");
+        }
+
+        if (mode === 'left') return "".concat(prefixCls, "-item-left");
+        if (mode === 'right') return "".concat(prefixCls, "-item-right");
+        if (ele.props.position === 'right') return "".concat(prefixCls, "-item-right");
+        return '';
+      }; // Remove falsy items
+
 
       var truthyItems = timeLineItems.filter(function (item) {
         return !!item;
@@ -108,7 +122,7 @@ function (_React$Component) {
       var lastCls = "".concat(prefixCls, "-item-last");
       var items = React.Children.map(truthyItems, function (ele, idx) {
         return React.cloneElement(ele, {
-          className: (0, _classnames["default"])([ele.props.className, !reverse && !!pending ? idx === itemsCount - 2 ? lastCls : '' : idx === itemsCount - 1 ? lastCls : '', mode === 'alternate' ? idx % 2 === 0 ? "".concat(prefixCls, "-item-left") : "".concat(prefixCls, "-item-right") : mode === 'right' ? "".concat(prefixCls, "-item-right") : ''])
+          className: (0, _classnames["default"])([ele.props.className, !reverse && !!pending ? idx === itemsCount - 2 ? lastCls : '' : idx === itemsCount - 1 ? lastCls : '', getPositionCls(ele, idx)])
         });
       });
       return React.createElement("ul", _extends({}, restProps, {
@@ -135,3 +149,4 @@ Timeline.defaultProps = {
   reverse: false,
   mode: ''
 };
+//# sourceMappingURL=Timeline.js.map

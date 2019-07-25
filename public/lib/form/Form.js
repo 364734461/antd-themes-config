@@ -17,15 +17,17 @@ var _createFormField = _interopRequireDefault(require("rc-form/lib/createFormFie
 
 var _omit = _interopRequireDefault(require("omit.js"));
 
-var _FormItem = _interopRequireDefault(require("./FormItem"));
-
-var _constants = require("./constants");
-
 var _configProvider = require("../config-provider");
 
 var _type = require("../_util/type");
 
 var _warning = _interopRequireDefault(require("../_util/warning"));
+
+var _FormItem = _interopRequireDefault(require("./FormItem"));
+
+var _constants = require("./constants");
+
+var _context = require("./context");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -79,28 +81,34 @@ function (_React$Component) {
           layout = _this$props.layout;
       var prefixCls = getPrefixCls('form', customizePrefixCls);
       var formClassName = (0, _classnames["default"])(prefixCls, (_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-horizontal"), layout === 'horizontal'), _defineProperty(_classNames, "".concat(prefixCls, "-vertical"), layout === 'vertical'), _defineProperty(_classNames, "".concat(prefixCls, "-inline"), layout === 'inline'), _defineProperty(_classNames, "".concat(prefixCls, "-hide-required-mark"), hideRequiredMark), _classNames), className);
-      var formProps = (0, _omit["default"])(_this.props, ['prefixCls', 'className', 'layout', 'form', 'hideRequiredMark']);
+      var formProps = (0, _omit["default"])(_this.props, ['prefixCls', 'className', 'layout', 'form', 'hideRequiredMark', 'wrapperCol', 'labelAlign', 'labelCol', 'colon']);
       return React.createElement("form", _extends({}, formProps, {
         className: formClassName
       }));
     };
 
-    (0, _warning["default"])(!props.form, 'It is unnecessary to pass `form` to `Form` after antd@1.7.0.');
+    (0, _warning["default"])(!props.form, 'Form', 'It is unnecessary to pass `form` to `Form` after antd@1.7.0.');
     return _this;
   }
 
   _createClass(Form, [{
-    key: "getChildContext",
-    value: function getChildContext() {
-      var layout = this.props.layout;
-      return {
-        vertical: layout === 'vertical'
-      };
-    }
-  }, {
     key: "render",
     value: function render() {
-      return React.createElement(_configProvider.ConfigConsumer, null, this.renderForm);
+      var _this$props2 = this.props,
+          wrapperCol = _this$props2.wrapperCol,
+          labelAlign = _this$props2.labelAlign,
+          labelCol = _this$props2.labelCol,
+          layout = _this$props2.layout,
+          colon = _this$props2.colon;
+      return React.createElement(_context.FormContext.Provider, {
+        value: {
+          wrapperCol: wrapperCol,
+          labelAlign: labelAlign,
+          labelCol: labelCol,
+          vertical: layout === 'vertical',
+          colon: colon
+        }
+      }, React.createElement(_configProvider.ConfigConsumer, null, this.renderForm));
     }
   }]);
 
@@ -109,6 +117,7 @@ function (_React$Component) {
 
 exports["default"] = Form;
 Form.defaultProps = {
+  colon: true,
   layout: 'horizontal',
   hideRequiredMark: false,
   onSubmit: function onSubmit(e) {
@@ -120,10 +129,8 @@ Form.propTypes = {
   layout: PropTypes.oneOf(FormLayouts),
   children: PropTypes.any,
   onSubmit: PropTypes.func,
-  hideRequiredMark: PropTypes.bool
-};
-Form.childContextTypes = {
-  vertical: PropTypes.bool
+  hideRequiredMark: PropTypes.bool,
+  colon: PropTypes.bool
 };
 Form.Item = _FormItem["default"];
 Form.createFormField = _createFormField["default"];
@@ -137,3 +144,4 @@ Form.create = function () {
     fieldDataProp: _constants.FIELD_DATA_PROP
   }));
 };
+//# sourceMappingURL=Form.js.map

@@ -7,10 +7,19 @@ import { PaginationConfig } from '../pagination';
 export { PaginationConfig } from '../pagination';
 export declare type CompareFn<T> = (a: T, b: T, sortOrder?: SortOrder) => number;
 export declare type ColumnFilterItem = {
-    text: string;
+    text: React.ReactNode;
     value: string;
     children?: ColumnFilterItem[];
 };
+export interface FilterDropdownProps {
+    prefixCls?: string;
+    setSelectedKeys?: (selectedKeys: string[]) => void;
+    selectedKeys?: string[];
+    confirm?: () => void;
+    clearFilters?: (selectedKeys: string[]) => void;
+    filters?: ColumnFilterItem[];
+    getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
+}
 export interface ColumnProps<T> {
     title?: React.ReactNode | ((options: {
         filters: TableStateFilters;
@@ -23,7 +32,7 @@ export interface ColumnProps<T> {
     filters?: ColumnFilterItem[];
     onFilter?: (value: any, record: T) => boolean;
     filterMultiple?: boolean;
-    filterDropdown?: React.ReactNode | ((props: Object) => React.ReactNode);
+    filterDropdown?: React.ReactNode | ((props: FilterDropdownProps) => React.ReactNode);
     filterDropdownVisible?: boolean;
     onFilterDropdownVisibleChange?: (visible: boolean) => void;
     sorter?: boolean | CompareFn<T>;
@@ -36,9 +45,9 @@ export interface ColumnProps<T> {
     filteredValue?: any[];
     sortOrder?: SortOrder | boolean;
     children?: ColumnProps<T>[];
-    onCellClick?: (record: T, event: any) => void;
-    onCell?: (record: T, rowIndex: number) => any;
-    onHeaderCell?: (props: ColumnProps<T>) => any;
+    onCellClick?: (record: T, event: Event) => void;
+    onCell?: (record: T, rowIndex: number) => TableEventListeners;
+    onHeaderCell?: (props: ColumnProps<T>) => TableEventListeners;
     sortDirections?: SortOrder[];
 }
 export interface AdditionalCellProps {
@@ -68,7 +77,7 @@ export interface TableLocale {
     sortTitle?: string;
 }
 export declare type RowSelectionType = 'checkbox' | 'radio';
-export declare type SelectionSelectFn<T> = (record: T, selected: boolean, selectedRows: Object[], nativeEvent: Event) => any;
+export declare type SelectionSelectFn<T> = (record: T, selected: boolean, selectedRows: Object[], nativeEvent: Event) => void;
 export declare type TableSelectWay = 'onSelect' | 'onSelectMultiple' | 'onSelectAll' | 'onSelectInvert';
 export interface TableRowSelection<T> {
     type?: RowSelectionType;
@@ -105,6 +114,14 @@ export interface ExpandIconProps<T> {
 export interface TableCurrentDataSource<T> {
     currentDataSource: T[];
 }
+export interface TableEventListeners {
+    onClick?: (arg: React.SyntheticEvent) => void;
+    onDoubleClick?: (arg: React.SyntheticEvent) => void;
+    onContextMenu?: (arg: React.SyntheticEvent) => void;
+    onMouseEnter?: (arg: React.SyntheticEvent) => void;
+    onMouseLeave?: (arg: React.SyntheticEvent) => void;
+    [name: string]: any;
+}
 export interface TableProps<T> {
     prefixCls?: string;
     dropdownPrefixCls?: string;
@@ -131,8 +148,8 @@ export interface TableProps<T> {
     locale?: TableLocale;
     indentSize?: number;
     onRowClick?: (record: T, index: number, event: Event) => void;
-    onRow?: (record: T, index: number) => any;
-    onHeaderRow?: (columns: ColumnProps<T>[], index: number) => any;
+    onRow?: (record: T, index: number) => TableEventListeners;
+    onHeaderRow?: (columns: ColumnProps<T>[]) => TableEventListeners;
     useFixedHeader?: boolean;
     bordered?: boolean;
     showHeader?: boolean;
@@ -159,8 +176,8 @@ export interface TableState<T> {
     sortOrder?: SortOrder;
     pivot?: number;
 }
-export declare type SelectionItemSelectFn = (key: string[]) => any;
-declare type GetPopupContainer = (triggerNode?: Element) => HTMLElement;
+export declare type SelectionItemSelectFn = (key: string[]) => void;
+declare type GetPopupContainer = (triggerNode?: HTMLElement) => HTMLElement;
 export interface SelectionItem {
     key: string;
     text: React.ReactNode;
@@ -168,10 +185,12 @@ export interface SelectionItem {
 }
 export interface SelectionCheckboxAllProps<T> {
     store: Store;
-    locale: any;
+    locale: TableLocale;
     disabled: boolean;
-    getCheckboxPropsByItem: (item: any, index: number) => any;
-    getRecordKey: (record: any, index?: number) => string;
+    getCheckboxPropsByItem: (item: T, index: number) => {
+        defaultChecked: boolean;
+    };
+    getRecordKey: (record: T, index?: number) => string;
     data: T[];
     prefixCls: string | undefined;
     onSelect: (key: string, index: number, selectFunc: any) => void;
@@ -211,12 +230,16 @@ export interface FilterMenuProps<T> {
     dropdownPrefixCls: string;
     getPopupContainer?: GetPopupContainer;
 }
-export interface FilterMenuState {
+export interface FilterMenuState<T> {
     selectedKeys: string[];
+    valueKeys: {
+        [name: string]: string;
+    };
     keyPathOfSelectedItem: {
         [key: string]: string;
     };
     visible?: boolean;
+    prevProps: FilterMenuProps<T>;
 }
 export declare type PrepareParamsArgumentsReturn<T> = [any, string[], Object, {
     currentDataSource: T[];

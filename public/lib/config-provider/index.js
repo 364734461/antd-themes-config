@@ -4,11 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.withConfigConsumer = withConfigConsumer;
-exports["default"] = exports.ConfigConsumer = void 0;
+exports["default"] = exports.ConfigConsumer = exports.configConsumerProps = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
-var _createReactContext = _interopRequireDefault(require("create-react-context"));
+var _createReactContext = _interopRequireDefault(require("@ant-design/create-react-context"));
 
 var _renderEmpty = _interopRequireDefault(require("./renderEmpty"));
 
@@ -36,6 +36,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+var configConsumerProps = ['getPopupContainer', 'rootPrefixCls', 'getPrefixCls', 'renderEmpty', 'csp', 'autoInsertSpaceInButton'];
+exports.configConsumerProps = configConsumerProps;
 var ConfigContext = (0, _createReactContext["default"])({
   // We provide a default function for Context without provider
   getPrefixCls: function getPrefixCls(suffixCls, customizePrefixCls) {
@@ -109,7 +111,7 @@ function (_React$Component) {
 function withConfigConsumer(config) {
   return function (Component) {
     // Wrap with ConfigConsumer. Since we need compatible with react 15, be care when using ref methods
-    return function (props) {
+    var SFC = function SFC(props) {
       return React.createElement(ConfigConsumer, null, function (configProps) {
         var basicPrefixCls = config.prefixCls;
         var getPrefixCls = configProps.getPrefixCls;
@@ -120,8 +122,14 @@ function withConfigConsumer(config) {
         }));
       });
     };
+
+    var cons = Component.constructor;
+    var name = cons && cons.displayName || Component.name || 'Component';
+    SFC.displayName = "withConfigConsumer(".concat(name, ")");
+    return SFC;
   };
 }
 
 var _default = ConfigProvider;
 exports["default"] = _default;
+//# sourceMappingURL=index.js.map

@@ -9,9 +9,11 @@ var React = _interopRequireWildcard(require("react"));
 
 var _rcMenu = require("rc-menu");
 
-var PropTypes = _interopRequireWildcard(require("prop-types"));
+var _ = require("./");
 
 var _tooltip = _interopRequireDefault(require("../tooltip"));
+
+var _Sider = require("../layout/Sider");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -45,7 +47,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -70,45 +72,53 @@ function (_React$Component) {
       _this.menuItem = menuItem;
     };
 
+    _this.renderItem = function (_ref) {
+      var siderCollapsed = _ref.siderCollapsed;
+      var _this$props = _this.props,
+          level = _this$props.level,
+          children = _this$props.children,
+          rootPrefixCls = _this$props.rootPrefixCls;
+
+      var _a = _this.props,
+          title = _a.title,
+          rest = __rest(_a, ["title"]);
+
+      return React.createElement(_.MenuContext.Consumer, null, function (_ref2) {
+        var inlineCollapsed = _ref2.inlineCollapsed;
+        var tooltipProps = {};
+        var titleNode = title || (level === 1 ? children : '');
+
+        if (!siderCollapsed && !inlineCollapsed) {
+          titleNode = null; // Reset `visible` to fix control mode tooltip display not correct
+          // ref: https://github.com/ant-design/ant-design/issues/16742
+
+          tooltipProps.visible = false;
+        }
+
+        return React.createElement(_tooltip["default"], _extends({}, tooltipProps, {
+          title: titleNode,
+          placement: "right",
+          overlayClassName: "".concat(rootPrefixCls, "-inline-collapsed-tooltip")
+        }), React.createElement(_rcMenu.Item, _extends({}, rest, {
+          title: title,
+          ref: _this.saveMenuItem
+        })));
+      });
+    };
+
     return _this;
   }
 
   _createClass(MenuItem, [{
     key: "render",
     value: function render() {
-      var inlineCollapsed = this.context.inlineCollapsed;
-      var _this$props = this.props,
-          level = _this$props.level,
-          children = _this$props.children,
-          rootPrefixCls = _this$props.rootPrefixCls;
-
-      var _a = this.props,
-          title = _a.title,
-          rest = __rest(_a, ["title"]);
-
-      var titleNode;
-
-      if (inlineCollapsed) {
-        titleNode = title || (level === 1 ? children : '');
-      }
-
-      return React.createElement(_tooltip["default"], {
-        title: titleNode,
-        placement: "right",
-        overlayClassName: "".concat(rootPrefixCls, "-inline-collapsed-tooltip")
-      }, React.createElement(_rcMenu.Item, _extends({}, rest, {
-        title: inlineCollapsed ? null : title,
-        ref: this.saveMenuItem
-      })));
+      return React.createElement(_Sider.SiderContext.Consumer, null, this.renderItem);
     }
   }]);
 
   return MenuItem;
 }(React.Component);
 
-MenuItem.contextTypes = {
-  inlineCollapsed: PropTypes.bool
-};
-MenuItem.isMenuItem = 1;
-var _default = MenuItem;
-exports["default"] = _default;
+exports["default"] = MenuItem;
+MenuItem.isMenuItem = true;
+//# sourceMappingURL=MenuItem.js.map

@@ -305,6 +305,7 @@
   border-color: rgba(0, 0, 0, 0.25);
 }
 .ant-tree {
+  /* see https://github.com/ant-design/ant-design/issues/16259 */
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   color: rgba(0, 0, 0, 0.65);
@@ -316,6 +317,13 @@
           font-feature-settings: 'tnum';
   margin: 0;
   padding: 0;
+}
+.ant-tree-checkbox-checked::after {
+  position: absolute;
+  top: 16.67%;
+  left: 0;
+  width: 100%;
+  height: 66.67%;
 }
 .ant-tree ol,
 .ant-tree ul {
@@ -409,7 +417,10 @@
   background-color: #bae7ff;
 }
 .ant-tree li span.ant-tree-checkbox {
-  margin: 4px 4px 0 2px;
+  top: initial;
+  height: 24px;
+  margin: 0 4px 0 2px;
+  padding: 4px 0;
 }
 .ant-tree li span.ant-tree-switcher,
 .ant-tree li span.ant-tree-iconEle {
@@ -487,11 +498,11 @@
 .ant-tree > li:last-child {
   padding-bottom: 7px;
 }
-.ant-tree-child-tree {
-  display: none;
+.ant-tree-child-tree > li:first-child {
+  padding-top: 8px;
 }
-.ant-tree-child-tree-open {
-  display: block;
+.ant-tree-child-tree > li:last-child {
+  padding-bottom: 0;
 }
 li.ant-tree-treenode-disabled > span:not(.ant-tree-switcher),
 li.ant-tree-treenode-disabled > .ant-tree-node-content-wrapper,
@@ -561,10 +572,17 @@ li.ant-tree-treenode-disabled > .ant-tree-node-content-wrapper:hover {
   left: 12px;
   width: 1px;
   height: 100%;
-  margin: 22px 0;
+  height: calc(100% - 22px);
+  margin: 22px 0 0;
   border-left: 1px solid #d9d9d9;
   content: ' ';
 }
 .ant-tree.ant-tree-icon-hide .ant-tree-treenode-loading .ant-tree-iconEle {
   display: none;
+}
+.ant-tree.ant-tree-block-node li .ant-tree-node-content-wrapper {
+  width: calc(100% - 24px);
+}
+.ant-tree.ant-tree-block-node li span.ant-tree-checkbox + .ant-tree-node-content-wrapper {
+  width: calc(100% - 46px);
 }

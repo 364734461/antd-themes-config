@@ -3,3 +3,6 @@
 require("../../style/index.css");
 
 require("./index.css");
+
+require("../../tooltip/style/css");
+//# sourceMappingURL=css.js.map

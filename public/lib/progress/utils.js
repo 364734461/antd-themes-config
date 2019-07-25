@@ -14,5 +14,4 @@ function validProgress(progress) {
 
   return progress;
 }
-
-;
+//# sourceMappingURL=utils.js.map

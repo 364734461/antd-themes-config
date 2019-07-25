@@ -35,9 +35,11 @@ var StatisticNumber = function StatisticNumber(props) {
       valueNode = val;
     } else {
       var negative = cells[1];
-      var int = cells[2] || '0';
+
+      var _int = cells[2] || '0';
+
       var decimal = cells[4] || '';
-      int = int.replace(/\B(?=(\d{3})+(?!\d))/g, groupSeparator);
+      _int = _int.replace(/\B(?=(\d{3})+(?!\d))/g, groupSeparator);
 
       if (typeof precision === 'number') {
         decimal = (0, _padEnd["default"])(decimal, precision, '0').slice(0, precision);
@@ -50,7 +52,7 @@ var StatisticNumber = function StatisticNumber(props) {
       valueNode = [React.createElement("span", {
         key: "int",
         className: "".concat(prefixCls, "-content-value-int")
-      }, negative, int), decimal && React.createElement("span", {
+      }, negative, _int), decimal && React.createElement("span", {
         key: "decimal",
         className: "".concat(prefixCls, "-content-value-decimal")
       }, decimal)];
@@ -64,3 +66,4 @@ var StatisticNumber = function StatisticNumber(props) {
 
 var _default = StatisticNumber;
 exports["default"] = _default;
+//# sourceMappingURL=Number.js.map

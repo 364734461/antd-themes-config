@@ -11,6 +11,8 @@ var _rcAnimate = _interopRequireDefault(require("rc-animate"));
 
 var _classnames = _interopRequireDefault(require("classnames"));
 
+var _utils = require("./utils");
+
 var _icon = _interopRequireDefault(require("../icon"));
 
 var _tooltip = _interopRequireDefault(require("../tooltip"));
@@ -44,54 +46,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-var imageTypes = ['image', 'webp', 'png', 'svg', 'gif', 'jpg', 'jpeg', 'bmp', 'dpg']; // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
-
-var previewFile = function previewFile(file, callback) {
-  if (file.type && !imageTypes.includes(file.type)) {
-    callback('');
-  }
-
-  var reader = new FileReader();
-
-  reader.onloadend = function () {
-    return callback(reader.result);
-  };
-
-  reader.readAsDataURL(file);
-};
-
-var extname = function extname(url) {
-  if (!url) {
-    return '';
-  }
-
-  var temp = url.split('/');
-  var filename = temp[temp.length - 1];
-  var filenameWithoutSuffix = filename.split(/#|\?/)[0];
-  return (/\.[^./\\]*$/.exec(filenameWithoutSuffix) || [''])[0];
-};
-
-var isImageUrl = function isImageUrl(file) {
-  if (imageTypes.includes(file.type)) {
-    return true;
-  }
-
-  var url = file.thumbUrl || file.url;
-  var extension = extname(url);
-
-  if (/^data:image\//.test(url) || /(webp|svg|png|gif|jpg|jpeg|bmp|dpg)$/i.test(extension)) {
-    return true;
-  } else if (/^data:/.test(url)) {
-    // other file types of base64
-    return false;
-  } else if (extension) {
-    // other file types which have extension
-    return false;
-  }
-
-  return true;
-};
 
 var UploadList =
 /*#__PURE__*/
@@ -157,7 +111,7 @@ function (_React$Component) {
               theme: "twoTone"
             });
           } else {
-            var thumbnail = isImageUrl(file) ? React.createElement("img", {
+            var thumbnail = (0, _utils.isImageUrl)(file) ? React.createElement("img", {
               src: file.thumbUrl || file.url,
               alt: file.name
             }) : React.createElement(_icon["default"], {
@@ -280,27 +234,32 @@ function (_React$Component) {
     value: function componentDidUpdate() {
       var _this2 = this;
 
-      if (this.props.listType !== 'picture' && this.props.listType !== 'picture-card') {
+      var _this$props2 = this.props,
+          listType = _this$props2.listType,
+          items = _this$props2.items,
+          previewFile = _this$props2.previewFile;
+
+      if (listType !== 'picture' && listType !== 'picture-card') {
         return;
       }
 
-      (this.props.items || []).forEach(function (file) {
-        if (typeof document === 'undefined' || typeof window === 'undefined' || !window.FileReader || !window.File || !(file.originFileObj instanceof File) || file.thumbUrl !== undefined) {
+      (items || []).forEach(function (file) {
+        var isValidateFile = file.originFileObj instanceof File || file.originFileObj instanceof Blob;
+
+        if (typeof document === 'undefined' || typeof window === 'undefined' || !window.FileReader || !window.File || !isValidateFile || file.thumbUrl !== undefined) {
           return;
         }
-        /*eslint-disable */
-
 
         file.thumbUrl = '';
-        /*eslint-enable */
 
-        previewFile(file.originFileObj, function (previewDataUrl) {
-          /*eslint-disable */
-          file.thumbUrl = previewDataUrl;
-          /*eslint-enable */
+        if (previewFile) {
+          previewFile(file.originFileObj).then(function (previewDataUrl) {
+            // Need append '' to avoid dead loop
+            file.thumbUrl = previewDataUrl || '';
 
-          _this2.forceUpdate();
-        });
+            _this2.forceUpdate();
+          });
+        }
       });
     }
   }, {
@@ -321,5 +280,7 @@ UploadList.defaultProps = {
     showInfo: false
   },
   showRemoveIcon: true,
-  showPreviewIcon: true
+  showPreviewIcon: true,
+  previewFile: _utils.previewImage
 };
+//# sourceMappingURL=UploadList.js.map

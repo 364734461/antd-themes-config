@@ -151,11 +151,6 @@ a {
   transition: color 0.3s;
   -webkit-text-decoration-skip: objects;
 }
-a:focus {
-  text-decoration: underline;
-  -webkit-text-decoration-skip: ink;
-          text-decoration-skip-ink: auto;
-}
 a:hover {
   color: #40a9ff;
 }
@@ -332,14 +327,15 @@ mark {
 }
 .clearfix::before,
 .clearfix::after {
-  content: '';
   display: table;
+  content: '';
 }
 .clearfix::after {
   clear: both;
 }
 .anticon {
   display: inline-block;
+  color: inherit;
   font-style: normal;
   line-height: 0;
   text-align: center;
@@ -883,40 +879,44 @@ mark {
 [ant-click-animating-without-extra-node='true'] {
   position: relative;
 }
+html {
+  --antd-wave-shadow-color: #1890ff;
+}
 [ant-click-animating-without-extra-node='true']::after,
 .ant-click-animating-node {
   position: absolute;
-  top: -1px;
-  right: -1px;
-  bottom: -1px;
-  left: -1px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: block;
-  border: 0 solid #1890ff;
   border-radius: inherit;
+  -webkit-box-shadow: 0 0 0 0 #1890ff;
+          box-shadow: 0 0 0 0 #1890ff;
+  -webkit-box-shadow: 0 0 0 0 var(--antd-wave-shadow-color);
+          box-shadow: 0 0 0 0 var(--antd-wave-shadow-color);
   opacity: 0.2;
   -webkit-animation: fadeEffect 2s cubic-bezier(0.08, 0.82, 0.17, 1), waveEffect 0.4s cubic-bezier(0.08, 0.82, 0.17, 1);
           animation: fadeEffect 2s cubic-bezier(0.08, 0.82, 0.17, 1), waveEffect 0.4s cubic-bezier(0.08, 0.82, 0.17, 1);
   -webkit-animation-fill-mode: forwards;
           animation-fill-mode: forwards;
-  pointer-events: none;
   content: '';
+  pointer-events: none;
 }
 @-webkit-keyframes waveEffect {
   100% {
-    top: -6px;
-    right: -6px;
-    bottom: -6px;
-    left: -6px;
-    border-width: 6px;
+    -webkit-box-shadow: 0 0 0 #1890ff;
+            box-shadow: 0 0 0 #1890ff;
+    -webkit-box-shadow: 0 0 0 6px var(--antd-wave-shadow-color);
+            box-shadow: 0 0 0 6px var(--antd-wave-shadow-color);
   }
 }
 @keyframes waveEffect {
   100% {
-    top: -6px;
-    right: -6px;
-    bottom: -6px;
-    left: -6px;
-    border-width: 6px;
+    -webkit-box-shadow: 0 0 0 #1890ff;
+            box-shadow: 0 0 0 #1890ff;
+    -webkit-box-shadow: 0 0 0 6px var(--antd-wave-shadow-color);
+            box-shadow: 0 0 0 6px var(--antd-wave-shadow-color);
   }
 }
 @-webkit-keyframes fadeEffect {
@@ -2051,10 +2051,15 @@ mark {
     opacity: 0;
   }
 }
-.ant-motion-collapse {
+.ant-motion-collapse-legacy {
   overflow: hidden;
 }
-.ant-motion-collapse-active {
+.ant-motion-collapse-legacy-active {
+  -webkit-transition: height 0.15s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.15s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+  transition: height 0.15s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.15s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+}
+.ant-motion-collapse {
+  overflow: hidden;
   -webkit-transition: height 0.15s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.15s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
   transition: height 0.15s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.15s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
 }

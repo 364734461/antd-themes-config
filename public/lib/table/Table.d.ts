@@ -3,8 +3,7 @@ import * as PropTypes from 'prop-types';
 import { Store } from './createStore';
 import Column from './Column';
 import ColumnGroup from './ColumnGroup';
-import { TableProps, TableSize, TableState, TableComponents, TableLocale, ColumnProps, TableStateFilters, SelectionItemSelectFn, SelectionInfo, PrepareParamsArgumentsReturn } from './interface';
-import { SpinProps } from '../spin';
+import { TableProps, TableState, TableComponents, TableLocale, ColumnProps, TableStateFilters, SelectionItemSelectFn, SelectionInfo, PrepareParamsArgumentsReturn } from './interface';
 import { RadioChangeEvent } from '../radio';
 import { CheckboxChangeEvent } from '../checkbox';
 import { ConfigConsumerProps } from '../config-provider';
@@ -18,7 +17,7 @@ export default class Table<T> extends React.Component<TableProps<T>, TableState<
         useFixedHeader: PropTypes.Requireable<boolean>;
         rowSelection: PropTypes.Requireable<object>;
         className: PropTypes.Requireable<string>;
-        size: PropTypes.Requireable<TableSize>;
+        size: PropTypes.Requireable<"small" | "default" | "middle">;
         loading: PropTypes.Requireable<boolean | object>;
         bordered: PropTypes.Requireable<boolean>;
         onChange: PropTypes.Requireable<(...args: any[]) => any>;
@@ -30,7 +29,7 @@ export default class Table<T> extends React.Component<TableProps<T>, TableState<
         dataSource: never[];
         useFixedHeader: boolean;
         className: string;
-        size: TableSize;
+        size: "small" | "default" | "middle";
         loading: boolean;
         bordered: boolean;
         indentSize: number;
@@ -38,6 +37,7 @@ export default class Table<T> extends React.Component<TableProps<T>, TableState<
         rowKey: string;
         showHeader: boolean;
         sortDirections: string[];
+        childrenColumnName: string;
     };
     CheckboxPropsCache: {
         [key: string]: any;
@@ -51,7 +51,16 @@ export default class Table<T> extends React.Component<TableProps<T>, TableState<
     getDefaultSelection(): any[];
     getDefaultPagination(props: TableProps<T>): {};
     componentWillReceiveProps(nextProps: TableProps<T>): void;
-    onRow: (prefixCls: string, record: T, index: number) => any;
+    onRow: (prefixCls: string, record: T, index: number) => {
+        prefixCls: string;
+        store: Store;
+        rowKey: any;
+        onClick?: ((arg: React.SyntheticEvent<Element, Event>) => void) | undefined;
+        onDoubleClick?: ((arg: React.SyntheticEvent<Element, Event>) => void) | undefined;
+        onContextMenu?: ((arg: React.SyntheticEvent<Element, Event>) => void) | undefined;
+        onMouseEnter?: ((arg: React.SyntheticEvent<Element, Event>) => void) | undefined;
+        onMouseLeave?: ((arg: React.SyntheticEvent<Element, Event>) => void) | undefined;
+    };
     setSelectedRowKeys(selectedRowKeys: string[], selectionInfo: SelectionInfo<T>): void;
     hasPagination(props?: any): boolean;
     isFiltersChanged(filters: TableStateFilters): boolean;
@@ -72,7 +81,7 @@ export default class Table<T> extends React.Component<TableProps<T>, TableState<
     handleFilter: (column: ColumnProps<T>, nextFilters: string[]) => void;
     handleSelect: (record: T, rowIndex: number, e: CheckboxChangeEvent) => void;
     handleRadioSelect: (record: T, rowIndex: number, e: RadioChangeEvent) => void;
-    handleSelectRow: (selectionKey: string, index: number, onSelectFunc: SelectionItemSelectFn) => any;
+    handleSelectRow: (selectionKey: string, index: number, onSelectFunc: SelectionItemSelectFn) => void;
     handlePageChange: (current: number, ...otherArguments: any[]) => void;
     renderSelectionBox: (type: "checkbox" | "radio" | undefined) => (_: any, record: T, index: number) => JSX.Element;
     getRecordKey: (record: T, index: number) => any;
@@ -90,11 +99,11 @@ export default class Table<T> extends React.Component<TableProps<T>, TableState<
     findColumn(myKey: string | number): undefined;
     getCurrentPageData(): T[];
     getFlatData(): any[];
-    getFlatCurrentPageData(childrenColumnName: string | undefined): any[];
+    getFlatCurrentPageData(): any[];
     recursiveSort(data: T[], sorterFn: (a: any, b: any) => number): T[];
     getLocalData(state?: TableState<T> | null, filter?: boolean): Array<T>;
     createComponents(components?: TableComponents, prevComponents?: TableComponents): void;
-    renderTable: (prefixCls: string, renderEmpty: (componentName?: string | undefined) => React.ReactNode, dropdownPrefixCls: string, contextLocale: TableLocale, loading: SpinProps) => JSX.Element;
+    renderTable: (prefixCls: string, renderEmpty: (componentName?: string | undefined) => React.ReactNode, dropdownPrefixCls: string, contextLocale: TableLocale) => JSX.Element;
     renderComponent: ({ getPrefixCls, renderEmpty }: ConfigConsumerProps) => JSX.Element;
     render(): JSX.Element;
 }

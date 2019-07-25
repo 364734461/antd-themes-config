@@ -2,6 +2,7 @@ import * as React from 'react';
 export interface PaginationProps {
     total?: number;
     defaultCurrent?: number;
+    disabled?: boolean;
     current?: number;
     defaultPageSize?: number;
     pageSize?: number;
@@ -10,7 +11,9 @@ export interface PaginationProps {
     showSizeChanger?: boolean;
     pageSizeOptions?: string[];
     onShowSizeChange?: (current: number, size: number) => void;
-    showQuickJumper?: boolean;
+    showQuickJumper?: boolean | {
+        goButton?: React.ReactNode;
+    };
     showTotal?: (total: number, range: [number, number]) => React.ReactNode;
     size?: string;
     simple?: boolean;
@@ -19,8 +22,9 @@ export interface PaginationProps {
     className?: string;
     prefixCls?: string;
     selectPrefixCls?: string;
-    itemRender?: (page: number, type: 'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next', originalElement: HTMLElement) => React.ReactNode;
+    itemRender?: (page: number, type: 'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next', originalElement: React.ReactElement<HTMLElement>) => React.ReactNode;
     role?: string;
+    showLessItems?: boolean;
 }
 export interface PaginationConfig extends PaginationProps {
     position?: 'top' | 'bottom' | 'both';

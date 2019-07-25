@@ -15,7 +15,7 @@ function getColor(varName, mappings = AllList) {
 
 function isValidColor(color) {
   if (!color || color.match(/px/g)) return false;
-  if (color.match(/colorPalette|fade/g)) return true;
+  if (color.match(/colorPalette|fade|tint/g)) return true;
   if (color.charAt(0) === "#") {
     color = color.substring(1);
     return (

@@ -7,13 +7,15 @@ exports["default"] = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
+var _classnames = _interopRequireDefault(require("classnames"));
+
 var _button = _interopRequireDefault(require("../button"));
 
 var _configProvider = require("../config-provider");
 
 var _dropdown = _interopRequireDefault(require("./dropdown"));
 
-var _classnames = _interopRequireDefault(require("classnames"));
+var _icon = _interopRequireDefault(require("../icon"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -47,7 +49,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -86,7 +88,11 @@ function (_React$Component) {
           placement = _a.placement,
           getPopupContainer = _a.getPopupContainer,
           href = _a.href,
-          restProps = __rest(_a, ["prefixCls", "type", "disabled", "onClick", "htmlType", "children", "className", "overlay", "trigger", "align", "visible", "onVisibleChange", "placement", "getPopupContainer", "href"]);
+          _a$icon = _a.icon,
+          icon = _a$icon === void 0 ? React.createElement(_icon["default"], {
+        type: "ellipsis"
+      }) : _a$icon,
+          restProps = __rest(_a, ["prefixCls", "type", "disabled", "onClick", "htmlType", "children", "className", "overlay", "trigger", "align", "visible", "onVisibleChange", "placement", "getPopupContainer", "href", "icon"]);
 
       var prefixCls = getPrefixCls('dropdown-button', customizePrefixCls);
       var dropdownProps = {
@@ -112,9 +118,8 @@ function (_React$Component) {
         htmlType: htmlType,
         href: href
       }, children), React.createElement(_dropdown["default"], dropdownProps, React.createElement(_button["default"], {
-        type: type,
-        icon: "ellipsis"
-      })));
+        type: type
+      }, icon)));
     };
 
     return _this;
@@ -135,3 +140,4 @@ DropdownButton.defaultProps = {
   placement: 'bottomRight',
   type: 'default'
 };
+//# sourceMappingURL=dropdown-button.js.map

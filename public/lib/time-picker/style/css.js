@@ -3,5 +3,4 @@
 require("../../style/index.css");
 
 require("./index.css");
-
-require("../../input/style/css");
+//# sourceMappingURL=css.js.map

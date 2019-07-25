@@ -15,7 +15,8 @@ export interface BadgeProps {
     scrollNumberPrefixCls?: string;
     className?: string;
     status?: 'success' | 'processing' | 'default' | 'error' | 'warning';
-    text?: string;
+    color?: string;
+    text?: React.ReactNode;
     offset?: [number | string, number | string];
     title?: string;
 }
@@ -33,8 +34,9 @@ export default class Badge extends React.Component<BadgeProps, any> {
         overflowCount: PropTypes.Requireable<number>;
     };
     getBadgeClassName(prefixCls: string): string;
+    hasStatus(): boolean;
     isZero(): boolean;
-    isDot(): true | "default" | "error" | "success" | "warning" | "processing" | undefined;
+    isDot(): boolean;
     isHidden(): boolean;
     getNumberedDispayCount(): string | number | null;
     getDispayCount(): string | number | null;

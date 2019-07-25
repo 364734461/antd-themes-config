@@ -56,8 +56,8 @@
   -webkit-box-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
           box-shadow: 0 2px 4px 0 rgba(0, 35, 11, 0.2);
 }
-.ant-switch:active::before,
-.ant-switch:active::after {
+.ant-switch:not(.ant-switch-disabled):active::before,
+.ant-switch:not(.ant-switch-disabled):active::after {
   width: 24px;
 }
 .ant-switch-loading-icon {

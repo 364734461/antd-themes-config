@@ -29,6 +29,10 @@ var _warning = _interopRequireDefault(require("../_util/warning"));
 
 var _interopDefault = _interopRequireDefault(require("../_util/interopDefault"));
 
+var _utils = require("./utils");
+
+var _InputIcon = _interopRequireDefault(require("./InputIcon"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -63,7 +67,7 @@ function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = 
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function getShowDateFromValue(value) {
+function getShowDateFromValue(value, mode) {
   var _value = _slicedToArray(value, 2),
       start = _value[0],
       end = _value[1]; // value could be an empty array, then we should not reset showDate
@@ -73,12 +77,12 @@ function getShowDateFromValue(value) {
     return;
   }
 
-  var newEnd = end && end.isSame(start, 'month') ? end.clone().add(1, 'month') : end;
-  return [start, newEnd];
-}
-
-function formatValue(value, format) {
-  return value && value.format(format) || '';
+  if (mode && mode[0] === 'month') {
+    return [start, end];
+  } else {
+    var newEnd = end && end.isSame(start, 'month') ? end.clone().add(1, 'month') : end;
+    return [start, newEnd];
+  }
 }
 
 function pickerValueAdapter(value) {
@@ -171,7 +175,7 @@ function (_React$Component) {
           start = _value3[0],
           end = _value3[1];
 
-      props.onChange(value, [formatValue(start, props.format), formatValue(end, props.format)]);
+      props.onChange(value, [(0, _utils.formatDate)(start, props.format), (0, _utils.formatDate)(end, props.format)]);
     };
 
     _this.handleOpenChange = function (open) {
@@ -267,7 +271,7 @@ function (_React$Component) {
       var customFooter = renderExtraFooter ? React.createElement("div", {
         className: "".concat(prefixCls, "-footer-extra"),
         key: "extra"
-      }, renderExtraFooter.apply(void 0, arguments)) : null;
+      }, renderExtraFooter()) : null;
       var operations = Object.keys(ranges || {}).map(function (range) {
         var value = ranges[range];
         return React.createElement(_tag["default"], {
@@ -293,7 +297,7 @@ function (_React$Component) {
     };
 
     _this.renderRangePicker = function (_ref3) {
-      var _classNames, _classNames2;
+      var _classNames;
 
       var getPrefixCls = _ref3.getPrefixCls;
 
@@ -320,7 +324,8 @@ function (_React$Component) {
           format = props.format,
           dateRender = props.dateRender,
           onCalendarChange = props.onCalendarChange,
-          suffixIcon = props.suffixIcon;
+          suffixIcon = props.suffixIcon,
+          separator = props.separator;
       var prefixCls = getPrefixCls('calendar', customizePrefixCls);
       var tagPrefixCls = getPrefixCls('tag', customizeTagPrefixCls); // To support old version react.
       // Have to add prefixCls on the instance.
@@ -330,7 +335,7 @@ function (_React$Component) {
       _this.tagPrefixCls = tagPrefixCls;
       fixLocale(value, localeCode);
       fixLocale(showDate, localeCode);
-      (0, _warning["default"])(!('onOK' in props), 'It should be `RangePicker[onOk]`, instead of `onOK`!');
+      (0, _warning["default"])(!('onOK' in props), 'RangePicker', 'It should be `RangePicker[onOk]`, instead of `onOK`!');
       var calendarClassName = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-time"), showTime), _defineProperty(_classNames, "".concat(prefixCls, "-range-with-ranges"), ranges), _classNames)); // 需要选择时间时，点击 ok 时才触发 onChange
 
       var pickerChangeHandler = {
@@ -355,6 +360,7 @@ function (_React$Component) {
       var startPlaceholder = 'placeholder' in props ? props.placeholder[0] : locale.lang.rangePlaceholder[0];
       var endPlaceholder = 'placeholder' in props ? props.placeholder[1] : locale.lang.rangePlaceholder[1];
       var calendar = React.createElement(_RangeCalendar["default"], _extends({}, calendarProps, {
+        seperator: separator,
         onChange: onCalendarChange,
         format: format,
         prefixCls: prefixCls,
@@ -392,13 +398,9 @@ function (_React$Component) {
         onClick: _this.clearSelection,
         theme: "filled"
       }) : null;
-      var inputIcon = suffixIcon && (React.isValidElement(suffixIcon) ? React.cloneElement(suffixIcon, {
-        className: (0, _classnames["default"])((_classNames2 = {}, _defineProperty(_classNames2, suffixIcon.props.className, suffixIcon.props.className), _defineProperty(_classNames2, "".concat(prefixCls, "-picker-icon"), true), _classNames2))
-      }) : React.createElement("span", {
-        className: "".concat(prefixCls, "-picker-icon")
-      }, suffixIcon)) || React.createElement(_icon["default"], {
-        type: "calendar",
-        className: "".concat(prefixCls, "-picker-icon")
+      var inputIcon = React.createElement(_InputIcon["default"], {
+        suffixIcon: suffixIcon,
+        prefixCls: prefixCls
       });
 
       var input = function input(_ref4) {
@@ -413,16 +415,16 @@ function (_React$Component) {
         }, React.createElement("input", {
           disabled: props.disabled,
           readOnly: true,
-          value: start && start.format(props.format) || '',
+          value: (0, _utils.formatDate)(start, props.format),
           placeholder: startPlaceholder,
           className: "".concat(prefixCls, "-range-picker-input"),
           tabIndex: -1
         }), React.createElement("span", {
           className: "".concat(prefixCls, "-range-picker-separator")
-        }, " ~ "), React.createElement("input", {
+        }, " ", separator, " "), React.createElement("input", {
           disabled: props.disabled,
           readOnly: true,
-          value: end && end.format(props.format) || '',
+          value: (0, _utils.formatDate)(end, props.format),
           placeholder: endPlaceholder,
           className: "".concat(prefixCls, "-range-picker-input"),
           tabIndex: -1
@@ -515,7 +517,7 @@ function (_React$Component) {
 
         if (!(0, _shallowequal["default"])(nextProps.value, prevState.value)) {
           state = _extends({}, state, {
-            showDate: getShowDateFromValue(value) || prevState.showDate
+            showDate: getShowDateFromValue(value, nextProps.mode) || prevState.showDate
           });
         }
       }
@@ -535,8 +537,10 @@ function (_React$Component) {
 
 RangePicker.defaultProps = {
   allowClear: true,
-  showToday: false
+  showToday: false,
+  separator: '~'
 };
 (0, _reactLifecyclesCompat.polyfill)(RangePicker);
 var _default = RangePicker;
 exports["default"] = _default;
+//# sourceMappingURL=RangePicker.js.map

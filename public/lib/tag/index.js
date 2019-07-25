@@ -7,8 +7,6 @@ exports["default"] = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
-var _rcAnimate = _interopRequireDefault(require("rc-animate"));
-
 var _classnames = _interopRequireDefault(require("classnames"));
 
 var _omit = _interopRequireDefault(require("omit.js"));
@@ -20,6 +18,10 @@ var _icon = _interopRequireDefault(require("../icon"));
 var _CheckableTag = _interopRequireDefault(require("./CheckableTag"));
 
 var _configProvider = require("../config-provider");
+
+var _colors = require("../_util/colors");
+
+var _warning = _interopRequireDefault(require("../_util/warning"));
 
 var _wave = _interopRequireDefault(require("../_util/wave"));
 
@@ -57,30 +59,24 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
 
-var InnerTag = function InnerTag(_a) {
-  var show = _a.show,
-      restProps = __rest(_a, ["show"]);
-
-  var divProps = (0, _omit["default"])(restProps, ['onClose', 'afterClose', 'color', 'visible', 'closable']);
-  return React.createElement("div", divProps);
-};
+var PresetColorRegex = new RegExp("^(".concat(_colors.PresetColorTypes.join('|'), ")(-inverse)?$"));
 
 var Tag =
 /*#__PURE__*/
 function (_React$Component) {
   _inherits(Tag, _React$Component);
 
-  function Tag() {
+  function Tag(props) {
     var _this;
 
     _classCallCheck(this, Tag);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Tag).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Tag).call(this, props));
     _this.state = {
       visible: true
     };
@@ -89,49 +85,41 @@ function (_React$Component) {
       _this.setVisible(false, e);
     };
 
-    _this.animationEnd = function (_, existed) {
-      if (!existed) {
-        var afterClose = _this.props.afterClose;
-
-        if (afterClose) {
-          afterClose();
-        }
-      }
-    };
-
     _this.renderTag = function (configProps) {
-      var getPrefixCls = configProps.getPrefixCls;
-
       var _a = _this.props,
           customizePrefixCls = _a.prefixCls,
           children = _a.children,
           otherProps = __rest(_a, ["prefixCls", "children"]);
 
-      var visible = _this.state.visible;
-      var prefixCls = getPrefixCls('tag', customizePrefixCls);
-      return React.createElement(_wave["default"], null, React.createElement(_rcAnimate["default"], {
-        component: "",
-        showProp: "show",
-        transitionName: "".concat(prefixCls, "-zoom"),
-        onEnd: _this.animationEnd
-      }, React.createElement(InnerTag, _extends({
-        show: visible
-      }, otherProps, {
+      var isNeedWave = 'onClick' in otherProps || children && children.type === 'a';
+      var divProps = (0, _omit["default"])(otherProps, ['onClose', 'afterClose', 'color', 'visible', 'closable']);
+      return isNeedWave ? React.createElement(_wave["default"], null, React.createElement("div", _extends({}, divProps, {
         className: _this.getTagClassName(configProps),
         style: _this.getTagStyle()
-      }), children, _this.renderCloseIcon())));
+      }), children, _this.renderCloseIcon())) : React.createElement("div", _extends({}, divProps, {
+        className: _this.getTagClassName(configProps),
+        style: _this.getTagStyle()
+      }), children, _this.renderCloseIcon());
     };
 
+    (0, _warning["default"])(!('afterClose' in props), 'Tag', "'afterClose' will be deprecated, please use 'onClose', we will remove this in the next version.");
     return _this;
   }
 
   _createClass(Tag, [{
     key: "setVisible",
     value: function setVisible(visible, e) {
-      var onClose = this.props.onClose;
+      var _this$props = this.props,
+          onClose = _this$props.onClose,
+          afterClose = _this$props.afterClose;
 
       if (onClose) {
         onClose(e);
+      }
+
+      if (afterClose && !onClose) {
+        // next version remove.
+        afterClose();
       }
 
       if (e.defaultPrevented) {
@@ -151,14 +139,14 @@ function (_React$Component) {
         return false;
       }
 
-      return /^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$/.test(color);
+      return PresetColorRegex.test(color);
     }
   }, {
     key: "getTagStyle",
     value: function getTagStyle() {
-      var _this$props = this.props,
-          color = _this$props.color,
-          style = _this$props.style;
+      var _this$props2 = this.props,
+          color = _this$props2.color,
+          style = _this$props2.style;
       var isPresetColor = this.isPresetColor(color);
       return _extends({
         backgroundColor: color && !isPresetColor ? color : undefined
@@ -170,10 +158,10 @@ function (_React$Component) {
       var _classNames;
 
       var getPrefixCls = _ref.getPrefixCls;
-      var _this$props2 = this.props,
-          customizePrefixCls = _this$props2.prefixCls,
-          className = _this$props2.className,
-          color = _this$props2.color;
+      var _this$props3 = this.props,
+          customizePrefixCls = _this$props3.prefixCls,
+          className = _this$props3.className,
+          color = _this$props3.color;
       var visible = this.state.visible;
       var isPresetColor = this.isPresetColor(color);
       var prefixCls = getPrefixCls('tag', customizePrefixCls);
@@ -216,3 +204,4 @@ Tag.defaultProps = {
 (0, _reactLifecyclesCompat.polyfill)(Tag);
 var _default = Tag;
 exports["default"] = _default;
+//# sourceMappingURL=index.js.map

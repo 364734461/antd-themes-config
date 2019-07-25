@@ -22,26 +22,26 @@ var _default = {
   TimePicker: _id_ID3["default"],
   Calendar: _id_ID4["default"],
   Table: {
-    filterTitle: 'Menu filter',
-    filterConfirm: 'baik',
-    filterReset: 'Setel ulang',
-    selectAll: 'Pilih halaman saat ini',
-    selectInvert: 'Balikkan halaman saat ini',
-    sortTitle: 'Menyortir'
+    filterTitle: 'Saring',
+    filterConfirm: 'OK',
+    filterReset: 'Hapus',
+    selectAll: 'Pilih semua di halaman ini',
+    selectInvert: 'Balikkan pilihan di halaman ini',
+    sortTitle: 'Urutkan'
   },
   Modal: {
-    okText: 'baik',
-    cancelText: 'Membatalkan',
-    justOkText: 'baik'
+    okText: 'OK',
+    cancelText: 'Batal',
+    justOkText: 'OK'
   },
   Popconfirm: {
-    okText: 'baik',
-    cancelText: 'Membatalkan'
+    okText: 'OK',
+    cancelText: 'Batal'
   },
   Transfer: {
     titles: ['', ''],
-    searchPlaceholder: 'Cari di sini',
-    itemUnit: 'barang',
+    searchPlaceholder: 'Cari',
+    itemUnit: 'item',
     itemsUnit: 'item'
   },
   Upload: {
@@ -55,3 +55,4 @@ var _default = {
   }
 };
 exports["default"] = _default;
+//# sourceMappingURL=id_ID.js.map

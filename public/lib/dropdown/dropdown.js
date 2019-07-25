@@ -72,7 +72,7 @@ function (_React$Component) {
       overlayNode = React.Children.only(overlayNode);
       var overlayProps = overlayNode.props; // Warning if use other mode
 
-      (0, _warning["default"])(!overlayProps.mode || overlayProps.mode === 'vertical', "mode=\"".concat(overlayProps.mode, "\" is not supported for Dropdown's Menu.")); // menu cannot be selectable in dropdown defaultly
+      (0, _warning["default"])(!overlayProps.mode || overlayProps.mode === 'vertical', 'Dropdown', "mode=\"".concat(overlayProps.mode, "\" is not supported for Dropdown's Menu.")); // menu cannot be selectable in dropdown defaultly
       // menu should be focusable in dropdown defaultly
 
       var _overlayProps$selecta = overlayProps.selectable,
@@ -166,3 +166,4 @@ Dropdown.defaultProps = {
   mouseLeaveDelay: 0.1,
   placement: 'bottomLeft'
 };
+//# sourceMappingURL=dropdown.js.map

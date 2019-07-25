@@ -78,3 +78,7 @@
   padding-top: 1px;
   padding-bottom: 1px;
 }
+.ant-input-group > .ant-select-auto-complete .ant-select-search__field.ant-input-affix-wrapper {
+  display: inline;
+  float: none;
+}

@@ -74,21 +74,17 @@
 .ant-form-hide-required-mark .ant-form-item-required::before {
   display: none;
 }
-input[type='radio'][disabled],
-input[type='checkbox'][disabled],
-input[type='radio'].disabled,
-input[type='checkbox'].disabled {
-  cursor: not-allowed;
+.ant-form-item-label > label {
+  color: rgba(0, 0, 0, 0.85);
 }
-.ant-radio-inline.disabled,
-.ant-radio-vertical.disabled,
-.ant-checkbox-inline.disabled,
-.ant-checkbox-vertical.disabled {
-  cursor: not-allowed;
+.ant-form-item-label > label::after {
+  content: ':';
+  position: relative;
+  top: -0.5px;
+  margin: 0 8px 0 2px;
 }
-.ant-radio.disabled label,
-.ant-checkbox.disabled label {
-  cursor: not-allowed;
+.ant-form-item-label > label.ant-form-item-no-colon::after {
+  content: ' ';
 }
 .ant-form-item {
   -webkit-box-sizing: border-box;
@@ -114,13 +110,13 @@ input[type='checkbox'].disabled {
 }
 .ant-form-item-control {
   position: relative;
-  line-height: 39.9999px;
+  line-height: 40px;
   zoom: 1;
 }
 .ant-form-item-control::before,
 .ant-form-item-control::after {
-  content: '';
   display: table;
+  content: '';
 }
 .ant-form-item-control::after {
   clear: both;
@@ -139,29 +135,25 @@ input[type='checkbox'].disabled {
   text-align: right;
   vertical-align: middle;
 }
-.ant-form-item-label label {
-  color: rgba(0, 0, 0, 0.85);
-}
-.ant-form-item-label label::after {
-  content: ':';
-  position: relative;
-  top: -0.5px;
-  margin: 0 8px 0 2px;
+.ant-form-item-label-left {
+  text-align: left;
 }
 .ant-form-item .ant-switch {
   margin: 2px 0 4px;
 }
-.ant-form-item-no-colon .ant-form-item-label label::after {
-  content: ' ';
-}
 .ant-form-explain,
 .ant-form-extra {
   clear: both;
+  min-height: 22px;
   margin-top: -2px;
   color: rgba(0, 0, 0, 0.45);
-  line-height: 1.524;
+  font-size: 14px;
+  line-height: 1.5;
   -webkit-transition: color 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: color 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.ant-form-explain {
+  margin-bottom: -1px;
 }
 .ant-form-extra {
   padding-top: 4px;
@@ -176,6 +168,9 @@ input[type='checkbox'].disabled {
 }
 form .has-feedback .ant-input {
   padding-right: 24px;
+}
+form .has-feedback .ant-input-password-icon {
+  margin-right: 18px;
 }
 form .has-feedback > .ant-select .ant-select-arrow,
 form .has-feedback > .ant-select .ant-select-selection__clear,
@@ -202,6 +197,7 @@ form .has-feedback .ant-calendar-picker-clear,
 form .has-feedback .ant-time-picker-clear {
   right: 28px;
 }
+form .ant-mentions,
 form textarea.ant-input {
   height: auto;
   margin-bottom: 4px;
@@ -255,28 +251,6 @@ form .ant-input-group-wrapper {
   display: inline-block;
   vertical-align: middle;
 }
-.ant-input-group-wrap .ant-select-selection {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.ant-input-group-wrap .ant-select-selection:hover {
-  border-color: #d9d9d9;
-}
-.ant-input-group-wrap .ant-select-selection--single {
-  height: 40px;
-  margin-left: -1px;
-  background-color: rgba(0, 0, 0, 0.07);
-}
-.ant-input-group-wrap .ant-select-selection--single .ant-select-selection__rendered {
-  padding-right: 25px;
-  padding-left: 8px;
-  line-height: 30px;
-}
-.ant-input-group-wrap .ant-select-open .ant-select-selection {
-  border-color: #d9d9d9;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
 .ant-form-vertical .ant-form-item-label,
 .ant-col-24.ant-form-item-label,
 .ant-col-xl-24.ant-form-item-label {
@@ -298,7 +272,10 @@ form .ant-input-group-wrapper {
 .ant-form-vertical .ant-form-item-control {
   line-height: 1.5;
 }
-.ant-form-vertical .ant-form-explain,
+.ant-form-vertical .ant-form-explain {
+  margin-top: 2px;
+  margin-bottom: -5px;
+}
 .ant-form-vertical .ant-form-extra {
   margin-top: 2px;
   margin-bottom: -4px;
@@ -444,6 +421,7 @@ form .ant-input-group-wrapper {
 }
 .has-warning .ant-input,
 .has-warning .ant-input:hover {
+  background-color: #fff;
   border-color: #faad14;
 }
 .has-warning .ant-input:focus {
@@ -465,6 +443,7 @@ form .ant-input-group-wrapper {
 }
 .has-warning .ant-input-affix-wrapper .ant-input,
 .has-warning .ant-input-affix-wrapper .ant-input:hover {
+  background-color: #fff;
   border-color: #faad14;
 }
 .has-warning .ant-input-affix-wrapper .ant-input:focus {
@@ -545,6 +524,7 @@ form .ant-input-group-wrapper {
 }
 .has-error .ant-input,
 .has-error .ant-input:hover {
+  background-color: #fff;
   border-color: #f5222d;
 }
 .has-error .ant-input:focus {
@@ -566,6 +546,7 @@ form .ant-input-group-wrapper {
 }
 .has-error .ant-input-affix-wrapper .ant-input,
 .has-error .ant-input-affix-wrapper .ant-input:hover {
+  background-color: #fff;
   border-color: #f5222d;
 }
 .has-error .ant-input-affix-wrapper .ant-input:focus {

@@ -24,7 +24,6 @@ declare class Input extends React.Component<InputProps, any> {
     static Password: typeof Password;
     static defaultProps: {
         type: string;
-        disabled: boolean;
     };
     static propTypes: {
         type: PropTypes.Requireable<string>;
@@ -52,13 +51,15 @@ declare class Input extends React.Component<InputProps, any> {
     } | null;
     input: HTMLInputElement;
     constructor(props: InputProps);
+    getSnapshotBeforeUpdate(prevProps: InputProps): null;
+    componentDidUpdate(): void;
     handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     focus(): void;
     blur(): void;
     select(): void;
     getInputClassName(prefixCls: string): string;
     saveInput: (node: HTMLInputElement) => void;
-    setValue(value: string, e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement, MouseEvent>): void;
+    setValue(value: string, e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement, MouseEvent>, callback?: () => void): void;
     handleReset: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     renderClearIcon(prefixCls: string): JSX.Element | null;

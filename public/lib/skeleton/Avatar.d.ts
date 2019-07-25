@@ -3,11 +3,11 @@ export interface SkeletonAvatarProps {
     prefixCls?: string;
     className?: string;
     style?: object;
-    size?: 'large' | 'small' | 'default';
+    size?: 'large' | 'small' | 'default' | number;
     shape?: 'circle' | 'square';
 }
-declare class Title extends React.Component<SkeletonAvatarProps, any> {
+declare class SkeletonAvatar extends React.Component<SkeletonAvatarProps, any> {
     static defaultProps: Partial<SkeletonAvatarProps>;
     render(): JSX.Element;
 }
-export default Title;
+export default SkeletonAvatar;

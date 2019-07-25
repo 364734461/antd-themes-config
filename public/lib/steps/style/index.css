@@ -15,7 +15,6 @@
   -webkit-font-feature-settings: 'tnum';
           font-feature-settings: 'tnum';
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   width: 100%;
@@ -25,7 +24,6 @@
   position: relative;
   display: inline-block;
   -webkit-box-flex: 1;
-  -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1;
   overflow: hidden;
@@ -33,12 +31,11 @@
 }
 .ant-steps-item:last-child {
   -webkit-box-flex: 0;
-  -webkit-flex: none;
       -ms-flex: none;
           flex: none;
 }
-.ant-steps-item:last-child .ant-steps-item-tail,
-.ant-steps-item:last-child .ant-steps-item-title::after {
+.ant-steps-item:last-child > .ant-steps-item-tail,
+.ant-steps-item:last-child > .ant-steps-item-content > .ant-steps-item-title::after {
   display: none;
 }
 .ant-steps-item-icon,
@@ -203,6 +200,28 @@
 }
 .ant-steps-item.ant-steps-next-error .ant-steps-item-title::after {
   background: #f5222d;
+}
+.ant-steps-item[role='button'] {
+  outline: none;
+}
+.ant-steps-item[role='button']:not(.ant-steps-item-process) {
+  cursor: pointer;
+}
+.ant-steps-item[role='button']:not(.ant-steps-item-process) .ant-steps-item-title,
+.ant-steps-item[role='button']:not(.ant-steps-item-process) .ant-steps-item-description,
+.ant-steps-item[role='button']:not(.ant-steps-item-process) .ant-steps-item-icon .ant-steps-icon {
+  -webkit-transition: color 0.3s;
+  transition: color 0.3s;
+}
+.ant-steps-item[role='button']:not(.ant-steps-item-process):hover .ant-steps-item-title,
+.ant-steps-item[role='button']:not(.ant-steps-item-process):hover .ant-steps-item-description {
+  color: #1890ff;
+}
+.ant-steps-item[role='button']:not(.ant-steps-item-process):hover .ant-steps-item-icon {
+  border-color: #1890ff;
+}
+.ant-steps-item[role='button']:not(.ant-steps-item-process):hover .ant-steps-item-icon .ant-steps-icon {
+  color: #1890ff;
 }
 .ant-steps-horizontal:not(.ant-steps-label-vertical) .ant-steps-item {
   margin-right: 16px;
@@ -407,6 +426,9 @@
 }
 .ant-steps-label-vertical .ant-steps-item-title::after {
   display: none;
+}
+.ant-steps-label-vertical.ant-steps-small:not(.ant-steps-dot) .ant-steps-item-icon {
+  margin-left: 40px;
 }
 .ant-steps-dot .ant-steps-item-title {
   line-height: 1.5;

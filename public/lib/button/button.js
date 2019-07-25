@@ -27,8 +27,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -49,6 +47,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 var __rest = void 0 && (void 0).__rest || function (s, e) {
   var t = {};
 
@@ -57,7 +57,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -67,6 +67,30 @@ var isTwoCNChar = rxTwoCNChar.test.bind(rxTwoCNChar);
 
 function isString(str) {
   return typeof str === 'string';
+}
+
+function spaceChildren(children, needInserted) {
+  var isPrevChildPure = false;
+  var childList = [];
+  React.Children.forEach(children, function (child) {
+    var type = _typeof(child);
+
+    var isCurrentChildPure = type === 'string' || type === 'number';
+
+    if (isPrevChildPure && isCurrentChildPure) {
+      var lastIndex = childList.length - 1;
+      var lastChild = childList[lastIndex];
+      childList[lastIndex] = "".concat(lastChild).concat(child);
+    } else {
+      childList.push(child);
+    }
+
+    isPrevChildPure = isCurrentChildPure;
+  }); // Pass to React.Children.map to auto fill key
+
+  return React.Children.map(childList, function (child) {
+    return insertSpace(child, needInserted);
+  });
 } // Insert one space between two chinese characters automatically.
 
 
@@ -93,7 +117,7 @@ function insertSpace(child, needInserted) {
   return child;
 }
 
-var ButtonTypes = (0, _type.tuple)('default', 'primary', 'ghost', 'dashed', 'danger');
+var ButtonTypes = (0, _type.tuple)('default', 'primary', 'ghost', 'dashed', 'danger', 'link');
 var ButtonShapes = (0, _type.tuple)('circle', 'circle-outline', 'round');
 var ButtonSizes = (0, _type.tuple)('large', 'default', 'small');
 var ButtonHTMLTypes = (0, _type.tuple)('submit', 'button', 'reset');
@@ -162,6 +186,7 @@ function (_React$Component) {
 
         case 'small':
           sizeCls = 'sm';
+          break;
 
         default:
           break;
@@ -172,9 +197,7 @@ function (_React$Component) {
       var iconNode = iconType ? React.createElement(_icon["default"], {
         type: iconType
       }) : null;
-      var kids = children || children === 0 ? React.Children.map(children, function (child) {
-        return insertSpace(child, _this.isNeedInserted() && autoInsertSpace);
-      }) : null;
+      var kids = children || children === 0 ? spaceChildren(children, _this.isNeedInserted() && autoInsertSpace) : null;
       var linkButtonRestProps = (0, _omit["default"])(rest, ['htmlType']);
 
       if (linkButtonRestProps.href !== undefined) {
@@ -190,12 +213,18 @@ function (_React$Component) {
           htmlType = _b.htmlType,
           otherProps = __rest(_b, ["htmlType"]);
 
-      return React.createElement(_wave["default"], null, React.createElement("button", _extends({}, otherProps, {
-        type: htmlType || 'button',
+      var buttonNode = React.createElement("button", _extends({}, otherProps, {
+        type: htmlType,
         className: classes,
         onClick: _this.handleClick,
         ref: _this.saveButtonRef
-      }), iconNode, kids));
+      }), iconNode, kids);
+
+      if (type === 'link') {
+        return buttonNode;
+      }
+
+      return React.createElement(_wave["default"], null, buttonNode);
     };
 
     _this.state = {
@@ -299,7 +328,8 @@ Button.__ANT_BUTTON = true;
 Button.defaultProps = {
   loading: false,
   ghost: false,
-  block: false
+  block: false,
+  htmlType: 'button'
 };
 Button.propTypes = {
   type: PropTypes.string,
@@ -315,3 +345,4 @@ Button.propTypes = {
 (0, _reactLifecyclesCompat.polyfill)(Button);
 var _default = Button;
 exports["default"] = _default;
+//# sourceMappingURL=button.js.map

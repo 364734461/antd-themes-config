@@ -86,16 +86,16 @@
   font-size: 24px;
   line-height: 24px;
 }
-.ant-notification-notice-icon-success {
+.anticon.ant-notification-notice-icon-success {
   color: #52c41a;
 }
-.ant-notification-notice-icon-info {
+.anticon.ant-notification-notice-icon-info {
   color: #1890ff;
 }
-.ant-notification-notice-icon-warning {
+.anticon.ant-notification-notice-icon-warning {
   color: #faad14;
 }
-.ant-notification-notice-icon-error {
+.anticon.ant-notification-notice-icon-error {
   color: #f5222d;
 }
 .ant-notification-notice-close {
@@ -104,9 +104,6 @@
   right: 22px;
   color: rgba(0, 0, 0, 0.45);
   outline: none;
-}
-a.ant-notification-notice-close:focus {
-  text-decoration: none;
 }
 .ant-notification-notice-close:hover {
   color: rgba(0, 0, 0, 0.67);

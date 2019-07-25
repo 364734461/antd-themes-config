@@ -3,5 +3,9 @@ declare const locale: {
     timePickerLocale: {
         placeholder: string;
     };
+    dateFormat: string;
+    monthFormat: string;
+    dateTimeFormat: string;
+    weekFormat: string;
 };
 export default locale;

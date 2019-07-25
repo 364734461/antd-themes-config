@@ -15,6 +15,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -33,18 +35,18 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var Title =
+var SkeletonAvatar =
 /*#__PURE__*/
 function (_React$Component) {
-  _inherits(Title, _React$Component);
+  _inherits(SkeletonAvatar, _React$Component);
 
-  function Title() {
-    _classCallCheck(this, Title);
+  function SkeletonAvatar() {
+    _classCallCheck(this, SkeletonAvatar);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Title).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(SkeletonAvatar).apply(this, arguments));
   }
 
-  _createClass(Title, [{
+  _createClass(SkeletonAvatar, [{
     key: "render",
     value: function render() {
       var _classNames, _classNames2;
@@ -57,18 +59,24 @@ function (_React$Component) {
           shape = _this$props.shape;
       var sizeCls = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-lg"), size === 'large'), _defineProperty(_classNames, "".concat(prefixCls, "-sm"), size === 'small'), _classNames));
       var shapeCls = (0, _classnames["default"])((_classNames2 = {}, _defineProperty(_classNames2, "".concat(prefixCls, "-circle"), shape === 'circle'), _defineProperty(_classNames2, "".concat(prefixCls, "-square"), shape === 'square'), _classNames2));
+      var sizeStyle = typeof size === 'number' ? {
+        width: size,
+        height: size,
+        lineHeight: "".concat(size, "px")
+      } : {};
       return React.createElement("span", {
         className: (0, _classnames["default"])(prefixCls, className, sizeCls, shapeCls),
-        style: style
+        style: _extends({}, sizeStyle, style)
       });
     }
   }]);
 
-  return Title;
+  return SkeletonAvatar;
 }(React.Component);
 
-Title.defaultProps = {
+SkeletonAvatar.defaultProps = {
   size: 'large'
 };
-var _default = Title;
+var _default = SkeletonAvatar;
 exports["default"] = _default;
+//# sourceMappingURL=Avatar.js.map

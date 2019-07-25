@@ -11,10 +11,14 @@ var _raf = _interopRequireDefault(require("raf"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+/**
+ * Deprecated. We should replace the animation with pure react motion instead of modify style directly.
+ * If you are creating new component with animation, please use `./motion`.
+ */
 function animate(node, show, done) {
   var height;
   var requestAnimationFrameId;
-  return (0, _cssAnimation["default"])(node, 'ant-motion-collapse', {
+  return (0, _cssAnimation["default"])(node, 'ant-motion-collapse-legacy', {
     start: function start() {
       if (!show) {
         node.style.height = "".concat(node.offsetHeight, "px");
@@ -60,3 +64,4 @@ var animation = {
 };
 var _default = animation;
 exports["default"] = _default;
+//# sourceMappingURL=openAnimation.js.map

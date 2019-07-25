@@ -5,6 +5,8 @@ export interface CascaderOptionType {
     value?: string;
     label?: React.ReactNode;
     disabled?: boolean;
+    isLeaf?: boolean;
+    loading?: boolean;
     children?: Array<CascaderOptionType>;
     [key: string]: any;
 }
@@ -64,7 +66,7 @@ export interface CascaderProps {
     onPopupVisibleChange?: (popupVisible: boolean) => void;
     prefixCls?: string;
     inputPrefixCls?: string;
-    getPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement;
+    getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
     popupVisible?: boolean;
     /** use this after antd@3.7.0 */
     fieldNames?: FieldNamesType;

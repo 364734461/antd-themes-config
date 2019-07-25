@@ -23,6 +23,8 @@ var _configProvider = require("../config-provider");
 
 var _interopDefault = _interopRequireDefault(require("../_util/interopDefault"));
 
+var _InputIcon = _interopRequireDefault(require("./InputIcon"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -30,8 +32,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -132,8 +132,6 @@ function (_React$Component) {
     };
 
     _this.renderWeekPicker = function (_ref) {
-      var _classNames;
-
       var getPrefixCls = _ref.getPrefixCls;
       var _this$props2 = _this.props,
           customizePrefixCls = _this$props2.prefixCls,
@@ -183,13 +181,9 @@ function (_React$Component) {
         onClick: _this.clearSelection,
         theme: "filled"
       }) : null;
-      var inputIcon = suffixIcon && (React.isValidElement(suffixIcon) ? React.cloneElement(suffixIcon, {
-        className: (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, suffixIcon.props.className, suffixIcon.props.className), _defineProperty(_classNames, "".concat(prefixCls, "-picker-icon"), true), _classNames))
-      }) : React.createElement("span", {
-        className: "".concat(prefixCls, "-picker-icon")
-      }, suffixIcon)) || React.createElement(_icon["default"], {
-        type: "calendar",
-        className: "".concat(prefixCls, "-picker-icon")
+      var inputIcon = React.createElement(_InputIcon["default"], {
+        suffixIcon: suffixIcon,
+        prefixCls: prefixCls
       });
 
       var input = function input(_ref2) {
@@ -292,3 +286,4 @@ WeekPicker.defaultProps = {
 (0, _reactLifecyclesCompat.polyfill)(WeekPicker);
 var _default = WeekPicker;
 exports["default"] = _default;
+//# sourceMappingURL=WeekPicker.js.map

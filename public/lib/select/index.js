@@ -57,7 +57,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -109,11 +109,12 @@ function (_React$Component) {
           removeIcon = _a.removeIcon,
           clearIcon = _a.clearIcon,
           menuItemSelectedIcon = _a.menuItemSelectedIcon,
-          restProps = __rest(_a, ["prefixCls", "className", "size", "mode", "getPopupContainer", "removeIcon", "clearIcon", "menuItemSelectedIcon"]);
+          showArrow = _a.showArrow,
+          restProps = __rest(_a, ["prefixCls", "className", "size", "mode", "getPopupContainer", "removeIcon", "clearIcon", "menuItemSelectedIcon", "showArrow"]);
 
       var rest = (0, _omit["default"])(restProps, ['inputIcon']);
       var prefixCls = getPrefixCls('select', customizePrefixCls);
-      var cls = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-lg"), size === 'large'), _defineProperty(_classNames, "".concat(prefixCls, "-sm"), size === 'small'), _classNames), className);
+      var cls = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-lg"), size === 'large'), _defineProperty(_classNames, "".concat(prefixCls, "-sm"), size === 'small'), _defineProperty(_classNames, "".concat(prefixCls, "-show-arrow"), showArrow), _classNames), className);
       var optionLabelProp = _this.props.optionLabelProp;
 
       if (_this.isCombobox()) {
@@ -149,7 +150,8 @@ function (_React$Component) {
         inputIcon: _this.renderSuffixIcon(prefixCls),
         removeIcon: finalRemoveIcon,
         clearIcon: finalClearIcon,
-        menuItemSelectedIcon: finalMenuItemSelectedIcon
+        menuItemSelectedIcon: finalMenuItemSelectedIcon,
+        showArrow: showArrow
       }, rest, modeConfig, {
         prefixCls: prefixCls,
         className: cls,
@@ -160,7 +162,7 @@ function (_React$Component) {
       }));
     };
 
-    (0, _warning["default"])(props.mode !== 'combobox', 'The combobox mode of Select is deprecated, ' + 'it will be removed in next major version, ' + 'please use AutoComplete instead');
+    (0, _warning["default"])(props.mode !== 'combobox', 'Select', 'The combobox mode is deprecated, ' + 'it will be removed in next major version, ' + 'please use AutoComplete instead');
     return _this;
   }
 
@@ -244,3 +246,4 @@ Select.defaultProps = {
   choiceTransitionName: 'zoom'
 };
 Select.propTypes = SelectPropTypes;
+//# sourceMappingURL=index.js.map

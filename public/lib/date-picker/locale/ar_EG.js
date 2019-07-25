@@ -19,9 +19,14 @@ var locale = {
     placeholder: 'اختيار التاريخ',
     rangePlaceholder: ['البداية', 'النهاية']
   }, _ar_EG["default"]),
-  timePickerLocale: _extends({}, _ar_EG2["default"])
+  timePickerLocale: _extends({}, _ar_EG2["default"]),
+  dateFormat: 'DD-MM-YYYY',
+  monthFormat: 'MM-YYYY',
+  dateTimeFormat: 'DD-MM-YYYY HH:mm:ss',
+  weekFormat: 'wo-YYYY'
 }; // All settings at:
 // https://github.com/ant-design/ant-design/blob/master/components/date-picker/locale/example.json
 
 var _default = locale;
 exports["default"] = _default;
+//# sourceMappingURL=ar_EG.js.map

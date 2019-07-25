@@ -53,7 +53,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -115,7 +115,14 @@ function (_React$Component) {
 
       var rest = (0, _omit["default"])(restProps, ['inputIcon', 'removeIcon', 'clearIcon', 'switcherIcon']);
       var prefixCls = getPrefixCls('select', customizePrefixCls);
-      var cls = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-lg"), size === 'large'), _defineProperty(_classNames, "".concat(prefixCls, "-sm"), size === 'small'), _classNames), className);
+      var cls = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-lg"), size === 'large'), _defineProperty(_classNames, "".concat(prefixCls, "-sm"), size === 'small'), _classNames), className); // showSearch: single - false, multiple - true
+
+      var showSearch = restProps.showSearch;
+
+      if (!('showSearch' in restProps)) {
+        showSearch = !!(restProps.multiple || restProps.treeCheckable);
+      }
+
       var checkable = rest.treeCheckable;
 
       if (checkable) {
@@ -145,6 +152,7 @@ function (_React$Component) {
         removeIcon: removeIcon,
         clearIcon: clearIcon
       }, rest, {
+        showSearch: showSearch,
         getPopupContainer: getPopupContainer || getContextPopupContainer,
         dropdownClassName: (0, _classnames["default"])(dropdownClassName, "".concat(prefixCls, "-tree-dropdown")),
         prefixCls: prefixCls,
@@ -159,7 +167,7 @@ function (_React$Component) {
       }));
     };
 
-    (0, _warning["default"])(props.multiple !== false || !props.treeCheckable, '`multiple` will alway be `true` when `treeCheckable` is true');
+    (0, _warning["default"])(props.multiple !== false || !props.treeCheckable, 'TreeSelect', '`multiple` will alway be `true` when `treeCheckable` is true');
     return _this;
   }
 
@@ -190,6 +198,6 @@ TreeSelect.SHOW_PARENT = _rcTreeSelect.SHOW_PARENT;
 TreeSelect.SHOW_CHILD = _rcTreeSelect.SHOW_CHILD;
 TreeSelect.defaultProps = {
   transitionName: 'slide-up',
-  choiceTransitionName: 'zoom',
-  showSearch: false
+  choiceTransitionName: 'zoom'
 };
+//# sourceMappingURL=index.js.map

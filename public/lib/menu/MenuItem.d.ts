@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
-import { ClickParam } from './index';
-interface MenuItemProps {
+import { ClickParam } from '.';
+import { SiderContextProps } from '../layout/Sider';
+export interface MenuItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>, 'title' | 'onClick' | 'onMouseEnter' | 'onMouseLeave'> {
     rootPrefixCls?: string;
     disabled?: boolean;
     level?: number;
@@ -19,15 +19,11 @@ interface MenuItemProps {
         domEvent: MouseEvent;
     }) => void;
 }
-declare class MenuItem extends React.Component<MenuItemProps, any> {
-    static contextTypes: {
-        inlineCollapsed: PropTypes.Requireable<boolean>;
-    };
-    static isMenuItem: number;
-    context: any;
+export default class MenuItem extends React.Component<MenuItemProps> {
+    static isMenuItem: boolean;
     private menuItem;
     onKeyDown: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
-    saveMenuItem: (menuItem: any) => void;
+    saveMenuItem: (menuItem: this) => void;
+    renderItem: ({ siderCollapsed }: SiderContextProps) => JSX.Element;
     render(): JSX.Element;
 }
-export default MenuItem;

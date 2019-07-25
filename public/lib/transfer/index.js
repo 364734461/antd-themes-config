@@ -21,9 +21,11 @@ var _warning = _interopRequireDefault(require("../_util/warning"));
 
 var _LocaleReceiver = _interopRequireDefault(require("../locale-provider/LocaleReceiver"));
 
-var _default = _interopRequireDefault(require("../locale-provider/default"));
+var _default2 = _interopRequireDefault(require("../locale-provider/default"));
 
 var _configProvider = require("../config-provider");
+
+var _reactLifecyclesCompat = require("react-lifecycles-compat");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -58,8 +60,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function noop() {}
 
 var Transfer =
 /*#__PURE__*/
@@ -115,38 +115,52 @@ function (_React$Component) {
       return _this.moveTo('right');
     };
 
-    _this.handleSelectAll = function (direction, filteredDataSource, checkAll) {
+    _this.onItemSelectAll = function (direction, selectedKeys, checkAll) {
       var originalSelectedKeys = _this.state[_this.getSelectedKeysName(direction)] || [];
-      var currentKeys = filteredDataSource.map(function (item) {
-        return item.key;
-      }); // Only operate current keys from original selected keys
+      var mergedCheckedKeys = [];
 
-      var newKeys1 = originalSelectedKeys.filter(function (key) {
-        return currentKeys.indexOf(key) === -1;
-      });
+      if (checkAll) {
+        // Merge current keys with origin key
+        mergedCheckedKeys = Array.from(new Set([].concat(_toConsumableArray(originalSelectedKeys), _toConsumableArray(selectedKeys))));
+      } else {
+        // Remove current keys from origin keys
+        mergedCheckedKeys = originalSelectedKeys.filter(function (key) {
+          return selectedKeys.indexOf(key) === -1;
+        });
+      }
 
-      var newKeys2 = _toConsumableArray(originalSelectedKeys);
-
-      currentKeys.forEach(function (key) {
-        if (newKeys2.indexOf(key) === -1) {
-          newKeys2.push(key);
-        }
-      });
-      var holder = checkAll ? newKeys1 : newKeys2;
-
-      _this.handleSelectChange(direction, holder);
+      _this.handleSelectChange(direction, mergedCheckedKeys);
 
       if (!_this.props.selectedKeys) {
-        _this.setState(_defineProperty({}, _this.getSelectedKeysName(direction), holder));
+        _this.setState(_defineProperty({}, _this.getSelectedKeysName(direction), mergedCheckedKeys));
       }
     };
 
+    _this.handleSelectAll = function (direction, filteredDataSource, checkAll) {
+      (0, _warning["default"])(false, 'Transfer', '`handleSelectAll` will be removed, please use `onSelectAll` instead.');
+
+      _this.onItemSelectAll(direction, filteredDataSource.map(function (_ref) {
+        var key = _ref.key;
+        return key;
+      }), !checkAll);
+    }; // [Legacy] Old prop `body` pass origin check as arg. It's confusing.
+    // TODO: Remove this in next version.
+
+
     _this.handleLeftSelectAll = function (filteredDataSource, checkAll) {
-      return _this.handleSelectAll('left', filteredDataSource, checkAll);
+      return _this.handleSelectAll('left', filteredDataSource, !checkAll);
     };
 
     _this.handleRightSelectAll = function (filteredDataSource, checkAll) {
-      return _this.handleSelectAll('right', filteredDataSource, checkAll);
+      return _this.handleSelectAll('right', filteredDataSource, !checkAll);
+    };
+
+    _this.onLeftItemSelectAll = function (selectedKeys, checkAll) {
+      return _this.onItemSelectAll('left', selectedKeys, checkAll);
+    };
+
+    _this.onRightItemSelectAll = function (selectedKeys, checkAll) {
+      return _this.onItemSelectAll('right', selectedKeys, checkAll);
     };
 
     _this.handleFilter = function (direction, e) {
@@ -155,10 +169,8 @@ function (_React$Component) {
           onSearch = _this$props2.onSearch;
       var value = e.target.value;
 
-      _this.setState(_defineProperty({}, "".concat(direction, "Filter"), value));
-
       if (onSearchChange) {
-        (0, _warning["default"])(false, '`onSearchChange` in Transfer is deprecated. Please use `onSearch` instead.');
+        (0, _warning["default"])(false, 'Transfer', '`onSearchChange` is deprecated. Please use `onSearch` instead.');
         onSearchChange(direction, e);
       }
 
@@ -178,8 +190,6 @@ function (_React$Component) {
     _this.handleClear = function (direction) {
       var onSearch = _this.props.onSearch;
 
-      _this.setState(_defineProperty({}, "".concat(direction, "Filter"), ''));
-
       if (onSearch) {
         onSearch(direction, '');
       }
@@ -193,19 +203,19 @@ function (_React$Component) {
       return _this.handleClear('right');
     };
 
-    _this.handleSelect = function (direction, selectedItem, checked) {
+    _this.onItemSelect = function (direction, selectedKey, checked) {
       var _this$state2 = _this.state,
           sourceSelectedKeys = _this$state2.sourceSelectedKeys,
           targetSelectedKeys = _this$state2.targetSelectedKeys;
       var holder = direction === 'left' ? _toConsumableArray(sourceSelectedKeys) : _toConsumableArray(targetSelectedKeys);
-      var index = holder.indexOf(selectedItem.key);
+      var index = holder.indexOf(selectedKey);
 
       if (index > -1) {
         holder.splice(index, 1);
       }
 
       if (checked) {
-        holder.push(selectedItem.key);
+        holder.push(selectedKey);
       }
 
       _this.handleSelectChange(direction, holder);
@@ -215,12 +225,26 @@ function (_React$Component) {
       }
     };
 
+    _this.handleSelect = function (direction, selectedItem, checked) {
+      (0, _warning["default"])(false, 'Transfer', '`handleSelect` will be removed, please use `onSelect` instead.');
+
+      _this.onItemSelect(direction, selectedItem.key, checked);
+    };
+
     _this.handleLeftSelect = function (selectedItem, checked) {
       return _this.handleSelect('left', selectedItem, checked);
     };
 
     _this.handleRightSelect = function (selectedItem, checked) {
       return _this.handleSelect('right', selectedItem, checked);
+    };
+
+    _this.onLeftItemSelect = function (selectedKey, checked) {
+      return _this.onItemSelect('left', selectedKey, checked);
+    };
+
+    _this.onRightItemSelect = function (selectedKey, checked) {
+      return _this.onItemSelect('right', selectedKey, checked);
     };
 
     _this.handleScroll = function (direction, e) {
@@ -257,9 +281,11 @@ function (_React$Component) {
     };
 
     _this.renderTransfer = function (transferLocale) {
-      return React.createElement(_configProvider.ConfigConsumer, null, function (_ref) {
-        var getPrefixCls = _ref.getPrefixCls,
-            renderEmpty = _ref.renderEmpty;
+      return React.createElement(_configProvider.ConfigConsumer, null, function (_ref2) {
+        var _classNames;
+
+        var getPrefixCls = _ref2.getPrefixCls,
+            renderEmpty = _ref2.renderEmpty;
         var _this$props3 = _this.props,
             customizePrefixCls = _this$props3.prefixCls,
             className = _this$props3.className,
@@ -274,14 +300,14 @@ function (_React$Component) {
             operationStyle = _this$props3.operationStyle,
             filterOption = _this$props3.filterOption,
             render = _this$props3.render,
-            lazy = _this$props3.lazy;
+            lazy = _this$props3.lazy,
+            children = _this$props3.children,
+            showSelectAll = _this$props3.showSelectAll;
         var prefixCls = getPrefixCls('transfer', customizePrefixCls);
 
         var locale = _this.getLocale(transferLocale, renderEmpty);
 
         var _this$state3 = _this.state,
-            leftFilter = _this$state3.leftFilter,
-            rightFilter = _this$state3.rightFilter,
             sourceSelectedKeys = _this$state3.sourceSelectedKeys,
             targetSelectedKeys = _this$state3.targetSelectedKeys;
 
@@ -291,7 +317,7 @@ function (_React$Component) {
 
         var leftActive = targetSelectedKeys.length > 0;
         var rightActive = sourceSelectedKeys.length > 0;
-        var cls = (0, _classnames["default"])(className, prefixCls, disabled && "".concat(prefixCls, "-disabled"));
+        var cls = (0, _classnames["default"])(className, prefixCls, (_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-disabled"), disabled), _defineProperty(_classNames, "".concat(prefixCls, "-customize-list"), !!children), _classNames));
 
         var titles = _this.getTitles(locale);
 
@@ -302,7 +328,6 @@ function (_React$Component) {
           prefixCls: "".concat(prefixCls, "-list"),
           titleText: titles[0],
           dataSource: leftDataSource,
-          filter: leftFilter,
           filterOption: filterOption,
           style: listStyle,
           checkedKeys: sourceSelectedKeys,
@@ -310,13 +335,18 @@ function (_React$Component) {
           handleClear: _this.handleLeftClear,
           handleSelect: _this.handleLeftSelect,
           handleSelectAll: _this.handleLeftSelectAll,
+          onItemSelect: _this.onLeftItemSelect,
+          onItemSelectAll: _this.onLeftItemSelectAll,
           render: render,
           showSearch: showSearch,
           body: body,
+          renderList: children,
           footer: footer,
           lazy: lazy,
           onScroll: _this.handleLeftScroll,
-          disabled: disabled
+          disabled: disabled,
+          direction: "left",
+          showSelectAll: showSelectAll
         }, locale)), React.createElement(_operation["default"], {
           className: "".concat(prefixCls, "-operation"),
           rightActive: rightActive,
@@ -331,7 +361,6 @@ function (_React$Component) {
           prefixCls: "".concat(prefixCls, "-list"),
           titleText: titles[1],
           dataSource: rightDataSource,
-          filter: rightFilter,
           filterOption: filterOption,
           style: listStyle,
           checkedKeys: targetSelectedKeys,
@@ -339,25 +368,29 @@ function (_React$Component) {
           handleClear: _this.handleRightClear,
           handleSelect: _this.handleRightSelect,
           handleSelectAll: _this.handleRightSelectAll,
+          onItemSelect: _this.onRightItemSelect,
+          onItemSelectAll: _this.onRightItemSelectAll,
           render: render,
           showSearch: showSearch,
           body: body,
+          renderList: children,
           footer: footer,
           lazy: lazy,
           onScroll: _this.handleRightScroll,
-          disabled: disabled
+          disabled: disabled,
+          direction: "right",
+          showSelectAll: showSelectAll
         }, locale)));
       });
     };
 
-    (0, _warning["default"])(!('notFoundContent' in props || 'searchPlaceholder' in props), 'Transfer[notFoundContent] and Transfer[searchPlaceholder] will be removed, ' + 'please use Transfer[locale] instead.');
+    (0, _warning["default"])(!('notFoundContent' in props || 'searchPlaceholder' in props), 'Transfer', '`notFoundContent` and `searchPlaceholder` will be removed, ' + 'please use `locale` instead.');
+    (0, _warning["default"])(!('body' in props), 'Transfer', '`body` is internal usage and will bre removed, please use `children` instead.');
     var _props$selectedKeys = props.selectedKeys,
         selectedKeys = _props$selectedKeys === void 0 ? [] : _props$selectedKeys,
         _props$targetKeys = props.targetKeys,
         targetKeys = _props$targetKeys === void 0 ? [] : _props$targetKeys;
     _this.state = {
-      leftFilter: '',
-      rightFilter: '',
       sourceSelectedKeys: selectedKeys.filter(function (key) {
         return targetKeys.indexOf(key) === -1;
       }),
@@ -369,62 +402,8 @@ function (_React$Component) {
   }
 
   _createClass(Transfer, [{
-    key: "componentWillReceiveProps",
-    value: function componentWillReceiveProps(nextProps) {
-      var _this$state4 = this.state,
-          sourceSelectedKeys = _this$state4.sourceSelectedKeys,
-          targetSelectedKeys = _this$state4.targetSelectedKeys;
-
-      if (nextProps.targetKeys !== this.props.targetKeys || nextProps.dataSource !== this.props.dataSource) {
-        // clear cached separated dataSource
-        this.separatedDataSource = null;
-
-        if (!nextProps.selectedKeys) {
-          // clear key no longer existed
-          // clear checkedKeys according to targetKeys
-          var dataSource = nextProps.dataSource,
-              _nextProps$targetKeys = nextProps.targetKeys,
-              targetKeys = _nextProps$targetKeys === void 0 ? [] : _nextProps$targetKeys;
-          var newSourceSelectedKeys = [];
-          var newTargetSelectedKeys = [];
-          dataSource.forEach(function (_ref2) {
-            var key = _ref2.key;
-
-            if (sourceSelectedKeys.includes(key) && !targetKeys.includes(key)) {
-              newSourceSelectedKeys.push(key);
-            }
-
-            if (targetSelectedKeys.includes(key) && targetKeys.includes(key)) {
-              newTargetSelectedKeys.push(key);
-            }
-          });
-          this.setState({
-            sourceSelectedKeys: newSourceSelectedKeys,
-            targetSelectedKeys: newTargetSelectedKeys
-          });
-        }
-      }
-
-      if (nextProps.selectedKeys) {
-        var _targetKeys = nextProps.targetKeys || [];
-
-        this.setState({
-          sourceSelectedKeys: nextProps.selectedKeys.filter(function (key) {
-            return !_targetKeys.includes(key);
-          }),
-          targetSelectedKeys: nextProps.selectedKeys.filter(function (key) {
-            return _targetKeys.includes(key);
-          })
-        });
-      }
-    }
-  }, {
     key: "separateDataSource",
     value: function separateDataSource(props) {
-      if (this.separatedDataSource) {
-        return this.separatedDataSource;
-      }
-
       var dataSource = props.dataSource,
           rowKey = props.rowKey,
           _props$targetKeys2 = props.targetKeys,
@@ -446,18 +425,17 @@ function (_React$Component) {
           leftDataSource.push(record);
         }
       });
-      this.separatedDataSource = {
+      return {
         leftDataSource: leftDataSource,
         rightDataSource: rightDataSource
       };
-      return this.separatedDataSource;
     }
   }, {
     key: "handleSelectChange",
     value: function handleSelectChange(direction, holder) {
-      var _this$state5 = this.state,
-          sourceSelectedKeys = _this$state5.sourceSelectedKeys,
-          targetSelectedKeys = _this$state5.targetSelectedKeys;
+      var _this$state4 = this.state,
+          sourceSelectedKeys = _this$state4.sourceSelectedKeys,
+          targetSelectedKeys = _this$state4.targetSelectedKeys;
       var onSelectChange = this.props.onSelectChange;
 
       if (!onSelectChange) {
@@ -491,8 +469,25 @@ function (_React$Component) {
     value: function render() {
       return React.createElement(_LocaleReceiver["default"], {
         componentName: "Transfer",
-        defaultLocale: _default["default"].Transfer
+        defaultLocale: _default2["default"].Transfer
       }, this.renderTransfer);
+    }
+  }], [{
+    key: "getDerivedStateFromProps",
+    value: function getDerivedStateFromProps(nextProps) {
+      if (nextProps.selectedKeys) {
+        var targetKeys = nextProps.targetKeys || [];
+        return {
+          sourceSelectedKeys: nextProps.selectedKeys.filter(function (key) {
+            return !targetKeys.includes(key);
+          }),
+          targetSelectedKeys: nextProps.selectedKeys.filter(function (key) {
+            return targetKeys.includes(key);
+          })
+        };
+      }
+
+      return null;
     }
   }]);
 
@@ -500,13 +495,11 @@ function (_React$Component) {
 }(React.Component); // For high-level customized Transfer @dqaria
 
 
-exports["default"] = Transfer;
 Transfer.List = _list["default"];
 Transfer.Operation = _operation["default"];
 Transfer.Search = _search["default"];
 Transfer.defaultProps = {
   dataSource: [],
-  render: noop,
   locale: {},
   showSearch: false
 };
@@ -534,3 +527,7 @@ Transfer.propTypes = {
   rowKey: PropTypes.func,
   lazy: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
 };
+(0, _reactLifecyclesCompat.polyfill)(Transfer);
+var _default = Transfer;
+exports["default"] = _default;
+//# sourceMappingURL=index.js.map

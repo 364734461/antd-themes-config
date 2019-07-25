@@ -1,8 +1,7 @@
 import { ConfigConsumerProps } from '../config-provider';
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-export declare type Breakpoint = 'xxl' | 'xl' | 'lg' | 'md' | 'sm' | 'xs';
-export declare type BreakpointMap = Partial<Record<Breakpoint, string>>;
+import { Breakpoint, BreakpointMap } from '../_util/responsiveObserve';
 declare const RowAligns: ["top", "middle", "bottom"];
 declare const RowJustify: ["start", "end", "center", "space-around", "space-between"];
 export interface RowProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -29,6 +28,7 @@ export default class Row extends React.Component<RowProps, RowState> {
         prefixCls: PropTypes.Requireable<string>;
     };
     state: RowState;
+    token: string;
     componentDidMount(): void;
     componentWillUnmount(): void;
     getGutter(): number | undefined;

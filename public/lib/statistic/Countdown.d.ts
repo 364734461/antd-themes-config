@@ -4,6 +4,7 @@ import { countdownValueType, FormatConfig } from './utils';
 interface CountdownProps extends StatisticProps {
     value?: countdownValueType;
     format?: string;
+    onFinish?: () => void;
 }
 declare class Countdown extends React.Component<CountdownProps, {}> {
     static defaultProps: Partial<CountdownProps>;

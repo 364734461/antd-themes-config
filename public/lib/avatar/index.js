@@ -7,8 +7,6 @@ exports["default"] = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
-var ReactDOM = _interopRequireWildcard(require("react-dom"));
-
 var _icon = _interopRequireDefault(require("../icon"));
 
 var _classnames = _interopRequireDefault(require("classnames"));
@@ -33,9 +31,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -49,7 +47,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -71,23 +69,24 @@ function (_React$Component) {
     };
 
     _this.setScale = function () {
-      var childrenNode = _this.avatarChildren;
-
-      if (childrenNode) {
-        var childrenWidth = childrenNode.offsetWidth;
-        var avatarNode = ReactDOM.findDOMNode(_assertThisInitialized(_this));
-        var avatarWidth = avatarNode.getBoundingClientRect().width; // add 4px gap for each side to get better performance
-
-        if (avatarWidth - 8 < childrenWidth) {
-          _this.setState({
-            scale: (avatarWidth - 8) / childrenWidth
-          });
-        } else {
-          _this.setState({
-            scale: 1
-          });
-        }
+      if (!_this.avatarChildren || !_this.avatarNode) {
+        return;
       }
+
+      var childrenWidth = _this.avatarChildren.offsetWidth; // offsetWidth avoid affecting be transform scale
+
+      var nodeWidth = _this.avatarNode.offsetWidth; // denominator is 0 is no meaning
+
+      if (childrenWidth === 0 || nodeWidth === 0 || _this.lastChildrenWidth === childrenWidth && _this.lastNodeWidth === nodeWidth) {
+        return;
+      }
+
+      _this.lastChildrenWidth = childrenWidth;
+      _this.lastNodeWidth = nodeWidth; // add 4px gap for each side to get better performance
+
+      _this.setState({
+        scale: nodeWidth - 8 < childrenWidth ? (nodeWidth - 8) / childrenWidth : 1
+      });
     };
 
     _this.handleImgLoadError = function () {
@@ -157,16 +156,16 @@ function (_React$Component) {
           } : {};
           children = React.createElement("span", {
             className: "".concat(prefixCls, "-string"),
-            ref: function ref(span) {
-              return _this.avatarChildren = span;
+            ref: function ref(node) {
+              return _this.avatarChildren = node;
             },
             style: _extends({}, sizeChildrenStyle, childrenStyle)
           }, children);
         } else {
           children = React.createElement("span", {
             className: "".concat(prefixCls, "-string"),
-            ref: function ref(span) {
-              return _this.avatarChildren = span;
+            ref: function ref(node) {
+              return _this.avatarChildren = node;
             }
           }, children);
         }
@@ -174,7 +173,10 @@ function (_React$Component) {
 
       return React.createElement("span", _extends({}, others, {
         style: _extends({}, sizeStyle, others.style),
-        className: classString
+        className: classString,
+        ref: function ref(node) {
+          return _this.avatarNode = node;
+        }
       }), children);
     };
 
@@ -188,10 +190,8 @@ function (_React$Component) {
     }
   }, {
     key: "componentDidUpdate",
-    value: function componentDidUpdate(prevProps, prevState) {
-      if (prevProps.children !== this.props.children || prevState.scale !== this.state.scale && this.state.scale === 1 || prevState.isImgExist !== this.state.isImgExist) {
-        this.setScale();
-      }
+    value: function componentDidUpdate(prevProps) {
+      this.setScale();
 
       if (prevProps.src !== this.props.src) {
         this.setState({
@@ -215,3 +215,4 @@ Avatar.defaultProps = {
   shape: 'circle',
   size: 'default'
 };
+//# sourceMappingURL=index.js.map

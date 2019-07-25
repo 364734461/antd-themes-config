@@ -13,9 +13,9 @@ export interface ModalProps {
     /** 是否显示右上角的关闭按钮*/
     closable?: boolean;
     /** 点击确定回调*/
-    onOk?: (e: React.MouseEvent<any>) => void;
+    onOk?: (e: React.MouseEvent<HTMLElement>) => void;
     /** 点击模态框右上角叉、取消按钮、Props.maskClosable 值为 true 时的遮罩层或键盘按下 Esc 时的回调*/
-    onCancel?: (e: React.MouseEvent<any>) => void;
+    onCancel?: (e: React.MouseEvent<HTMLElement>) => void;
     afterClose?: () => void;
     /** 垂直居中 */
     centered?: boolean;
@@ -41,7 +41,7 @@ export interface ModalProps {
     maskTransitionName?: string;
     transitionName?: string;
     className?: string;
-    getContainer?: (instance: React.ReactInstance) => HTMLElement;
+    getContainer?: string | HTMLElement | getContainerFunc | false | null;
     zIndex?: number;
     bodyStyle?: React.CSSProperties;
     maskStyle?: React.CSSProperties;
@@ -50,14 +50,15 @@ export interface ModalProps {
     wrapProps?: any;
     prefixCls?: string;
 }
+declare type getContainerFunc = () => HTMLElement;
 export interface ModalFuncProps {
     prefixCls?: string;
     className?: string;
     visible?: boolean;
     title?: React.ReactNode;
     content?: React.ReactNode;
-    onOk?: (...args: any[]) => any | PromiseLike<any>;
-    onCancel?: (...args: any[]) => any | PromiseLike<any>;
+    onOk?: (...args: any[]) => any;
+    onCancel?: (...args: any[]) => any;
     okButtonProps?: NativeButtonProps;
     cancelButtonProps?: NativeButtonProps;
     centered?: boolean;
@@ -76,7 +77,7 @@ export interface ModalFuncProps {
     maskStyle?: React.CSSProperties;
     type?: string;
     keyboard?: boolean;
-    getContainer?: (instance: React.ReactInstance) => HTMLElement;
+    getContainer?: string | HTMLElement | getContainerFunc | false | null;
     autoFocusButton?: null | 'ok' | 'cancel';
     transitionName?: string;
     maskTransitionName?: string;
@@ -104,9 +105,7 @@ export default class Modal extends React.Component<ModalProps, {}> {
         maskTransitionName: string;
         confirmLoading: boolean;
         visible: boolean;
-        okType: "default" | "dashed" | "primary" | "ghost" | "danger";
-        okButtonDisabled: boolean;
-        cancelButtonDisabled: boolean;
+        okType: "link" | "default" | "dashed" | "primary" | "ghost" | "danger";
     };
     static propTypes: {
         prefixCls: PropTypes.Requireable<string>;
@@ -118,15 +117,14 @@ export default class Modal extends React.Component<ModalProps, {}> {
         width: PropTypes.Requireable<string | number>;
         confirmLoading: PropTypes.Requireable<boolean>;
         visible: PropTypes.Requireable<boolean>;
-        align: PropTypes.Requireable<object>;
         footer: PropTypes.Requireable<PropTypes.ReactNodeLike>;
         title: PropTypes.Requireable<PropTypes.ReactNodeLike>;
         closable: PropTypes.Requireable<boolean>;
     };
     handleCancel: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
     handleOk: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-    componentDidMount(): void;
     renderFooter: (locale: ModalLocale) => JSX.Element;
-    renderModal: ({ getPrefixCls }: ConfigConsumerProps) => JSX.Element;
+    renderModal: ({ getPopupContainer: getContextPopupContainer, getPrefixCls, }: ConfigConsumerProps) => JSX.Element;
     render(): JSX.Element;
 }
+export {};

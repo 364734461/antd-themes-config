@@ -29,6 +29,8 @@ var _interopDefault = _interopRequireDefault(require("../_util/interopDefault"))
 
 var _getDataOrAriaProps = _interopRequireDefault(require("../_util/getDataOrAriaProps"));
 
+var _utils = require("./utils");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -87,7 +89,8 @@ function createPicker(TheCalendar) {
       };
 
       _this.handleChange = function (value) {
-        var props = _this.props;
+        var _assertThisInitialize2 = _assertThisInitialized(_this),
+            props = _assertThisInitialize2.props;
 
         if (!('value' in props)) {
           _this.setState({
@@ -96,7 +99,7 @@ function createPicker(TheCalendar) {
           });
         }
 
-        props.onChange(value, value && value.format(props.format) || '');
+        props.onChange(value, (0, _utils.formatDate)(value, props.format));
       };
 
       _this.handleCalendarChange = function (value) {
@@ -158,7 +161,7 @@ function createPicker(TheCalendar) {
             // fix https://github.com/ant-design/ant-design/issues/1902
             onSelect: _this.handleChange
           };
-          pickerStyle.width = 195;
+          pickerStyle.minWidth = 195;
         } else {
           pickerProps = {
             onChange: _this.handleChange
@@ -169,7 +172,7 @@ function createPicker(TheCalendar) {
           calendarProps.mode = props.mode;
         }
 
-        (0, _warning["default"])(!('onOK' in props), 'It should be `DatePicker[onOk]` or `MonthPicker[onOk]`, instead of `onOK`!');
+        (0, _warning["default"])(!('onOK' in props), 'DatePicker', 'It should be `DatePicker[onOk]` or `MonthPicker[onOk]`, instead of `onOK`!');
         var calendar = React.createElement(TheCalendar, _extends({}, calendarProps, {
           disabledDate: props.disabledDate,
           disabledTime: disabledTime,
@@ -211,10 +214,11 @@ function createPicker(TheCalendar) {
             ref: _this.saveInput,
             disabled: props.disabled,
             readOnly: true,
-            value: inputValue && inputValue.format(props.format) || '',
+            value: (0, _utils.formatDate)(inputValue, props.format),
             placeholder: placeholder,
             className: props.pickerInputClass,
-            tabIndex: props.tabIndex
+            tabIndex: props.tabIndex,
+            name: props.name
           }, dataOrAriaProps)), clearIcon, inputIcon);
         };
 
@@ -305,3 +309,4 @@ function createPicker(TheCalendar) {
   (0, _reactLifecyclesCompat.polyfill)(CalenderWrapper);
   return CalenderWrapper;
 }
+//# sourceMappingURL=createPicker.js.map

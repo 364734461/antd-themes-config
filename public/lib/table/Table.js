@@ -9,7 +9,7 @@ var React = _interopRequireWildcard(require("react"));
 
 var ReactDOM = _interopRequireWildcard(require("react-dom"));
 
-var _rcTable = _interopRequireDefault(require("rc-table"));
+var _rcTable = _interopRequireWildcard(require("rc-table"));
 
 var PropTypes = _interopRequireWildcard(require("prop-types"));
 
@@ -81,7 +81,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -104,7 +104,6 @@ var defaultPagination = {
   onChange: noop,
   onShowSizeChange: noop
 };
-var ROW_SELECTION_COLUMN_WIDTH = '62px';
 /**
  * Avoid creating new object, so that parent component's shouldComponentUpdate
  * can works appropriately。
@@ -135,7 +134,9 @@ function (_React$Component) {
 
 
       if (!_this.CheckboxPropsCache[key]) {
-        _this.CheckboxPropsCache[key] = rowSelection.getCheckboxProps(item);
+        _this.CheckboxPropsCache[key] = rowSelection.getCheckboxProps(item) || {};
+        var checkboxProps = _this.CheckboxPropsCache[key];
+        (0, _warning["default"])(!('checked' in checkboxProps) && !('defaultChecked' in checkboxProps), 'Table', 'Do not set `checked` or `defaultChecked` in `getCheckboxProps`. Please use `selectedRowKeys` instead.');
       }
 
       return _this.CheckboxPropsCache[key];
@@ -232,7 +233,7 @@ function (_React$Component) {
 
       var pivot = _this.state.pivot;
 
-      var rows = _this.getFlatCurrentPageData(_this.props.childrenColumnName);
+      var rows = _this.getFlatCurrentPageData();
 
       var realIndex = rowIndex;
 
@@ -340,7 +341,7 @@ function (_React$Component) {
     };
 
     _this.handleSelectRow = function (selectionKey, index, onSelectFunc) {
-      var data = _this.getFlatCurrentPageData(_this.props.childrenColumnName);
+      var data = _this.getFlatCurrentPageData();
 
       var defaultSelection = _this.store.getState().selectionDirty ? [] : _this.getDefaultSelection();
 
@@ -485,7 +486,7 @@ function (_React$Component) {
     _this.getRecordKey = function (record, index) {
       var rowKey = _this.props.rowKey;
       var recordKey = typeof rowKey === 'function' ? rowKey(record, index) : record[rowKey];
-      (0, _warning["default"])(recordKey !== undefined, 'Each record in dataSource of table should have a unique `key` prop, ' + 'or set `rowKey` of Table to an unique primary key, ' + 'see https://u.ant.design/table-row-key');
+      (0, _warning["default"])(recordKey !== undefined, 'Table', 'Each record in dataSource of table should have a unique `key` prop, ' + 'or set `rowKey` of Table to an unique primary key, ' + 'see https://u.ant.design/table-row-key');
       return recordKey === undefined ? index : recordKey;
     };
 
@@ -521,7 +522,7 @@ function (_React$Component) {
       }
     };
 
-    _this.renderTable = function (prefixCls, renderEmpty, dropdownPrefixCls, contextLocale, loading) {
+    _this.renderTable = function (prefixCls, renderEmpty, dropdownPrefixCls, contextLocale) {
       var _classNames;
 
       var _a = _this.props,
@@ -572,7 +573,7 @@ function (_React$Component) {
         className: classString,
         expandIconColumnIndex: expandIconColumnIndex,
         expandIconAsCell: expandIconAsCell,
-        emptyText: !loading.spinning && mergedLocale.emptyText
+        emptyText: mergedLocale.emptyText
       }));
     };
 
@@ -601,7 +602,7 @@ function (_React$Component) {
         componentName: "Table",
         defaultLocale: _default["default"].Table
       }, function (locale) {
-        return _this.renderTable(prefixCls, renderEmpty, dropdownPrefixCls, locale, loading);
+        return _this.renderTable(prefixCls, renderEmpty, dropdownPrefixCls, locale);
       }); // if there is no pagination or no data,
       // the height of spin should decrease by half of pagination
 
@@ -614,8 +615,18 @@ function (_React$Component) {
       }), _this.renderPagination(prefixCls, 'top'), table, _this.renderPagination(prefixCls, 'bottom')));
     };
 
-    (0, _warning["default"])(!('columnsPageRange' in props || 'columnsPageSize' in props), '`columnsPageRange` and `columnsPageSize` are removed, please use ' + 'fixed columns instead, see: https://u.ant.design/fixed-columns.');
-    (0, _warning["default"])(!('expandedRowRender' in props) || !('scroll' in props), '`expandedRowRender` and `scroll` are not compatible. Please use one of them at one time.');
+    var expandedRowRender = props.expandedRowRender,
+        _props$columns = props.columns,
+        columns = _props$columns === void 0 ? [] : _props$columns;
+    (0, _warning["default"])(!('columnsPageRange' in props || 'columnsPageSize' in props), 'Table', '`columnsPageRange` and `columnsPageSize` are removed, please use ' + 'fixed columns instead, see: https://u.ant.design/fixed-columns.');
+
+    if (expandedRowRender && columns.some(function (_ref2) {
+      var fixed = _ref2.fixed;
+      return !!fixed;
+    })) {
+      (0, _warning["default"])(false, 'Table', '`expandedRowRender` and `Column.fixed` are not compatible. Please use one of them at one time.');
+    }
+
     _this.columns = props.columns || (0, _util.normalizeColumns)(props.children);
 
     _this.createComponents(props.components);
@@ -880,9 +891,9 @@ function (_React$Component) {
   }, {
     key: "getSorterFn",
     value: function getSorterFn(state) {
-      var _ref2 = state || this.state,
-          sortOrder = _ref2.sortOrder,
-          sortColumn = _ref2.sortColumn;
+      var _ref3 = state || this.state,
+          sortOrder = _ref3.sortOrder,
+          sortColumn = _ref3.sortColumn;
 
       if (!sortOrder || !sortColumn || typeof sortColumn.sorter !== 'function') {
         return;
@@ -918,6 +929,8 @@ function (_React$Component) {
         return;
       }
 
+      var pagination = _extends({}, this.state.pagination);
+
       var sortDirections = column.sortDirections || this.props.sortDirections;
       var _this$state = this.state,
           sortOrder = _this$state.sortOrder,
@@ -933,7 +946,14 @@ function (_React$Component) {
         newSortOrder = sortDirections[0];
       }
 
+      if (this.props.pagination) {
+        // Reset current prop
+        pagination.current = 1;
+        pagination.onChange(pagination.current);
+      }
+
       var newState = {
+        pagination: pagination,
         sortOrder: newSortOrder,
         sortColumn: newSortOrder ? column : null
       }; // Controlled
@@ -953,13 +973,11 @@ function (_React$Component) {
     value: function renderRowSelection(prefixCls, locale) {
       var _this6 = this;
 
-      var _this$props2 = this.props,
-          rowSelection = _this$props2.rowSelection,
-          childrenColumnName = _this$props2.childrenColumnName;
+      var rowSelection = this.props.rowSelection;
       var columns = this.columns.concat();
 
       if (rowSelection) {
-        var data = this.getFlatCurrentPageData(childrenColumnName).filter(function (item, index) {
+        var data = this.getFlatCurrentPageData().filter(function (item, index) {
           if (rowSelection.getCheckboxProps) {
             return !_this6.getCheckboxPropsByItem(item, index).disabled;
           }
@@ -967,14 +985,17 @@ function (_React$Component) {
           return true;
         });
         var selectionColumnClass = (0, _classnames["default"])("".concat(prefixCls, "-selection-column"), _defineProperty({}, "".concat(prefixCls, "-selection-column-custom"), rowSelection.selections));
-        var selectionColumn = {
+
+        var selectionColumn = _defineProperty({
           key: 'selection-column',
           render: this.renderSelectionBox(rowSelection.type),
           className: selectionColumnClass,
           fixed: rowSelection.fixed,
-          width: rowSelection.columnWidth || ROW_SELECTION_COLUMN_WIDTH,
+          width: rowSelection.columnWidth,
           title: rowSelection.columnTitle
-        };
+        }, _rcTable.INTERNAL_COL_DEFINE, {
+          className: "".concat(prefixCls, "-selection-col")
+        });
 
         if (rowSelection.type !== 'radio') {
           var checkboxAllDisabled = data.every(function (item, index) {
@@ -1090,7 +1111,7 @@ function (_React$Component) {
           });
           sortButton = React.createElement("div", {
             title: locale.sortTitle,
-            className: "".concat(prefixCls, "-column-sorter"),
+            className: (0, _classnames["default"])("".concat(prefixCls, "-column-sorter-inner"), ascend && descend && "".concat(prefixCls, "-column-sorter-inner-full")),
             key: "sorter"
           }, ascend, descend);
 
@@ -1118,10 +1139,16 @@ function (_React$Component) {
 
         return _extends({}, column, {
           className: (0, _classnames["default"])(column.className, (_classNames3 = {}, _defineProperty(_classNames3, "".concat(prefixCls, "-column-has-actions"), sortButton || filterDropdown), _defineProperty(_classNames3, "".concat(prefixCls, "-column-has-filters"), filterDropdown), _defineProperty(_classNames3, "".concat(prefixCls, "-column-has-sorters"), sortButton), _defineProperty(_classNames3, "".concat(prefixCls, "-column-sort"), isSortColumn && sortOrder), _classNames3)),
-          title: [React.createElement("div", {
+          title: [React.createElement("span", {
             key: "title",
+            className: "".concat(prefixCls, "-header-column")
+          }, React.createElement("div", {
             className: sortButton ? "".concat(prefixCls, "-column-sorters") : undefined
-          }, _this7.renderColumnTitle(column.title), sortButton), filterDropdown],
+          }, React.createElement("span", {
+            className: "".concat(prefixCls, "-column-title")
+          }, _this7.renderColumnTitle(column.title)), React.createElement("span", {
+            className: "".concat(prefixCls, "-column-sorter")
+          }, sortButton))), filterDropdown],
           onHeaderCell: onHeaderCell
         });
       });
@@ -1240,11 +1267,13 @@ function (_React$Component) {
   }, {
     key: "getFlatData",
     value: function getFlatData() {
-      return (0, _util.flatArray)(this.getLocalData(null, false));
+      var childrenColumnName = this.props.childrenColumnName;
+      return (0, _util.flatArray)(this.getLocalData(null, false), childrenColumnName);
     }
   }, {
     key: "getFlatCurrentPageData",
-    value: function getFlatCurrentPageData(childrenColumnName) {
+    value: function getFlatCurrentPageData() {
+      var childrenColumnName = this.props.childrenColumnName;
       return (0, _util.flatArray)(this.getCurrentPageData(), childrenColumnName);
     }
   }, {
@@ -1358,5 +1387,7 @@ Table.defaultProps = {
   locale: {},
   rowKey: 'key',
   showHeader: true,
-  sortDirections: ['ascend', 'descend']
+  sortDirections: ['ascend', 'descend'],
+  childrenColumnName: 'children'
 };
+//# sourceMappingURL=Table.js.map

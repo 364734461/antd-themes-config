@@ -2,7 +2,8 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import Group from './button-group';
 import { ConfigConsumerProps } from '../config-provider';
-declare const ButtonTypes: ["default", "primary", "ghost", "dashed", "danger"];
+import { Omit } from '../_util/type';
+declare const ButtonTypes: ["default", "primary", "ghost", "dashed", "danger", "link"];
 export declare type ButtonType = (typeof ButtonTypes)[number];
 declare const ButtonShapes: ["circle", "circle-outline", "round"];
 export declare type ButtonShape = (typeof ButtonShapes)[number];
@@ -27,13 +28,13 @@ export interface BaseButtonProps {
 export declare type AnchorButtonProps = {
     href: string;
     target?: string;
-    onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-} & BaseButtonProps & React.AnchorHTMLAttributes<HTMLAnchorElement>;
+    onClick?: React.MouseEventHandler<HTMLElement>;
+} & BaseButtonProps & Omit<React.AnchorHTMLAttributes<any>, 'type' | 'onClick'>;
 export declare type NativeButtonProps = {
     htmlType?: ButtonHTMLType;
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
-} & BaseButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
-export declare type ButtonProps = AnchorButtonProps | NativeButtonProps;
+    onClick?: React.MouseEventHandler<HTMLElement>;
+} & BaseButtonProps & Omit<React.ButtonHTMLAttributes<any>, 'type' | 'onClick'>;
+export declare type ButtonProps = Partial<AnchorButtonProps & NativeButtonProps>;
 interface ButtonState {
     loading?: boolean | {
         delay?: number;
@@ -47,6 +48,7 @@ declare class Button extends React.Component<ButtonProps, ButtonState> {
         loading: boolean;
         ghost: boolean;
         block: boolean;
+        htmlType: string;
     };
     static propTypes: {
         type: PropTypes.Requireable<string>;

@@ -21,12 +21,16 @@ var _default = {
   DatePicker: _es_ES2["default"],
   TimePicker: _es_ES3["default"],
   Calendar: _es_ES4["default"],
+  global: {
+    placeholder: 'Seleccione'
+  },
   Table: {
     filterTitle: 'Filtrar menú',
     filterConfirm: 'Aceptar',
     filterReset: 'Reiniciar',
     selectAll: 'Seleccionar todo',
-    selectInvert: 'Invertir selección'
+    selectInvert: 'Invertir selección',
+    sortTitle: 'Ordenar'
   },
   Modal: {
     okText: 'Aceptar',
@@ -50,6 +54,19 @@ var _default = {
   },
   Empty: {
     description: 'No hay datos'
+  },
+  Icon: {
+    icon: 'ícono'
+  },
+  Text: {
+    edit: 'editar',
+    copy: 'copiar',
+    copied: 'copiado',
+    expand: 'expandir'
+  },
+  PageHeader: {
+    back: 'volver'
   }
 };
 exports["default"] = _default;
+//# sourceMappingURL=es_ES.js.map

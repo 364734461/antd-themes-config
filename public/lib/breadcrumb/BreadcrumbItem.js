@@ -9,7 +9,13 @@ var React = _interopRequireWildcard(require("react"));
 
 var PropTypes = _interopRequireWildcard(require("prop-types"));
 
+var _dropdown = _interopRequireDefault(require("../dropdown/dropdown"));
+
+var _icon = _interopRequireDefault(require("../icon"));
+
 var _configProvider = require("../config-provider");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
 
@@ -41,7 +47,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -65,7 +71,8 @@ function (_React$Component) {
           customizePrefixCls = _a.prefixCls,
           separator = _a.separator,
           children = _a.children,
-          restProps = __rest(_a, ["prefixCls", "separator", "children"]);
+          overlay = _a.overlay,
+          restProps = __rest(_a, ["prefixCls", "separator", "children", "overlay"]);
 
       var prefixCls = getPrefixCls('breadcrumb', customizePrefixCls);
       var link;
@@ -78,7 +85,10 @@ function (_React$Component) {
         link = React.createElement("span", _extends({
           className: "".concat(prefixCls, "-link")
         }, restProps), children);
-      }
+      } // wrap to dropDown
+
+
+      link = _this.renderBreadcrumbNode(link, prefixCls);
 
       if (children) {
         return React.createElement("span", null, link, React.createElement("span", {
@@ -87,6 +97,28 @@ function (_React$Component) {
       }
 
       return null;
+    };
+    /**
+     * if overlay is have
+     * Wrap a DropDown
+     */
+
+
+    _this.renderBreadcrumbNode = function (breadcrumbItem, prefixCls) {
+      var overlay = _this.props.overlay;
+
+      if (overlay) {
+        return React.createElement(_dropdown["default"], {
+          overlay: overlay,
+          placement: "bottomCenter"
+        }, React.createElement("span", {
+          className: "".concat(prefixCls, "-overlay-link")
+        }, breadcrumbItem, React.createElement(_icon["default"], {
+          type: "down"
+        })));
+      }
+
+      return breadcrumbItem;
     };
 
     return _this;
@@ -112,3 +144,4 @@ BreadcrumbItem.propTypes = {
   separator: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   href: PropTypes.string
 };
+//# sourceMappingURL=BreadcrumbItem.js.map

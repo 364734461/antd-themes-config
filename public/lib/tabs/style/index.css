@@ -9,22 +9,30 @@
   visibility: hidden;
 }
 .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab {
+  height: 40px;
   margin: 0;
   margin-right: 2px;
   padding: 0 16px;
   line-height: 38px;
   background: #fafafa;
   border: 1px solid #e8e8e8;
-  border-bottom: 0;
   border-radius: 4px 4px 0 0;
   -webkit-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active {
-  padding-bottom: 1px;
+  height: 40px;
   color: #1890ff;
   background: #fff;
   border-color: #e8e8e8;
+  border-bottom: 1px solid #fff;
+}
+.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active::before {
+  border-top: 2px solid transparent;
+}
+.ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-disabled {
+  color: #1890ff;
+  color: rgba(0, 0, 0, 0.25);
 }
 .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-inactive {
   padding: 0;
@@ -91,7 +99,7 @@
 }
 .ant-tabs-vertical.ant-tabs-card .ant-tabs-card-bar.ant-tabs-left-bar .ant-tabs-nav-container,
 .ant-tabs-vertical.ant-tabs-card .ant-tabs-card-bar.ant-tabs-right-bar .ant-tabs-nav-container {
-  height: auto;
+  height: 100%;
 }
 .ant-tabs-vertical.ant-tabs-card .ant-tabs-card-bar.ant-tabs-left-bar .ant-tabs-tab,
 .ant-tabs-vertical.ant-tabs-card .ant-tabs-card-bar.ant-tabs-right-bar .ant-tabs-tab {
@@ -135,6 +143,7 @@
   padding-left: 18px;
 }
 .ant-tabs .ant-tabs-card-bar.ant-tabs-bottom-bar .ant-tabs-tab {
+  height: auto;
   border-top: 0;
   border-bottom: 1px solid #e8e8e8;
   border-radius: 0 0 4px 4px;
@@ -162,8 +171,8 @@
 }
 .ant-tabs::before,
 .ant-tabs::after {
-  content: '';
   display: table;
+  content: '';
 }
 .ant-tabs::after {
   clear: both;
@@ -203,8 +212,8 @@
 }
 .ant-tabs-nav-container::before,
 .ant-tabs-nav-container::after {
-  content: '';
   display: table;
+  content: '';
 }
 .ant-tabs-nav-container::after {
   clear: both;
@@ -346,6 +355,18 @@
   -webkit-transition: color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition: color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
+.ant-tabs-nav .ant-tabs-tab::before {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  border-top: 2px solid transparent;
+  border-radius: 4px 4px 0 0;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  content: '';
+  pointer-events: none;
+}
 .ant-tabs-nav .ant-tabs-tab:last-child {
   margin-right: 0;
 }
@@ -358,14 +379,14 @@
 .ant-tabs-nav .ant-tabs-tab .anticon {
   margin-right: 8px;
 }
+.ant-tabs-nav .ant-tabs-tab-active {
+  color: #1890ff;
+  font-weight: 500;
+}
 .ant-tabs-nav .ant-tabs-tab-disabled,
 .ant-tabs-nav .ant-tabs-tab-disabled:hover {
   color: rgba(0, 0, 0, 0.25);
   cursor: not-allowed;
-}
-.ant-tabs-nav .ant-tabs-tab-active {
-  color: #1890ff;
-  font-weight: 500;
 }
 .ant-tabs .ant-tabs-large-bar .ant-tabs-nav-container {
   font-size: 16px;
@@ -385,9 +406,8 @@
 }
 .ant-tabs .ant-tabs-top-content > .ant-tabs-tabpane,
 .ant-tabs .ant-tabs-bottom-content > .ant-tabs-tabpane {
-  -webkit-flex-shrink: 0;
-      -ms-flex-negative: 0;
-          flex-shrink: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
   width: 100%;
   opacity: 1;
   -webkit-transition: opacity 0.45s;
@@ -397,6 +417,7 @@
 .ant-tabs .ant-tabs-bottom-content > .ant-tabs-tabpane-inactive {
   height: 0;
   padding: 0 !important;
+  overflow: hidden;
   opacity: 0;
   pointer-events: none;
 }
@@ -407,12 +428,10 @@
 .ant-tabs .ant-tabs-top-content.ant-tabs-content-animated,
 .ant-tabs .ant-tabs-bottom-content.ant-tabs-content-animated {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
       -ms-flex-direction: row;
           flex-direction: row;
   -webkit-transition: margin-left 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -424,19 +443,10 @@
   height: 100%;
   border-bottom: 0;
 }
-.ant-tabs .ant-tabs-left-bar-tab-prev,
-.ant-tabs .ant-tabs-right-bar-tab-prev,
-.ant-tabs .ant-tabs-left-bar-tab-next,
-.ant-tabs .ant-tabs-right-bar-tab-next {
-  width: 32px;
-  height: 0;
-  -webkit-transition: height 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-  transition: height 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-}
-.ant-tabs .ant-tabs-left-bar-tab-prev.ant-tabs-tab-arrow-show,
-.ant-tabs .ant-tabs-right-bar-tab-prev.ant-tabs-tab-arrow-show,
-.ant-tabs .ant-tabs-left-bar-tab-next.ant-tabs-tab-arrow-show,
-.ant-tabs .ant-tabs-right-bar-tab-next.ant-tabs-tab-arrow-show {
+.ant-tabs .ant-tabs-left-bar .ant-tabs-tab-arrow-show,
+.ant-tabs .ant-tabs-right-bar .ant-tabs-tab-arrow-show,
+.ant-tabs .ant-tabs-left-bar .ant-tabs-tab-arrow-show,
+.ant-tabs .ant-tabs-right-bar .ant-tabs-tab-arrow-show {
   width: 100%;
   height: 32px;
 }
@@ -491,6 +501,7 @@
 }
 .ant-tabs .ant-tabs-left-bar .ant-tabs-tab-next,
 .ant-tabs .ant-tabs-right-bar .ant-tabs-tab-next {
+  right: 0;
   bottom: 0;
   width: 100%;
   height: 32px;
@@ -571,7 +582,15 @@
 }
 .no-flex > .ant-tabs-content > .ant-tabs-tabpane-inactive,
 .ant-tabs-no-animation > .ant-tabs-content > .ant-tabs-tabpane-inactive {
-  display: none;
+  height: 0;
+  padding: 0 !important;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.no-flex > .ant-tabs-content > .ant-tabs-tabpane-inactive input,
+.ant-tabs-no-animation > .ant-tabs-content > .ant-tabs-tabpane-inactive input {
+  visibility: hidden;
 }
 .ant-tabs-left-content > .ant-tabs-content-animated,
 .ant-tabs-right-content > .ant-tabs-content-animated {
@@ -582,5 +601,13 @@
 }
 .ant-tabs-left-content > .ant-tabs-tabpane-inactive,
 .ant-tabs-right-content > .ant-tabs-tabpane-inactive {
-  display: none;
+  height: 0;
+  padding: 0 !important;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.ant-tabs-left-content > .ant-tabs-tabpane-inactive input,
+.ant-tabs-right-content > .ant-tabs-tabpane-inactive input {
+  visibility: hidden;
 }

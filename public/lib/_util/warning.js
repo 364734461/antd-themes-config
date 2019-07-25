@@ -11,11 +11,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 var warned = {};
 
-var _default = function _default(valid, message) {
+var _default = function _default(valid, component, message) {
   if (!valid && !warned[message]) {
-    (0, _warning["default"])(false, message);
+    (0, _warning["default"])(false, "[antd: ".concat(component, "] ").concat(message));
     warned[message] = true;
   }
 };
 
 exports["default"] = _default;
+//# sourceMappingURL=warning.js.map

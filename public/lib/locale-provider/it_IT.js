@@ -21,6 +21,9 @@ var _default = {
   DatePicker: _it_IT2["default"],
   TimePicker: _it_IT3["default"],
   Calendar: _it_IT4["default"],
+  global: {
+    placeholder: 'Selezionare'
+  },
   Table: {
     filterTitle: 'Menù Filtro',
     filterConfirm: 'OK',
@@ -40,7 +43,7 @@ var _default = {
   },
   Transfer: {
     searchPlaceholder: 'Cerca qui',
-    itemUnit: 'articolo',
+    itemUnit: 'elemento',
     itemsUnit: 'elementi'
   },
   Upload: {
@@ -51,6 +54,16 @@ var _default = {
   },
   Empty: {
     description: 'Nessun dato'
+  },
+  Icon: {
+    icon: 'icona'
+  },
+  Text: {
+    edit: 'modifica',
+    copy: 'copia',
+    copied: 'copia effettuata',
+    expand: 'espandi'
   }
 };
 exports["default"] = _default;
+//# sourceMappingURL=it_IT.js.map

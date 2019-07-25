@@ -3,5 +3,4 @@
 require("../../style/index.css");
 
 require("./index.css");
-
-require("../../checkbox/style/css");
+//# sourceMappingURL=css.js.map

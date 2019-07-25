@@ -22,6 +22,9 @@ export interface ArgsProps {
     className?: string;
     readonly type?: IconType;
     onClick?: () => void;
+    top?: number;
+    bottom?: number;
+    getContainer?: () => HTMLElement;
 }
 export interface NotificationApi {
     success(args: ArgsProps): void;

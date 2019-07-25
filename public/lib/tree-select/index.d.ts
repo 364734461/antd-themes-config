@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { TreeSelectProps } from './interface';
+import { TreeSelectProps, TreeNodeValue } from './interface';
 import { ConfigConsumerProps } from '../config-provider';
 import { AntTreeNodeProps } from '../tree';
 export { TreeNode, TreeSelectProps } from './interface';
-export default class TreeSelect extends React.Component<TreeSelectProps, any> {
+export default class TreeSelect<T extends TreeNodeValue> extends React.Component<TreeSelectProps<T>, any> {
     static TreeNode: any;
     static SHOW_ALL: any;
     static SHOW_PARENT: any;
@@ -11,10 +11,9 @@ export default class TreeSelect extends React.Component<TreeSelectProps, any> {
     static defaultProps: {
         transitionName: string;
         choiceTransitionName: string;
-        showSearch: boolean;
     };
     private rcTreeSelect;
-    constructor(props: TreeSelectProps);
+    constructor(props: TreeSelectProps<T>);
     focus(): void;
     blur(): void;
     saveTreeSelect: (node: any) => void;

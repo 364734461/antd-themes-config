@@ -17,6 +17,8 @@ var _RowContext = _interopRequireDefault(require("./RowContext"));
 
 var _type = require("../_util/type");
 
+var _responsiveObserve = _interopRequireWildcard(require("../_util/responsiveObserve"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -51,40 +53,13 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
 
-// matchMedia polyfill for
-// https://github.com/WickyNilliams/enquire.js/issues/82
-var enquire;
-
-if (typeof window !== 'undefined') {
-  var matchMediaPolyfill = function matchMediaPolyfill(mediaQuery) {
-    return {
-      media: mediaQuery,
-      matches: false,
-      addListener: function addListener() {},
-      removeListener: function removeListener() {}
-    };
-  };
-
-  window.matchMedia = window.matchMedia || matchMediaPolyfill;
-  enquire = require('enquire.js');
-}
-
 var RowAligns = (0, _type.tuple)('top', 'middle', 'bottom');
 var RowJustify = (0, _type.tuple)('start', 'end', 'center', 'space-around', 'space-between');
-var responsiveArray = ['xxl', 'xl', 'lg', 'md', 'sm', 'xs'];
-var responsiveMap = {
-  xs: '(max-width: 575px)',
-  sm: '(min-width: 576px)',
-  md: '(min-width: 768px)',
-  lg: '(min-width: 992px)',
-  xl: '(min-width: 1200px)',
-  xxl: '(min-width: 1600px)'
-};
 
 var Row =
 /*#__PURE__*/
@@ -147,41 +122,18 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      Object.keys(responsiveMap).map(function (screen) {
-        return enquire.register(responsiveMap[screen], {
-          match: function match() {
-            if (_typeof(_this2.props.gutter) !== 'object') {
-              return;
-            }
-
-            _this2.setState(function (prevState) {
-              return {
-                screens: _extends({}, prevState.screens, _defineProperty({}, screen, true))
-              };
-            });
-          },
-          unmatch: function unmatch() {
-            if (_typeof(_this2.props.gutter) !== 'object') {
-              return;
-            }
-
-            _this2.setState(function (prevState) {
-              return {
-                screens: _extends({}, prevState.screens, _defineProperty({}, screen, false))
-              };
-            });
-          },
-          // Keep a empty destory to avoid triggering unmatch when unregister
-          destroy: function destroy() {}
-        });
+      this.token = _responsiveObserve["default"].subscribe(function (screens) {
+        if (_typeof(_this2.props.gutter) === 'object') {
+          _this2.setState({
+            screens: screens
+          });
+        }
       });
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      Object.keys(responsiveMap).map(function (screen) {
-        return enquire.unregister(responsiveMap[screen]);
-      });
+      _responsiveObserve["default"].unsubscribe(this.token);
     }
   }, {
     key: "getGutter",
@@ -189,8 +141,8 @@ function (_React$Component) {
       var gutter = this.props.gutter;
 
       if (_typeof(gutter) === 'object') {
-        for (var i = 0; i < responsiveArray.length; i++) {
-          var breakpoint = responsiveArray[i];
+        for (var i = 0; i < _responsiveObserve.responsiveArray.length; i++) {
+          var breakpoint = _responsiveObserve.responsiveArray[i];
 
           if (this.state.screens[breakpoint] && gutter[breakpoint] !== undefined) {
             return gutter[breakpoint];
@@ -223,3 +175,4 @@ Row.propTypes = {
   gutter: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
   prefixCls: PropTypes.string
 };
+//# sourceMappingURL=row.js.map

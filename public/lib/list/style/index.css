@@ -37,32 +37,35 @@
 }
 .ant-list-empty-text {
   padding: 16px;
-  color: rgba(0, 0, 0, 0.45);
+  color: rgba(0, 0, 0, 0.25);
   font-size: 14px;
   text-align: center;
 }
+.ant-list-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 .ant-list-item {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   padding: 12px 0;
 }
+.ant-list-item-content {
+  color: rgba(0, 0, 0, 0.65);
+}
 .ant-list-item-meta {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-flex: 1;
-  -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1;
   -webkit-box-align: start;
-  -webkit-align-items: flex-start;
       -ms-flex-align: start;
           align-items: flex-start;
   font-size: 0;
@@ -72,7 +75,6 @@
 }
 .ant-list-item-meta-content {
   -webkit-box-flex: 1;
-  -webkit-flex: 1 0;
       -ms-flex: 1 0;
           flex: 1 0;
 }
@@ -95,29 +97,8 @@
   font-size: 14px;
   line-height: 22px;
 }
-.ant-list-item-content {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
-}
-.ant-list-item-content-single {
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-}
 .ant-list-item-action {
   -webkit-box-flex: 0;
-  -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
   margin-left: 48px;
@@ -146,16 +127,6 @@
   height: 14px;
   margin-top: -7px;
   background-color: #e8e8e8;
-}
-.ant-list-item-main {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
 }
 .ant-list-header {
   background: transparent;
@@ -186,7 +157,7 @@
 .ant-list-loading .ant-list-spin-nested-loading {
   min-height: 32px;
 }
-.ant-list-something-after-last-item .ant-spin-container > .ant-list-item:last-child {
+.ant-list-something-after-last-item .ant-spin-container > .ant-list-items > .ant-list-item:last-child {
   border-bottom: 1px solid #e8e8e8;
 }
 .ant-list-lg .ant-list-item {
@@ -198,23 +169,18 @@
   padding-bottom: 8px;
 }
 .ant-list-vertical .ant-list-item {
-  display: block;
-}
-.ant-list-vertical .ant-list-item-extra-wrap {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
+  -webkit-box-align: initial;
+      -ms-flex-align: initial;
+          align-items: initial;
 }
 .ant-list-vertical .ant-list-item-main {
   display: block;
   -webkit-box-flex: 1;
-  -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1;
 }
 .ant-list-vertical .ant-list-item-extra {
-  margin-left: 58px;
+  margin-left: 40px;
 }
 .ant-list-vertical .ant-list-item-meta {
   margin-bottom: 16px;
@@ -225,13 +191,8 @@
   font-size: 16px;
   line-height: 24px;
 }
-.ant-list-vertical .ant-list-item-content {
-  display: block;
-  margin: 0 0 16px 0;
-  color: rgba(0, 0, 0, 0.65);
-  font-size: 14px;
-}
 .ant-list-vertical .ant-list-item-action {
+  margin-top: 16px;
   margin-left: auto;
 }
 .ant-list-vertical .ant-list-item-action > li {
@@ -241,14 +202,18 @@
   padding-left: 0;
 }
 .ant-list-grid .ant-list-item {
+  display: block;
+  max-width: 100%;
   margin-bottom: 16px;
   padding-top: 0;
   padding-bottom: 0;
   border-bottom: none;
 }
-.ant-list-grid .ant-list-item-content {
+.ant-list-item-no-flex {
   display: block;
-  max-width: 100%;
+}
+.ant-list:not(.ant-list-vertical) .ant-list-item-no-flex .ant-list-item-action {
+  float: right;
 }
 .ant-list-bordered {
   border: 1px solid #d9d9d9;
@@ -290,24 +255,22 @@
     margin-left: 24px;
   }
 }
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 576px) {
   .ant-list-item {
-    -webkit-flex-wrap: wrap;
-        -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
   }
   .ant-list-item-action {
     margin-left: 12px;
   }
-  .ant-list-vertical .ant-list-item-extra-wrap {
-    -webkit-flex-wrap: wrap-reverse;
-        -ms-flex-wrap: wrap-reverse;
-            flex-wrap: wrap-reverse;
+  .ant-list-vertical .ant-list-item {
+    -ms-flex-wrap: wrap-reverse;
+        flex-wrap: wrap-reverse;
   }
   .ant-list-vertical .ant-list-item-main {
     min-width: 220px;
   }
   .ant-list-vertical .ant-list-item-extra {
-    margin-left: 0;
+    margin: auto auto 16px;
   }
 }

@@ -3,9 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports["default"] = exports.SiderContext = void 0;
+
+var _createReactContext = _interopRequireDefault(require("@ant-design/create-react-context"));
 
 var _configProvider = require("../config-provider");
+
+var _layout = require("./layout");
 
 var React = _interopRequireWildcard(require("react"));
 
@@ -15,15 +19,13 @@ var _classnames = _interopRequireDefault(require("classnames"));
 
 var _omit = _interopRequireDefault(require("omit.js"));
 
-var PropTypes = _interopRequireWildcard(require("prop-types"));
-
 var _icon = _interopRequireDefault(require("../icon"));
 
 var _isNumeric = _interopRequireDefault(require("../_util/isNumeric"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -55,7 +57,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -83,6 +85,8 @@ var dimensionMap = {
   xl: '1200px',
   xxl: '1600px'
 };
+var SiderContext = (0, _createReactContext["default"])({});
+exports.SiderContext = SiderContext;
 
 var generateId = function () {
   var i = 0;
@@ -93,17 +97,17 @@ var generateId = function () {
   };
 }();
 
-var Sider =
+var InternalSider =
 /*#__PURE__*/
 function (_React$Component) {
-  _inherits(Sider, _React$Component);
+  _inherits(InternalSider, _React$Component);
 
-  function Sider(props) {
+  function InternalSider(props) {
     var _this;
 
-    _classCallCheck(this, Sider);
+    _classCallCheck(this, InternalSider);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Sider).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(InternalSider).call(this, props));
 
     _this.responsiveHandler = function (mql) {
       _this.setState({
@@ -165,7 +169,7 @@ function (_React$Component) {
           others = __rest(_a, ["prefixCls", "className", "theme", "collapsible", "reverseArrow", "trigger", "style", "width", "collapsedWidth"]);
 
       var prefixCls = getPrefixCls('layout-sider', customizePrefixCls);
-      var divProps = (0, _omit["default"])(others, ['collapsed', 'defaultCollapsed', 'onCollapse', 'breakpoint', 'onBreakpoint']);
+      var divProps = (0, _omit["default"])(others, ['collapsed', 'defaultCollapsed', 'onCollapse', 'breakpoint', 'onBreakpoint', 'siderHook']);
       var rawWidth = _this.state.collapsed ? collapsedWidth : width; // use "px" as fallback unit for width
 
       var siderWidth = (0, _isNumeric["default"])(rawWidth) ? "".concat(rawWidth, "px") : String(rawWidth); // special trigger when collapsedWidth == 0
@@ -206,7 +210,7 @@ function (_React$Component) {
       });
 
       var siderCls = (0, _classnames["default"])(className, prefixCls, "".concat(prefixCls, "-").concat(theme), (_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-collapsed"), !!_this.state.collapsed), _defineProperty(_classNames, "".concat(prefixCls, "-has-trigger"), collapsible && trigger !== null && !zeroWidthTrigger), _defineProperty(_classNames, "".concat(prefixCls, "-below"), !!_this.state.below), _defineProperty(_classNames, "".concat(prefixCls, "-zero-width"), parseFloat(siderWidth) === 0), _classNames));
-      return React.createElement("div", _extends({
+      return React.createElement("aside", _extends({
         className: siderCls
       }, divProps, {
         style: divStyle
@@ -241,15 +245,7 @@ function (_React$Component) {
     return _this;
   }
 
-  _createClass(Sider, [{
-    key: "getChildContext",
-    value: function getChildContext() {
-      return {
-        siderCollapsed: this.state.collapsed,
-        collapsedWidth: this.props.collapsedWidth
-      };
-    }
-  }, {
+  _createClass(InternalSider, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       if (this.mql) {
@@ -257,8 +253,8 @@ function (_React$Component) {
         this.responsiveHandler(this.mql);
       }
 
-      if (this.context.siderHook) {
-        this.context.siderHook.addSider(this.uniqueId);
+      if (this.props.siderHook) {
+        this.props.siderHook.addSider(this.uniqueId);
       }
     }
   }, {
@@ -268,14 +264,21 @@ function (_React$Component) {
         this.mql.removeListener(this.responsiveHandler);
       }
 
-      if (this.context.siderHook) {
-        this.context.siderHook.removeSider(this.uniqueId);
+      if (this.props.siderHook) {
+        this.props.siderHook.removeSider(this.uniqueId);
       }
     }
   }, {
     key: "render",
     value: function render() {
-      return React.createElement(_configProvider.ConfigConsumer, null, this.renderSider);
+      var collapsed = this.state.collapsed;
+      var collapsedWidth = this.props.collapsedWidth;
+      return React.createElement(SiderContext.Provider, {
+        value: {
+          siderCollapsed: collapsed,
+          collapsedWidth: collapsedWidth
+        }
+      }, React.createElement(_configProvider.ConfigConsumer, null, this.renderSider));
     }
   }], [{
     key: "getDerivedStateFromProps",
@@ -290,11 +293,10 @@ function (_React$Component) {
     }
   }]);
 
-  return Sider;
+  return InternalSider;
 }(React.Component);
 
-Sider.__ANT_LAYOUT_SIDER = true;
-Sider.defaultProps = {
+InternalSider.defaultProps = {
   collapsible: false,
   defaultCollapsed: false,
   reverseArrow: false,
@@ -303,13 +305,32 @@ Sider.defaultProps = {
   style: {},
   theme: 'dark'
 };
-Sider.childContextTypes = {
-  siderCollapsed: PropTypes.bool,
-  collapsedWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
-};
-Sider.contextTypes = {
-  siderHook: PropTypes.object
-};
-(0, _reactLifecyclesCompat.polyfill)(Sider);
-var _default = Sider;
-exports["default"] = _default;
+(0, _reactLifecyclesCompat.polyfill)(InternalSider);
+
+var Sider =
+/*#__PURE__*/
+function (_React$Component2) {
+  _inherits(Sider, _React$Component2);
+
+  function Sider() {
+    _classCallCheck(this, Sider);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Sider).apply(this, arguments));
+  }
+
+  _createClass(Sider, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      return React.createElement(_layout.LayoutContext.Consumer, null, function (context) {
+        return React.createElement(InternalSider, _extends({}, context, _this2.props));
+      });
+    }
+  }]);
+
+  return Sider;
+}(React.Component);
+
+exports["default"] = Sider;
+//# sourceMappingURL=Sider.js.map

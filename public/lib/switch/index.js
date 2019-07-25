@@ -115,6 +115,7 @@ function (_React$Component) {
 }(React.Component);
 
 exports["default"] = Switch;
+Switch.__ANT_SWITCH = true;
 Switch.propTypes = {
   prefixCls: PropTypes.string,
   // HACK: https://github.com/ant-design/ant-design/issues/5368
@@ -122,3 +123,4 @@ Switch.propTypes = {
   size: PropTypes.oneOf(['small', 'default', 'large']),
   className: PropTypes.string
 };
+//# sourceMappingURL=index.js.map

@@ -74,8 +74,10 @@ function (_React$Component) {
             // It's unnecessary to set loading=false, for the Modal will be unmounted after close.
             // this.setState({ loading: false });
             closeModal.apply(void 0, arguments);
-          }, function () {
-            // See: https://github.com/ant-design/ant-design/issues/6183
+          }, function (e) {
+            // Emit error when catch promise reject
+            console.error(e); // See: https://github.com/ant-design/ant-design/issues/6183
+
             _this.setState({
               loading: false
             });
@@ -127,3 +129,4 @@ function (_React$Component) {
 }(React.Component);
 
 exports["default"] = ActionButton;
+//# sourceMappingURL=ActionButton.js.map

@@ -23,7 +23,7 @@ export interface TimePickerProps {
     disabledMinutes?: (selectedHour: number) => number[];
     disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[];
     style?: React.CSSProperties;
-    getPopupContainer?: (triggerNode: Element) => HTMLElement;
+    getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
     addon?: Function;
     use12Hours?: boolean;
     focusOnOpen?: boolean;
@@ -38,6 +38,8 @@ export interface TimePickerProps {
     popupClassName?: string;
     popupStyle?: React.CSSProperties;
     suffixIcon?: React.ReactNode;
+    clearIcon?: React.ReactNode;
+    locale?: TimePickerLocale;
 }
 export interface TimePickerLocale {
     placeholder: string;
@@ -47,7 +49,6 @@ declare class TimePicker extends React.Component<TimePickerProps, any> {
         align: {
             offset: number[];
         };
-        disabled: boolean;
         disabledHours: undefined;
         disabledMinutes: undefined;
         disabledSeconds: undefined;
@@ -72,6 +73,11 @@ declare class TimePicker extends React.Component<TimePickerProps, any> {
     getAllowClear(): boolean | undefined;
     renderInputIcon(prefixCls: string): JSX.Element;
     renderClearIcon(prefixCls: string): JSX.Element;
+    getDefaultLocale: () => {
+        placeholder: string;
+    } | {
+        placeholder: string;
+    };
     renderTimePicker: (locale: TimePickerLocale) => JSX.Element;
     render(): JSX.Element;
 }

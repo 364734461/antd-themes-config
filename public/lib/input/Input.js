@@ -21,6 +21,8 @@ var _icon = _interopRequireDefault(require("../icon"));
 
 var _type = require("../_util/type");
 
+var _warning = _interopRequireDefault(require("../_util/warning"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -53,6 +55,10 @@ function fixControlledValue(value) {
   }
 
   return value;
+}
+
+function hasPrefixSuffix(props) {
+  return !!('prefix' in props || props.suffix || props.allowClear);
 }
 
 var InputSizes = (0, _type.tuple)('small', 'default', 'large');
@@ -88,7 +94,9 @@ function (_React$Component) {
     };
 
     _this.handleReset = function (e) {
-      _this.setValue('', e);
+      _this.setValue('', e, function () {
+        _this.focus();
+      });
     };
 
     _this.handleChange = function (e) {
@@ -110,6 +118,20 @@ function (_React$Component) {
   }
 
   _createClass(Input, [{
+    key: "getSnapshotBeforeUpdate",
+    value: function getSnapshotBeforeUpdate(prevProps) {
+      if (hasPrefixSuffix(prevProps) !== hasPrefixSuffix(this.props)) {
+        (0, _warning["default"])(this.input !== document.activeElement, 'Input', "When Input is focused, dynamic add or remove prefix / suffix will make it lose focus caused by dom structure change. Read more: https://ant.design/components/input/#FAQ");
+      }
+
+      return null;
+    } // Since polyfill `getSnapshotBeforeUpdate` need work with `componentDidUpdate`.
+    // We keep an empty function here.
+
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {}
+  }, {
     key: "focus",
     value: function focus() {
       this.input.focus();
@@ -136,11 +158,11 @@ function (_React$Component) {
     }
   }, {
     key: "setValue",
-    value: function setValue(value, e) {
+    value: function setValue(value, e, callback) {
       if (!('value' in this.props)) {
         this.setState({
           value: value
-        });
+        }, callback);
       }
 
       var onChange = this.props.onChange;
@@ -243,7 +265,7 @@ function (_React$Component) {
       var props = this.props;
       var suffix = this.renderSuffix(prefixCls);
 
-      if (!('prefix' in props) && !suffix) {
+      if (!hasPrefixSuffix(props)) {
         return children;
       }
 
@@ -301,8 +323,7 @@ function (_React$Component) {
 }(React.Component);
 
 Input.defaultProps = {
-  type: 'text',
-  disabled: false
+  type: 'text'
 };
 Input.propTypes = {
   type: PropTypes.string,
@@ -328,3 +349,4 @@ Input.propTypes = {
 (0, _reactLifecyclesCompat.polyfill)(Input);
 var _default = Input;
 exports["default"] = _default;
+//# sourceMappingURL=Input.js.map

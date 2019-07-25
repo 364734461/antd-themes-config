@@ -9,6 +9,8 @@ var React = _interopRequireWildcard(require("react"));
 
 var PropTypes = _interopRequireWildcard(require("prop-types"));
 
+var _reactLifecyclesCompat = require("react-lifecycles-compat");
+
 var _classnames = _interopRequireDefault(require("classnames"));
 
 var _rcCheckbox = _interopRequireDefault(require("rc-checkbox"));
@@ -51,7 +53,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -107,6 +109,7 @@ function (_React$Component) {
           });
         };
 
+        checkboxProps.name = checkboxGroup.name;
         checkboxProps.checked = checkboxGroup.value.indexOf(props.value) !== -1;
         checkboxProps.disabled = props.disabled || checkboxGroup.disabled;
       }
@@ -129,6 +132,47 @@ function (_React$Component) {
   }
 
   _createClass(Checkbox, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var value = this.props.value;
+
+      var _ref2 = this.context || {},
+          _ref2$checkboxGroup = _ref2.checkboxGroup,
+          checkboxGroup = _ref2$checkboxGroup === void 0 ? {} : _ref2$checkboxGroup;
+
+      if (checkboxGroup.registerValue) {
+        checkboxGroup.registerValue(value);
+      }
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(_ref3) {
+      var prevValue = _ref3.value;
+      var value = this.props.value;
+
+      var _ref4 = this.context || {},
+          _ref4$checkboxGroup = _ref4.checkboxGroup,
+          checkboxGroup = _ref4$checkboxGroup === void 0 ? {} : _ref4$checkboxGroup;
+
+      if (value !== prevValue && checkboxGroup.registerValue && checkboxGroup.cancelValue) {
+        checkboxGroup.cancelValue(prevValue);
+        checkboxGroup.registerValue(value);
+      }
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      var value = this.props.value;
+
+      var _ref5 = this.context || {},
+          _ref5$checkboxGroup = _ref5.checkboxGroup,
+          checkboxGroup = _ref5$checkboxGroup === void 0 ? {} : _ref5$checkboxGroup;
+
+      if (checkboxGroup.cancelValue) {
+        checkboxGroup.cancelValue(value);
+      }
+    }
+  }, {
     key: "shouldComponentUpdate",
     value: function shouldComponentUpdate(nextProps, nextState, nextContext) {
       return !(0, _shallowequal["default"])(this.props, nextProps) || !(0, _shallowequal["default"])(this.state, nextState) || !(0, _shallowequal["default"])(this.context.checkboxGroup, nextContext.checkboxGroup);
@@ -153,10 +197,13 @@ function (_React$Component) {
   return Checkbox;
 }(React.Component);
 
-exports["default"] = Checkbox;
 Checkbox.defaultProps = {
   indeterminate: false
 };
 Checkbox.contextTypes = {
   checkboxGroup: PropTypes.any
 };
+(0, _reactLifecyclesCompat.polyfill)(Checkbox);
+var _default = Checkbox;
+exports["default"] = _default;
+//# sourceMappingURL=Checkbox.js.map

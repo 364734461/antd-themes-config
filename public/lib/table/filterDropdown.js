@@ -9,6 +9,8 @@ var React = _interopRequireWildcard(require("react"));
 
 var ReactDOM = _interopRequireWildcard(require("react-dom"));
 
+var _reactLifecyclesCompat = require("react-lifecycles-compat");
+
 var _rcMenu = _interopRequireWildcard(require("rc-menu"));
 
 var _domClosest = _interopRequireDefault(require("dom-closest"));
@@ -26,6 +28,8 @@ var _checkbox = _interopRequireDefault(require("../checkbox"));
 var _radio = _interopRequireDefault(require("../radio"));
 
 var _FilterDropdownMenuWrapper = _interopRequireDefault(require("./FilterDropdownMenuWrapper"));
+
+var _util = require("./util");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -168,8 +172,10 @@ function (_React$Component) {
     var visible = 'filterDropdownVisible' in props.column ? props.column.filterDropdownVisible : false;
     _this.state = {
       selectedKeys: props.selectedKeys,
+      valueKeys: (0, _util.generateValueMaps)(props.column.filters),
       keyPathOfSelectedItem: {},
-      visible: visible
+      visible: visible,
+      prevProps: props
     };
     return _this;
   }
@@ -181,30 +187,10 @@ function (_React$Component) {
       this.setNeverShown(column);
     }
   }, {
-    key: "componentWillReceiveProps",
-    value: function componentWillReceiveProps(nextProps) {
-      var column = nextProps.column;
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      var column = this.props.column;
       this.setNeverShown(column);
-      var newState = {};
-      /**
-       * if the state is visible the component should ignore updates on selectedKeys prop to avoid
-       * that the user selection is lost
-       * this happens frequently when a table is connected on some sort of realtime data
-       * Fixes https://github.com/ant-design/ant-design/issues/10289 and
-       * https://github.com/ant-design/ant-design/issues/10209
-       */
-
-      if ('selectedKeys' in nextProps && !(0, _shallowequal["default"])(this.props.selectedKeys, nextProps.selectedKeys)) {
-        newState.selectedKeys = nextProps.selectedKeys;
-      }
-
-      if ('filterDropdownVisible' in column) {
-        newState.visible = column.filterDropdownVisible;
-      }
-
-      if (Object.keys(newState).length > 0) {
-        this.setState(newState);
-      }
     }
   }, {
     key: "getDropdownVisible",
@@ -229,10 +215,17 @@ function (_React$Component) {
   }, {
     key: "confirmFilter",
     value: function confirmFilter() {
-      var selectedKeys = this.state.selectedKeys;
+      var _this$state = this.state,
+          selectedKeys = _this$state.selectedKeys,
+          valueKeys = _this$state.valueKeys;
+      var filterDropdown = this.props.column.filterDropdown;
 
       if (!(0, _shallowequal["default"])(selectedKeys, this.props.selectedKeys)) {
-        this.props.confirmFilter(this.props.column, selectedKeys);
+        this.props.confirmFilter(this.props.column, filterDropdown ? selectedKeys : selectedKeys.map(function (key) {
+          return valueKeys[key];
+        }).filter(function (key) {
+          return key !== undefined;
+        }));
       }
     }
   }, {
@@ -240,11 +233,15 @@ function (_React$Component) {
     value: function renderMenuItem(item) {
       var column = this.props.column;
       var selectedKeys = this.state.selectedKeys;
-      var multiple = 'filterMultiple' in column ? column.filterMultiple : true;
+      var multiple = 'filterMultiple' in column ? column.filterMultiple : true; // We still need trade key as string since Menu render need string
+
+      var internalSelectedKeys = (selectedKeys || []).map(function (key) {
+        return key.toString();
+      });
       var input = multiple ? React.createElement(_checkbox["default"], {
-        checked: selectedKeys && selectedKeys.indexOf(item.value.toString()) >= 0
+        checked: internalSelectedKeys.indexOf(item.value.toString()) >= 0
       }) : React.createElement(_radio["default"], {
-        checked: selectedKeys && selectedKeys.indexOf(item.value.toString()) >= 0
+        checked: internalSelectedKeys.indexOf(item.value.toString()) >= 0
       });
       return React.createElement(_rcMenu.Item, {
         key: item.value
@@ -286,6 +283,7 @@ function (_React$Component) {
     value: function render() {
       var _this3 = this;
 
+      var originSelectedKeys = this.state.selectedKeys;
       var _this$props2 = this.props,
           column = _this$props2.column,
           locale = _this$props2.locale,
@@ -305,7 +303,7 @@ function (_React$Component) {
               selectedKeys: selectedKeys
             });
           },
-          selectedKeys: this.state.selectedKeys,
+          selectedKeys: originSelectedKeys,
           confirm: this.handleConfirm,
           clearFilters: this.handleClearFilters,
           filters: column.filters,
@@ -326,7 +324,9 @@ function (_React$Component) {
         className: dropdownMenuClass,
         onSelect: this.setSelectedKeys,
         onDeselect: this.setSelectedKeys,
-        selectedKeys: this.state.selectedKeys,
+        selectedKeys: originSelectedKeys && originSelectedKeys.map(function (val) {
+          return val.toString();
+        }),
         getPopupContainer: function getPopupContainer(triggerNode) {
           return triggerNode.parentNode;
         }
@@ -349,13 +349,46 @@ function (_React$Component) {
         forceRender: true
       }, this.renderFilterIcon());
     }
+  }], [{
+    key: "getDerivedStateFromProps",
+    value: function getDerivedStateFromProps(nextProps, prevState) {
+      var column = nextProps.column;
+      var prevProps = prevState.prevProps;
+      var newState = {
+        prevProps: nextProps
+      };
+      /**
+       * if the state is visible the component should ignore updates on selectedKeys prop to avoid
+       * that the user selection is lost
+       * this happens frequently when a table is connected on some sort of realtime data
+       * Fixes https://github.com/ant-design/ant-design/issues/10289 and
+       * https://github.com/ant-design/ant-design/issues/10209
+       */
+
+      if ('selectedKeys' in nextProps && !(0, _shallowequal["default"])(prevProps.selectedKeys, nextProps.selectedKeys)) {
+        newState.selectedKeys = nextProps.selectedKeys;
+      }
+
+      if (!(0, _shallowequal["default"])((prevProps.column || {}).filters, (nextProps.column || {}).filters)) {
+        newState.valueKeys = (0, _util.generateValueMaps)(nextProps.column.filters);
+      }
+
+      if ('filterDropdownVisible' in column) {
+        newState.visible = column.filterDropdownVisible;
+      }
+
+      return newState;
+    }
   }]);
 
   return FilterMenu;
 }(React.Component);
 
-exports["default"] = FilterMenu;
 FilterMenu.defaultProps = {
   handleFilter: function handleFilter() {},
   column: {}
 };
+(0, _reactLifecyclesCompat.polyfill)(FilterMenu);
+var _default = FilterMenu;
+exports["default"] = _default;
+//# sourceMappingURL=filterDropdown.js.map

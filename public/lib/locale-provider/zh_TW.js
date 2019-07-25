@@ -50,6 +50,10 @@ var _default = {
   },
   Empty: {
     description: '無此資料'
+  },
+  PageHeader: {
+    back: '返回'
   }
 };
 exports["default"] = _default;
+//# sourceMappingURL=zh_TW.js.map

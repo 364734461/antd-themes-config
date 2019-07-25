@@ -10,15 +10,17 @@ export interface AbstractCheckboxProps<T> {
     style?: React.CSSProperties;
     disabled?: boolean;
     onChange?: (e: T) => void;
-    onClick?: React.MouseEventHandler<any>;
-    onMouseEnter?: React.MouseEventHandler<any>;
-    onMouseLeave?: React.MouseEventHandler<any>;
-    onKeyPress?: React.KeyboardEventHandler<any>;
-    onKeyDown?: React.KeyboardEventHandler<any>;
+    onClick?: React.MouseEventHandler<HTMLElement>;
+    onMouseEnter?: React.MouseEventHandler<HTMLElement>;
+    onMouseLeave?: React.MouseEventHandler<HTMLElement>;
+    onKeyPress?: React.KeyboardEventHandler<HTMLElement>;
+    onKeyDown?: React.KeyboardEventHandler<HTMLElement>;
     value?: any;
     tabIndex?: number;
     name?: string;
     children?: React.ReactNode;
+    id?: string;
+    autoFocus?: boolean;
 }
 export interface CheckboxProps extends AbstractCheckboxProps<CheckboxChangeEvent> {
     indeterminate?: boolean;
@@ -32,7 +34,7 @@ export interface CheckboxChangeEvent {
     preventDefault: () => void;
     nativeEvent: MouseEvent;
 }
-export default class Checkbox extends React.Component<CheckboxProps, {}> {
+declare class Checkbox extends React.Component<CheckboxProps, {}> {
     static Group: typeof CheckboxGroup;
     static defaultProps: {
         indeterminate: boolean;
@@ -42,6 +44,9 @@ export default class Checkbox extends React.Component<CheckboxProps, {}> {
     };
     context: any;
     private rcCheckbox;
+    componentDidMount(): void;
+    componentDidUpdate({ value: prevValue }: CheckboxProps): void;
+    componentWillUnmount(): void;
     shouldComponentUpdate(nextProps: CheckboxProps, nextState: {}, nextContext: CheckboxGroupContext): boolean;
     focus(): void;
     blur(): void;
@@ -49,3 +54,4 @@ export default class Checkbox extends React.Component<CheckboxProps, {}> {
     renderCheckbox: ({ getPrefixCls }: ConfigConsumerProps) => JSX.Element;
     render(): JSX.Element;
 }
+export default Checkbox;

@@ -48,8 +48,9 @@ var ConfirmDialog = function ConfirmDialog(props) {
       cancelButtonProps = props.cancelButtonProps,
       _props$iconType = props.iconType,
       iconType = _props$iconType === void 0 ? 'question-circle' : _props$iconType;
-  (0, _warning["default"])(!('iconType' in props), "The property 'iconType' is deprecated. Use the property 'icon' instead.");
-  var icon = props.icon ? props.icon : iconType;
+  (0, _warning["default"])(!('iconType' in props), 'Modal', "The property 'iconType' is deprecated. Use the property 'icon' instead."); // 支持传入{ icon: null }来隐藏`Modal.confirm`默认的Icon
+
+  var icon = props.icon === undefined ? iconType : props.icon;
   var okType = props.okType || 'primary';
   var prefixCls = props.prefixCls || 'ant-modal';
   var contentPrefixCls = "".concat(prefixCls, "-confirm"); // 默认为 true，保持向下兼容
@@ -179,7 +180,9 @@ function confirm(config) {
   }
 
   function render(props) {
-    ReactDOM.render(React.createElement(ConfirmDialog, props), div);
+    ReactDOM.render(React.createElement(ConfirmDialog, _extends({}, props, {
+      getContainer: false
+    })), div);
   }
 
   render(currentConfig);
@@ -191,3 +194,4 @@ function confirm(config) {
     update: update
   };
 }
+//# sourceMappingURL=confirm.js.map

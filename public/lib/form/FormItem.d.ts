@@ -3,11 +3,14 @@ import * as PropTypes from 'prop-types';
 import { ColProps } from '../grid/col';
 import { ConfigConsumerProps } from '../config-provider';
 declare const ValidateStatuses: ["success", "warning", "error", "validating", ""];
+export declare type FormLabelAlign = 'left' | 'right';
 export interface FormItemProps {
     prefixCls?: string;
     className?: string;
     id?: string;
+    htmlFor?: string;
     label?: React.ReactNode;
+    labelAlign?: FormLabelAlign;
     labelCol?: ColProps;
     wrapperCol?: ColProps;
     help?: React.ReactNode;
@@ -18,17 +21,14 @@ export interface FormItemProps {
     style?: React.CSSProperties;
     colon?: boolean;
 }
-export interface FormItemContext {
-    vertical: boolean;
-}
 export default class FormItem extends React.Component<FormItemProps, any> {
     static defaultProps: {
         hasFeedback: boolean;
-        colon: boolean;
     };
     static propTypes: {
         prefixCls: PropTypes.Requireable<string>;
         label: PropTypes.Requireable<string | number | boolean | {} | PropTypes.ReactElementLike | PropTypes.ReactNodeArray>;
+        labelAlign: PropTypes.Requireable<string>;
         labelCol: PropTypes.Requireable<object>;
         help: PropTypes.Requireable<string | number | boolean | {} | PropTypes.ReactElementLike | PropTypes.ReactNodeArray>;
         validateStatus: PropTypes.Requireable<"" | "error" | "success" | "warning" | "validating">;
@@ -39,10 +39,6 @@ export default class FormItem extends React.Component<FormItemProps, any> {
         children: PropTypes.Requireable<PropTypes.ReactNodeLike>;
         colon: PropTypes.Requireable<boolean>;
     };
-    static contextTypes: {
-        vertical: PropTypes.Requireable<boolean>;
-    };
-    context: FormItemContext;
     helpShow: boolean;
     componentDidMount(): void;
     getHelpMessage(): {} | null | undefined;
@@ -59,9 +55,9 @@ export default class FormItem extends React.Component<FormItemProps, any> {
     renderValidateWrapper(prefixCls: string, c1: React.ReactNode, c2: React.ReactNode, c3: React.ReactNode): JSX.Element;
     renderWrapper(prefixCls: string, children: React.ReactNode): JSX.Element;
     isRequired(): any;
-    onLabelClick: (e: any) => void;
-    renderLabel(prefixCls: string): JSX.Element | null;
-    renderChildren(prefixCls: string): (JSX.Element | null)[];
+    onLabelClick: () => void;
+    renderLabel(prefixCls: string): JSX.Element;
+    renderChildren(prefixCls: string): JSX.Element[];
     renderFormItem: ({ getPrefixCls }: ConfigConsumerProps) => JSX.Element;
     render(): JSX.Element;
 }

@@ -23,7 +23,7 @@ var svgBaseProps = (_svgBaseProps = {
   width: '1em',
   height: '1em',
   fill: 'currentColor'
-}, _defineProperty(_svgBaseProps, 'aria-hidden', 'true'), _defineProperty(_svgBaseProps, "focusable", 'false'), _svgBaseProps);
+}, _defineProperty(_svgBaseProps, 'aria-hidden', true), _defineProperty(_svgBaseProps, "focusable", 'false'), _svgBaseProps);
 exports.svgBaseProps = svgBaseProps;
 var fillTester = /-fill$/;
 var outlineTester = /-o$/;
@@ -57,7 +57,7 @@ function withThemeSuffix(type, theme) {
   } else if (theme === 'twoTone') {
     result += '-twotone';
   } else {
-    (0, _warning["default"])(false, "This icon '".concat(type, "' has unknown theme '").concat(theme, "'"));
+    (0, _warning["default"])(false, 'Icon', "This icon '".concat(type, "' has unknown theme '").concat(theme, "'"));
   }
 
   return result;
@@ -65,12 +65,32 @@ function withThemeSuffix(type, theme) {
 
 
 function alias(type) {
+  var newType = type;
+
   switch (type) {
     case 'cross':
-      return 'close';
+      newType = 'close';
+      break;
+    // https://github.com/ant-design/ant-design/issues/13007
+
+    case 'interation':
+      newType = 'interaction';
+      break;
+    // https://github.com/ant-design/ant-design/issues/16810
+
+    case 'canlendar':
+      newType = 'calendar';
+      break;
+    // https://github.com/ant-design/ant-design/issues/17448
+
+    case 'colum-height':
+      newType = 'column-height';
+      break;
 
     default:
   }
 
-  return type;
+  (0, _warning["default"])(newType === type, 'Icon', "Icon '".concat(type, "' was a typo and is now deprecated, please use '").concat(newType, "' instead."));
+  return newType;
 }
+//# sourceMappingURL=utils.js.map

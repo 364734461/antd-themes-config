@@ -5,22 +5,23 @@ export interface CSPConfig {
     nonce?: string;
 }
 export interface ConfigConsumerProps {
-    getPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement;
+    getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
     rootPrefixCls?: string;
     getPrefixCls: (suffixCls: string, customizePrefixCls?: string) => string;
     renderEmpty: RenderEmptyHandler;
     csp?: CSPConfig;
     autoInsertSpaceInButton?: boolean;
 }
-interface ConfigProviderProps {
-    getPopupContainer?: (triggerNode?: HTMLElement) => HTMLElement;
+export declare const configConsumerProps: string[];
+export interface ConfigProviderProps {
+    getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
     prefixCls?: string;
     children?: React.ReactNode;
     renderEmpty?: RenderEmptyHandler;
     csp?: CSPConfig;
     autoInsertSpaceInButton?: boolean;
 }
-export declare const ConfigConsumer: React.ComponentClass<import("create-react-context").ConsumerProps<ConfigConsumerProps | null>, any>;
+export declare const ConfigConsumer: React.ComponentClass<import("@ant-design/create-react-context").ConsumerProps<ConfigConsumerProps>, any>;
 declare class ConfigProvider extends React.Component<ConfigProviderProps> {
     getPrefixCls: (suffixCls: string, customizePrefixCls?: string | undefined) => string;
     renderProvider: (context: ConfigConsumerProps) => JSX.Element;

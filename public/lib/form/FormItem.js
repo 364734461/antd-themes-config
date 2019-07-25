@@ -15,8 +15,6 @@ var _classnames = _interopRequireDefault(require("classnames"));
 
 var _rcAnimate = _interopRequireDefault(require("rc-animate"));
 
-var _constants = require("./constants");
-
 var _row = _interopRequireDefault(require("../grid/row"));
 
 var _col = _interopRequireDefault(require("../grid/col"));
@@ -28,6 +26,10 @@ var _configProvider = require("../config-provider");
 var _warning = _interopRequireDefault(require("../_util/warning"));
 
 var _type = require("../_util/type");
+
+var _constants = require("./constants");
+
+var _context = require("./context");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -94,9 +96,7 @@ function (_React$Component) {
     // https://github.com/ant-design/ant-design/issues/7351
 
 
-    _this.onLabelClick = function (e) {
-      var label = _this.props.label;
-
+    _this.onLabelClick = function () {
       var id = _this.props.id || _this.getId();
 
       if (!id) {
@@ -106,16 +106,8 @@ function (_React$Component) {
       var formItemNode = ReactDOM.findDOMNode(_assertThisInitialized(_this));
       var control = formItemNode.querySelector("[id=\"".concat(id, "\"]"));
 
-      if (control) {
-        // Only prevent in default situation
-        // Avoid preventing event in `label={<a href="xx">link</a>}``
-        if (typeof label === 'string') {
-          e.preventDefault();
-        }
-
-        if (control.focus) {
-          control.focus();
-        }
+      if (control && control.focus) {
+        control.focus();
       }
     };
 
@@ -126,16 +118,16 @@ function (_React$Component) {
       var _this$props = _this.props,
           customizePrefixCls = _this$props.prefixCls,
           style = _this$props.style,
-          colon = _this$props.colon,
           className = _this$props.className;
       var prefixCls = getPrefixCls('form', customizePrefixCls);
 
       var children = _this.renderChildren(prefixCls);
 
-      var itemClassName = (_itemClassName = {}, _defineProperty(_itemClassName, "".concat(prefixCls, "-item"), true), _defineProperty(_itemClassName, "".concat(prefixCls, "-item-with-help"), _this.helpShow), _defineProperty(_itemClassName, "".concat(prefixCls, "-item-no-colon"), !colon), _defineProperty(_itemClassName, "".concat(className), !!className), _itemClassName);
+      var itemClassName = (_itemClassName = {}, _defineProperty(_itemClassName, "".concat(prefixCls, "-item"), true), _defineProperty(_itemClassName, "".concat(prefixCls, "-item-with-help"), _this.helpShow), _defineProperty(_itemClassName, "".concat(className), !!className), _itemClassName);
       return React.createElement(_row["default"], {
         className: (0, _classnames["default"])(itemClassName),
-        style: style
+        style: style,
+        key: "row"
       }, children);
     };
 
@@ -145,7 +137,13 @@ function (_React$Component) {
   _createClass(FormItem, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      (0, _warning["default"])(this.getControls(this.props.children, true).length <= 1, '`Form.Item` cannot generate `validateStatus` and `help` automatically, ' + 'while there are more than one `getFieldDecorator` in it.');
+      var _this$props2 = this.props,
+          children = _this$props2.children,
+          help = _this$props2.help,
+          validateStatus = _this$props2.validateStatus,
+          id = _this$props2.id;
+      (0, _warning["default"])(this.getControls(children, true).length <= 1 || help !== undefined || validateStatus !== undefined, 'Form.Item', 'Cannot generate `validateStatus` and `help` automatically, ' + 'while there are more than one `getFieldDecorator` in it.');
+      (0, _warning["default"])(!id, 'Form.Item', '`id` is deprecated for its label `htmlFor`. Please use `htmlFor` directly.');
     }
   }, {
     key: "getHelpMessage",
@@ -153,7 +151,8 @@ function (_React$Component) {
       var help = this.props.help;
 
       if (help === undefined && this.getOnlyControl()) {
-        var errors = this.getField().errors;
+        var _this$getField = this.getField(),
+            errors = _this$getField.errors;
 
         if (errors) {
           return intersperseSpace(errors.map(function (e, index) {
@@ -347,12 +346,25 @@ function (_React$Component) {
   }, {
     key: "renderWrapper",
     value: function renderWrapper(prefixCls, children) {
-      var wrapperCol = this.props.wrapperCol;
-      var className = (0, _classnames["default"])("".concat(prefixCls, "-item-control-wrapper"), wrapperCol && wrapperCol.className);
-      return React.createElement(_col["default"], _extends({}, wrapperCol, {
-        className: className,
+      var _this2 = this;
+
+      return React.createElement(_context.FormContext.Consumer, {
         key: "wrapper"
-      }), children);
+      }, function (_ref2) {
+        var contextWrapperCol = _ref2.wrapperCol,
+            vertical = _ref2.vertical;
+        var wrapperCol = _this2.props.wrapperCol;
+        var mergedWrapperCol = ('wrapperCol' in _this2.props ? wrapperCol : contextWrapperCol) || {};
+        var className = (0, _classnames["default"])("".concat(prefixCls, "-item-control-wrapper"), mergedWrapperCol.className); // No pass FormContext since it's useless
+
+        return React.createElement(_context.FormContext.Provider, {
+          value: {
+            vertical: vertical
+          }
+        }, React.createElement(_col["default"], _extends({}, mergedWrapperCol, {
+          className: className
+        }), children));
+      });
     }
   }, {
     key: "isRequired",
@@ -380,32 +392,50 @@ function (_React$Component) {
   }, {
     key: "renderLabel",
     value: function renderLabel(prefixCls) {
-      var _this$props2 = this.props,
-          label = _this$props2.label,
-          labelCol = _this$props2.labelCol,
-          colon = _this$props2.colon,
-          id = _this$props2.id;
-      var context = this.context;
-      var required = this.isRequired();
-      var labelColClassName = (0, _classnames["default"])("".concat(prefixCls, "-item-label"), labelCol && labelCol.className);
-      var labelClassName = (0, _classnames["default"])(_defineProperty({}, "".concat(prefixCls, "-item-required"), required));
-      var labelChildren = label; // Keep label is original where there should have no colon
+      var _this3 = this;
 
-      var haveColon = colon && !context.vertical; // Remove duplicated user input colon
-
-      if (haveColon && typeof label === 'string' && label.trim() !== '') {
-        labelChildren = label.replace(/[：|:]\s*$/, '');
-      }
-
-      return label ? React.createElement(_col["default"], _extends({}, labelCol, {
-        className: labelColClassName,
+      return React.createElement(_context.FormContext.Consumer, {
         key: "label"
-      }), React.createElement("label", {
-        htmlFor: id || this.getId(),
-        className: labelClassName,
-        title: typeof label === 'string' ? label : '',
-        onClick: this.onLabelClick
-      }, labelChildren)) : null;
+      }, function (_ref3) {
+        var _classNames;
+
+        var vertical = _ref3.vertical,
+            contextLabelAlign = _ref3.labelAlign,
+            contextLabelCol = _ref3.labelCol,
+            contextColon = _ref3.colon;
+        var _this3$props = _this3.props,
+            label = _this3$props.label,
+            labelCol = _this3$props.labelCol,
+            labelAlign = _this3$props.labelAlign,
+            colon = _this3$props.colon,
+            id = _this3$props.id,
+            htmlFor = _this3$props.htmlFor;
+
+        var required = _this3.isRequired();
+
+        var mergedLabelCol = ('labelCol' in _this3.props ? labelCol : contextLabelCol) || {};
+        var mergedLabelAlign = 'labelAlign' in _this3.props ? labelAlign : contextLabelAlign;
+        var labelClsBasic = "".concat(prefixCls, "-item-label");
+        var labelColClassName = (0, _classnames["default"])(labelClsBasic, mergedLabelAlign === 'left' && "".concat(labelClsBasic, "-left"), mergedLabelCol.className);
+        var labelChildren = label; // Keep label is original where there should have no colon
+
+        var computedColon = colon === true || contextColon !== false && colon !== false;
+        var haveColon = computedColon && !vertical; // Remove duplicated user input colon
+
+        if (haveColon && typeof label === 'string' && label.trim() !== '') {
+          labelChildren = label.replace(/[：|:]\s*$/, '');
+        }
+
+        var labelClassName = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-item-required"), required), _defineProperty(_classNames, "".concat(prefixCls, "-item-no-colon"), !computedColon), _classNames));
+        return label ? React.createElement(_col["default"], _extends({}, mergedLabelCol, {
+          className: labelColClassName
+        }), React.createElement("label", {
+          htmlFor: htmlFor || id || _this3.getId(),
+          className: labelClassName,
+          title: typeof label === 'string' ? label : '',
+          onClick: _this3.onLabelClick
+        }, labelChildren)) : null;
+      });
     }
   }, {
     key: "renderChildren",
@@ -425,12 +455,12 @@ function (_React$Component) {
 
 exports["default"] = FormItem;
 FormItem.defaultProps = {
-  hasFeedback: false,
-  colon: true
+  hasFeedback: false
 };
 FormItem.propTypes = {
   prefixCls: PropTypes.string,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  labelAlign: PropTypes.string,
   labelCol: PropTypes.object,
   help: PropTypes.oneOfType([PropTypes.node, PropTypes.bool]),
   validateStatus: PropTypes.oneOf(ValidateStatuses),
@@ -441,6 +471,4 @@ FormItem.propTypes = {
   children: PropTypes.node,
   colon: PropTypes.bool
 };
-FormItem.contextTypes = {
-  vertical: PropTypes.bool
-};
+//# sourceMappingURL=FormItem.js.map

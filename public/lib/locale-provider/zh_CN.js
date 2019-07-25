@@ -58,6 +58,16 @@ var _default = {
   },
   Icon: {
     icon: '图标'
+  },
+  Text: {
+    edit: '编辑',
+    copy: '复制',
+    copied: '复制成功',
+    expand: '展开'
+  },
+  PageHeader: {
+    back: '返回'
   }
 };
 exports["default"] = _default;
+//# sourceMappingURL=zh_CN.js.map

@@ -53,7 +53,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -91,6 +91,12 @@ function (_React$Component) {
     };
 
     _this.onVisibleChange = function (visible) {
+      var disabled = _this.props.disabled;
+
+      if (disabled) {
+        return;
+      }
+
       _this.setVisible(visible);
     };
 
@@ -211,8 +217,10 @@ Popconfirm.defaultProps = {
   icon: React.createElement(_icon["default"], {
     type: "exclamation-circle",
     theme: "filled"
-  })
+  }),
+  disabled: false
 };
 (0, _reactLifecyclesCompat.polyfill)(Popconfirm);
 var _default = Popconfirm;
 exports["default"] = _default;
+//# sourceMappingURL=index.js.map

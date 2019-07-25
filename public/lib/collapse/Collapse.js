@@ -71,14 +71,17 @@ function (_React$Component) {
     };
 
     _this.renderCollapse = function (_ref) {
+      var _classNames;
+
       var getPrefixCls = _ref.getPrefixCls;
       var _this$props = _this.props,
           customizePrefixCls = _this$props.prefixCls,
           _this$props$className = _this$props.className,
           className = _this$props$className === void 0 ? '' : _this$props$className,
-          bordered = _this$props.bordered;
+          bordered = _this$props.bordered,
+          expandIconPosition = _this$props.expandIconPosition;
       var prefixCls = getPrefixCls('collapse', customizePrefixCls);
-      var collapseClassName = (0, _classnames["default"])(_defineProperty({}, "".concat(prefixCls, "-borderless"), !bordered), className);
+      var collapseClassName = (0, _classnames["default"])((_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-borderless"), !bordered), _defineProperty(_classNames, "".concat(prefixCls, "-icon-position-").concat(expandIconPosition), true), _classNames), className);
       return React.createElement(_rcCollapse["default"], _extends({}, _this.props, {
         expandIcon: function expandIcon(panelProps) {
           return _this.renderExpandIcon(panelProps, prefixCls);
@@ -107,5 +110,7 @@ Collapse.defaultProps = {
   bordered: true,
   openAnimation: _extends({}, _openAnimation["default"], {
     appear: function appear() {}
-  })
+  }),
+  expandIconPosition: 'left'
 };
+//# sourceMappingURL=Collapse.js.map

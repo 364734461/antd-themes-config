@@ -13,6 +13,8 @@ var _classnames = _interopRequireDefault(require("classnames"));
 
 var _configProvider = require("../config-provider");
 
+var _reactLifecyclesCompat = require("react-lifecycles-compat");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -39,7 +41,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function getNumberArray(num) {
   return num ? num.toString().split('').reverse().map(function (i) {
-    return Number(i);
+    var current = Number(i);
+    return isNaN(current) ? i : current;
   }) : [];
 }
 
@@ -54,6 +57,14 @@ function (_Component) {
     _classCallCheck(this, ScrollNumber);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ScrollNumber).call(this, props));
+
+    _this.onAnimated = function () {
+      var onAnimated = _this.props.onAnimated;
+
+      if (onAnimated) {
+        onAnimated();
+      }
+    };
 
     _this.renderScrollNumber = function (_ref) {
       var getPrefixCls = _ref.getPrefixCls;
@@ -102,14 +113,18 @@ function (_Component) {
   _createClass(ScrollNumber, [{
     key: "getPositionByNum",
     value: function getPositionByNum(num, i) {
+      var count = this.state.count;
+      var currentCount = Math.abs(Number(count));
+      var lastCount = Math.abs(Number(this.lastCount));
+      var currentDigit = Math.abs(getNumberArray(this.state.count)[i]);
+      var lastDigit = Math.abs(getNumberArray(this.lastCount)[i]);
+
       if (this.state.animateStarted) {
         return 10 + num;
-      }
+      } // 同方向则在同一侧切换数字
 
-      var currentDigit = getNumberArray(this.state.count)[i];
-      var lastDigit = getNumberArray(this.lastCount)[i]; // 同方向则在同一侧切换数字
 
-      if (this.state.count > this.lastCount) {
+      if (currentCount > lastCount) {
         if (currentDigit >= lastDigit) {
           return 10 + num;
         }
@@ -124,35 +139,18 @@ function (_Component) {
       return num;
     }
   }, {
-    key: "componentWillReceiveProps",
-    value: function componentWillReceiveProps(nextProps) {
-      var _this2 = this;
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(_, prevState) {
+      this.lastCount = prevState.count;
+      var animateStarted = this.state.animateStarted;
 
-      if ('count' in nextProps) {
-        if (this.state.count === nextProps.count) {
-          return;
-        }
-
-        this.lastCount = this.state.count; // 复原数字初始位置
-
-        this.setState({
-          animateStarted: true
-        }, function () {
-          // 等待数字位置复原完毕
-          // 开始设置完整的数字
-          setTimeout(function () {
-            _this2.setState({
-              animateStarted: false,
-              count: nextProps.count
-            }, function () {
-              var onAnimated = _this2.props.onAnimated;
-
-              if (onAnimated) {
-                onAnimated();
-              }
-            });
-          }, 5);
-        });
+      if (animateStarted) {
+        this.setState(function (__, props) {
+          return {
+            animateStarted: false,
+            count: props.count
+          };
+        }, this.onAnimated);
       }
     }
   }, {
@@ -173,29 +171,36 @@ function (_Component) {
   }, {
     key: "renderCurrentNumber",
     value: function renderCurrentNumber(prefixCls, num, i) {
-      var position = this.getPositionByNum(num, i);
-      var removeTransition = this.state.animateStarted || getNumberArray(this.lastCount)[i] === undefined;
-      return (0, React.createElement)('span', {
-        className: "".concat(prefixCls, "-only"),
-        style: {
-          transition: removeTransition ? 'none' : undefined,
-          msTransform: "translateY(".concat(-position * 100, "%)"),
-          WebkitTransform: "translateY(".concat(-position * 100, "%)"),
-          transform: "translateY(".concat(-position * 100, "%)")
-        },
-        key: i
-      }, this.renderNumberList(position));
+      if (typeof num === 'number') {
+        var position = this.getPositionByNum(num, i);
+        var removeTransition = this.state.animateStarted || getNumberArray(this.lastCount)[i] === undefined;
+        return (0, React.createElement)('span', {
+          className: "".concat(prefixCls, "-only"),
+          style: {
+            transition: removeTransition ? 'none' : undefined,
+            msTransform: "translateY(".concat(-position * 100, "%)"),
+            WebkitTransform: "translateY(".concat(-position * 100, "%)"),
+            transform: "translateY(".concat(-position * 100, "%)")
+          },
+          key: i
+        }, this.renderNumberList(position));
+      }
+
+      return React.createElement("span", {
+        key: "symbol",
+        className: "".concat(prefixCls, "-symbol")
+      }, num);
     }
   }, {
     key: "renderNumberElement",
     value: function renderNumberElement(prefixCls) {
-      var _this3 = this;
+      var _this2 = this;
 
       var count = this.state.count;
 
       if (count && Number(count) % 1 === 0) {
         return getNumberArray(count).map(function (num, i) {
-          return _this3.renderCurrentNumber(prefixCls, num, i);
+          return _this2.renderCurrentNumber(prefixCls, num, i);
         }).reverse();
       }
 
@@ -206,13 +211,31 @@ function (_Component) {
     value: function render() {
       return React.createElement(_configProvider.ConfigConsumer, null, this.renderScrollNumber);
     }
+  }], [{
+    key: "getDerivedStateFromProps",
+    value: function getDerivedStateFromProps(nextProps, nextState) {
+      if ('count' in nextProps) {
+        if (nextState.count === nextProps.count) {
+          return null;
+        }
+
+        return {
+          animateStarted: true
+        };
+      }
+
+      return null;
+    }
   }]);
 
   return ScrollNumber;
 }(React.Component);
 
-exports["default"] = ScrollNumber;
 ScrollNumber.defaultProps = {
   count: null,
   onAnimated: function onAnimated() {}
 };
+(0, _reactLifecyclesCompat.polyfill)(ScrollNumber);
+var _default = ScrollNumber;
+exports["default"] = _default;
+//# sourceMappingURL=ScrollNumber.js.map

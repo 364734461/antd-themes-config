@@ -16,12 +16,16 @@ declare const _default: {
             placeholder: string;
         };
     };
+    global: {
+        placeholder: string;
+    };
     Table: {
         filterTitle: string;
         filterConfirm: string;
         filterReset: string;
         selectAll: string;
         selectInvert: string;
+        sortTitle: string;
     };
     Modal: {
         okText: string;
@@ -45,6 +49,18 @@ declare const _default: {
     };
     Empty: {
         description: string;
+    };
+    Icon: {
+        icon: string;
+    };
+    Text: {
+        edit: string;
+        copy: string;
+        copied: string;
+        expand: string;
+    };
+    PageHeader: {
+        back: string;
     };
 };
 export default _default;

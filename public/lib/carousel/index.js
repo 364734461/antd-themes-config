@@ -11,6 +11,8 @@ var _debounce = _interopRequireDefault(require("lodash/debounce"));
 
 var _configProvider = require("../config-provider");
 
+var _warning = _interopRequireDefault(require("../_util/warning"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -91,6 +93,12 @@ function (_React$Component) {
       }
 
       var className = getPrefixCls('carousel', props.prefixCls);
+      var dotsClass = 'slick-dots';
+
+      var dotPosition = _this.getDotPosition();
+
+      props.vertical = dotPosition === 'left' || dotPosition === 'right';
+      props.dotsClass = "".concat(dotsClass, " ").concat(dotsClass, "-").concat(dotPosition || 'bottom');
 
       if (props.vertical) {
         className = "".concat(className, " ").concat(className, "-vertical");
@@ -106,6 +114,11 @@ function (_React$Component) {
     _this.onWindowResized = (0, _debounce["default"])(_this.onWindowResized, 500, {
       leading: false
     });
+
+    if ('vertical' in _this.props) {
+      (0, _warning["default"])(!_this.props.vertical, 'Carousel', '`vertical` is deprecated, please use `dotPosition` instead.');
+    }
+
     return _this;
   }
 
@@ -120,6 +133,13 @@ function (_React$Component) {
 
 
       this.innerSlider = this.slick && this.slick.innerSlider;
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      if (React.Children.count(this.props.children) !== React.Children.count(prevProps.children)) {
+        this.goTo(this.props.initialSlide || 0, false);
+      }
     }
   }, {
     key: "componentWillUnmount",
@@ -148,6 +168,17 @@ function (_React$Component) {
       this.slick.slickGoTo(slide, dontAnimate);
     }
   }, {
+    key: "getDotPosition",
+    value: function getDotPosition() {
+      if (this.props.dotPosition) {
+        return this.props.dotPosition;
+      } else if ('vertical' in this.props) {
+        return this.props.vertical ? 'right' : 'bottom';
+      }
+
+      return 'bottom';
+    }
+  }, {
     key: "render",
     value: function render() {
       return React.createElement(_configProvider.ConfigConsumer, null, this.renderCarousel);
@@ -163,3 +194,4 @@ Carousel.defaultProps = {
   arrows: false,
   draggable: false
 };
+//# sourceMappingURL=index.js.map

@@ -47,7 +47,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -84,18 +84,18 @@ function (_React$Component) {
   _createClass(Password, [{
     key: "getIcon",
     value: function getIcon() {
+      var _iconProps;
+
       var _this$props = this.props,
           prefixCls = _this$props.prefixCls,
           action = _this$props.action;
       var iconTrigger = ActionMap[action] || '';
-
-      var iconProps = _defineProperty({}, iconTrigger, this.onChange);
-
-      return React.cloneElement(React.createElement(_icon["default"], _extends({}, iconProps, {
-        className: "".concat(prefixCls, "-icon"),
-        type: this.state.visible ? 'eye-invisible' : 'eye',
-        key: "passwordIcon"
-      })));
+      var iconProps = (_iconProps = {}, _defineProperty(_iconProps, iconTrigger, this.onChange), _defineProperty(_iconProps, "className", "".concat(prefixCls, "-icon")), _defineProperty(_iconProps, "type", this.state.visible ? 'eye' : 'eye-invisible'), _defineProperty(_iconProps, "key", 'passwordIcon'), _defineProperty(_iconProps, "onMouseDown", function onMouseDown(e) {
+        // Prevent focused state lost
+        // https://github.com/ant-design/ant-design/issues/15173
+        e.preventDefault();
+      }), _iconProps);
+      return React.createElement(_icon["default"], iconProps);
     }
   }, {
     key: "render",
@@ -131,3 +131,4 @@ Password.defaultProps = {
   action: 'click',
   visibilityToggle: true
 };
+//# sourceMappingURL=Password.js.map

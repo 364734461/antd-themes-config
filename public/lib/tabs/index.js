@@ -59,7 +59,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -129,7 +129,7 @@ function (_React$Component) {
         tabPaneAnimated = 'animated' in _this.props ? tabPaneAnimated : false;
       }
 
-      (0, _warning["default"])(!(type.indexOf('card') >= 0 && (size === 'small' || size === 'large')), "Tabs[type=card|editable-card] doesn't have small or large size, it's by design.");
+      (0, _warning["default"])(!(type.indexOf('card') >= 0 && (size === 'small' || size === 'large')), 'Tabs', "`type=card|editable-card` doesn't have small or large size, it's by design.");
       var prefixCls = getPrefixCls('tabs', customizePrefixCls);
       var cls = (0, _classnames["default"])(className, (_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-vertical"), tabPosition === 'left' || tabPosition === 'right'), _defineProperty(_classNames, "".concat(prefixCls, "-").concat(size), !!size), _defineProperty(_classNames, "".concat(prefixCls, "-card"), type.indexOf('card') >= 0), _defineProperty(_classNames, "".concat(prefixCls, "-").concat(type), true), _defineProperty(_classNames, "".concat(prefixCls, "-no-animation"), !tabPaneAnimated), _classNames)); // only card type tabs can be added and closed
 
@@ -222,3 +222,4 @@ Tabs.defaultProps = {
   hideAdd: false,
   tabPosition: 'top'
 };
+//# sourceMappingURL=index.js.map

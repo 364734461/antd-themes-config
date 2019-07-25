@@ -3,13 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports["default"] = exports.LayoutContext = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
-var PropTypes = _interopRequireWildcard(require("prop-types"));
-
 var _classnames = _interopRequireDefault(require("classnames"));
+
+var _createReactContext = _interopRequireDefault(require("@ant-design/create-react-context"));
 
 var _configProvider = require("../config-provider");
 
@@ -55,13 +55,26 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
 
+var LayoutContext = (0, _createReactContext["default"])({
+  siderHook: {
+    addSider: function addSider() {
+      return null;
+    },
+    removeSider: function removeSider() {
+      return null;
+    }
+  }
+});
+exports.LayoutContext = LayoutContext;
+
 function generator(_ref) {
-  var suffixCls = _ref.suffixCls;
+  var suffixCls = _ref.suffixCls,
+      tagName = _ref.tagName;
   return function (BasicComponent) {
     return (
       /*#__PURE__*/
@@ -80,7 +93,8 @@ function generator(_ref) {
             var customizePrefixCls = _this.props.prefixCls;
             var prefixCls = getPrefixCls(suffixCls, customizePrefixCls);
             return React.createElement(BasicComponent, _extends({
-              prefixCls: prefixCls
+              prefixCls: prefixCls,
+              tagName: tagName
             }, _this.props));
           };
 
@@ -118,11 +132,12 @@ function (_React$Component2) {
           prefixCls = _a.prefixCls,
           className = _a.className,
           children = _a.children,
-          others = __rest(_a, ["prefixCls", "className", "children"]);
+          tagName = _a.tagName,
+          others = __rest(_a, ["prefixCls", "className", "children", "tagName"]);
 
-      var divCls = (0, _classnames["default"])(className, prefixCls);
-      return React.createElement("div", _extends({
-        className: divCls
+      var classString = (0, _classnames["default"])(className, prefixCls);
+      return React.createElement(tagName, _extends({
+        className: classString
       }, others), children);
     }
   }]);
@@ -148,28 +163,26 @@ function (_React$Component3) {
   }
 
   _createClass(BasicLayout, [{
-    key: "getChildContext",
-    value: function getChildContext() {
+    key: "getSiderHook",
+    value: function getSiderHook() {
       var _this3 = this;
 
       return {
-        siderHook: {
-          addSider: function addSider(id) {
-            _this3.setState(function (state) {
-              return {
-                siders: [].concat(_toConsumableArray(state.siders), [id])
-              };
-            });
-          },
-          removeSider: function removeSider(id) {
-            _this3.setState(function (state) {
-              return {
-                siders: state.siders.filter(function (currentId) {
-                  return currentId !== id;
-                })
-              };
-            });
-          }
+        addSider: function addSider(id) {
+          _this3.setState(function (state) {
+            return {
+              siders: [].concat(_toConsumableArray(state.siders), [id])
+            };
+          });
+        },
+        removeSider: function removeSider(id) {
+          _this3.setState(function (state) {
+            return {
+              siders: state.siders.filter(function (currentId) {
+                return currentId !== id;
+              })
+            };
+          });
         }
       };
     }
@@ -181,35 +194,42 @@ function (_React$Component3) {
           className = _a.className,
           children = _a.children,
           hasSider = _a.hasSider,
-          others = __rest(_a, ["prefixCls", "className", "children", "hasSider"]);
+          Tag = _a.tagName,
+          others = __rest(_a, ["prefixCls", "className", "children", "hasSider", "tagName"]);
 
-      var divCls = (0, _classnames["default"])(className, prefixCls, _defineProperty({}, "".concat(prefixCls, "-has-sider"), hasSider || this.state.siders.length > 0));
-      return React.createElement("div", _extends({
-        className: divCls
-      }, others), children);
+      var classString = (0, _classnames["default"])(className, prefixCls, _defineProperty({}, "".concat(prefixCls, "-has-sider"), typeof hasSider === 'boolean' ? hasSider : this.state.siders.length > 0));
+      return React.createElement(LayoutContext.Provider, {
+        value: {
+          siderHook: this.getSiderHook()
+        }
+      }, React.createElement(Tag, _extends({
+        className: classString
+      }, others), children));
     }
   }]);
 
   return BasicLayout;
 }(React.Component);
 
-BasicLayout.childContextTypes = {
-  siderHook: PropTypes.object
-};
 var Layout = generator({
-  suffixCls: 'layout'
+  suffixCls: 'layout',
+  tagName: 'section'
 })(BasicLayout);
 var Header = generator({
-  suffixCls: 'layout-header'
+  suffixCls: 'layout-header',
+  tagName: 'header'
 })(Basic);
 var Footer = generator({
-  suffixCls: 'layout-footer'
+  suffixCls: 'layout-footer',
+  tagName: 'footer'
 })(Basic);
 var Content = generator({
-  suffixCls: 'layout-content'
+  suffixCls: 'layout-content',
+  tagName: 'main'
 })(Basic);
 Layout.Header = Header;
 Layout.Footer = Footer;
 Layout.Content = Content;
 var _default = Layout;
 exports["default"] = _default;
+//# sourceMappingURL=layout.js.map

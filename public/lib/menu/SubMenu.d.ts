@@ -13,13 +13,13 @@ export interface SubMenuProps {
     onTitleClick?: (e: TitleEventEntity) => void;
     onTitleMouseEnter?: (e: TitleEventEntity) => void;
     onTitleMouseLeave?: (e: TitleEventEntity) => void;
+    popupOffset?: [number, number];
 }
 declare class SubMenu extends React.Component<SubMenuProps, any> {
     static contextTypes: {
         antdMenuTheme: PropTypes.Requireable<string>;
     };
     static isSubMenu: number;
-    context: any;
     private subMenu;
     onKeyDown: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
     saveSubMenu: (subMenu: any) => void;

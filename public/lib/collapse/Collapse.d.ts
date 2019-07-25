@@ -1,9 +1,10 @@
 import * as React from 'react';
 import CollapsePanel from './CollapsePanel';
 import { ConfigConsumerProps } from '../config-provider';
+export declare type ExpandIconPosition = 'left' | 'right';
 export interface CollapseProps {
-    activeKey?: Array<string> | string;
-    defaultActiveKey?: Array<string>;
+    activeKey?: Array<string | number> | string | number;
+    defaultActiveKey?: Array<string | number> | string | number;
     /** 手风琴效果 */
     accordion?: boolean;
     destroyInactivePanel?: boolean;
@@ -12,7 +13,8 @@ export interface CollapseProps {
     className?: string;
     bordered?: boolean;
     prefixCls?: string;
-    expandIcon?: (panelProps: any) => React.ReactNode;
+    expandIcon?: (panelProps: PanelProps) => React.ReactNode;
+    expandIconPosition?: ExpandIconPosition;
 }
 interface PanelProps {
     isActive?: boolean;
@@ -22,6 +24,7 @@ interface PanelProps {
     showArrow?: boolean;
     forceRender?: boolean;
     disabled?: boolean;
+    extra?: React.ReactNode;
 }
 export default class Collapse extends React.Component<CollapseProps, any> {
     static Panel: typeof CollapsePanel;
@@ -32,6 +35,7 @@ export default class Collapse extends React.Component<CollapseProps, any> {
             enter(node: HTMLElement, done: () => void): any;
             leave(node: HTMLElement, done: () => void): any;
         };
+        expandIconPosition: string;
     };
     renderExpandIcon: (panelProps: PanelProps | undefined, prefixCls: string) => {} | null | undefined;
     renderCollapse: ({ getPrefixCls }: ConfigConsumerProps) => JSX.Element;

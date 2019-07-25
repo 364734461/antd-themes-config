@@ -195,7 +195,9 @@ function (_React$Component) {
   }, {
     key: "getDisabledCompatibleChildren",
     value: function getDisabledCompatibleChildren(element) {
-      if ((element.type.__ANT_BUTTON || element.type === 'button') && element.props.disabled) {
+      var elementType = element.type;
+
+      if ((elementType.__ANT_BUTTON || elementType.__ANT_SWITCH || element.type === 'button') && element.props.disabled) {
         // Pick some layout related style properties up to span
         // Prevent layout bugs like https://github.com/ant-design/ant-design/issues/5254
         var _splitObject = splitObject(element.props.style, ['position', 'left', 'right', 'top', 'bottom', 'float', 'display', 'zIndex']),
@@ -265,3 +267,4 @@ Tooltip.defaultProps = {
 (0, _reactLifecyclesCompat.polyfill)(Tooltip);
 var _default = Tooltip;
 exports["default"] = _default;
+//# sourceMappingURL=index.js.map

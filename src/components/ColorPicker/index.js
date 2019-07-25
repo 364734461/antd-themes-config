@@ -86,12 +86,22 @@ class ColorPicker extends Component {
       styles.wrapper.transform = "translate(13%, -50%)";
     }
 
+    let className = "";
+    if (this.state.color.match(/colorPalette/g)) {
+      // console.log(this.state.color);
+      const reg = /@\{(.)+\}/;
+      const reg2 = /,(.)+\)/;
+      this.state.color.replace(reg, reg2, (key, i) => {
+        console.log(key);
+        console.log(i);
+      });
+    } else if (this.state.color.match(/fade/g)) {
+    } else if (this.state.color.match(/tint/g)) {
+    }
+
     const swatch = (
       <div style={styles.swatch} onClick={this.handleClick}>
-        <div
-          style={styles.color}
-          // className="colorPalette-blue-6-1"
-        />
+        <div style={styles.color} className={className} />
       </div>
     );
     const picker = this.state.displayColorPicker ? (

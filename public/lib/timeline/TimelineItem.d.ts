@@ -5,6 +5,7 @@ export interface TimeLineItemProps {
     color?: string;
     dot?: React.ReactNode;
     pending?: boolean;
+    position?: string;
     style?: React.CSSProperties;
 }
 declare const TimelineItem: React.SFC<TimeLineItemProps>;

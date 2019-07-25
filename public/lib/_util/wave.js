@@ -85,7 +85,7 @@ function (_React$Component) {
         }
 
         extraNode.style.borderColor = waveColor;
-        styleForPesudo.innerHTML = "[ant-click-animating-without-extra-node=\"true\"]:after { border-color: ".concat(waveColor, "; }");
+        styleForPesudo.innerHTML = "html body { --antd-wave-shadow-color: ".concat(waveColor, "; }");
 
         if (!document.body.contains(styleForPesudo)) {
           document.body.appendChild(styleForPesudo);
@@ -219,7 +219,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var node = (0, _reactDom.findDOMNode)(this);
 
-      if (node.nodeType !== 1) {
+      if (!node || node.nodeType !== 1) {
         return;
       }
 
@@ -249,3 +249,4 @@ function (_React$Component) {
 }(React.Component);
 
 exports["default"] = Wave;
+//# sourceMappingURL=wave.js.map

@@ -17,12 +17,14 @@ export interface AbstractCheckboxGroupProps {
     style?: React.CSSProperties;
 }
 export interface CheckboxGroupProps extends AbstractCheckboxGroupProps {
+    name?: string;
     defaultValue?: Array<CheckboxValueType>;
     value?: Array<CheckboxValueType>;
     onChange?: (checkedValue: Array<CheckboxValueType>) => void;
 }
 export interface CheckboxGroupState {
-    value: any;
+    value: CheckboxValueType[];
+    registeredValues: CheckboxValueType[];
 }
 export interface CheckboxGroupContext {
     checkboxGroup: {
@@ -45,17 +47,22 @@ declare class CheckboxGroup extends React.Component<CheckboxGroupProps, Checkbox
         checkboxGroup: PropTypes.Requireable<any>;
     };
     static getDerivedStateFromProps(nextProps: CheckboxGroupProps): {
-        value: CheckboxValueType[];
+        value: (string | number | boolean)[];
     } | null;
     constructor(props: CheckboxGroupProps);
     getChildContext(): {
         checkboxGroup: {
             toggleOption: (option: CheckboxOptionType) => void;
-            value: any;
+            value: (string | number | boolean)[];
             disabled: boolean | undefined;
+            name: string | undefined;
+            registerValue: (value: string) => void;
+            cancelValue: (value: string) => void;
         };
     };
     shouldComponentUpdate(nextProps: CheckboxGroupProps, nextState: CheckboxGroupState): boolean;
+    registerValue: (value: string) => void;
+    cancelValue: (value: string) => void;
     getOptions(): CheckboxOptionType[];
     toggleOption: (option: CheckboxOptionType) => void;
     renderGroup: ({ getPrefixCls }: ConfigConsumerProps) => JSX.Element;

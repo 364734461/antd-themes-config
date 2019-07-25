@@ -22,6 +22,7 @@ export interface AntdTreeNodeAttribute {
 }
 export interface AntTreeNodeProps {
     className?: string;
+    checkable?: boolean;
     disabled?: boolean;
     disableCheckbox?: boolean;
     title?: string | React.ReactNode;
@@ -58,7 +59,10 @@ export interface AntTreeNodeExpandedEvent extends AntTreeNodeBaseEvent {
 }
 export interface AntTreeNodeMouseEvent {
     node: AntTreeNode;
-    event: React.MouseEventHandler<any>;
+    event: React.MouseEvent<HTMLElement>;
+}
+export interface AntTreeNodeDragEnterEvent extends AntTreeNodeMouseEvent {
+    expandedKeys: string[];
 }
 export interface AntTreeNodeDropEvent {
     node: AntTreeNode;
@@ -66,7 +70,16 @@ export interface AntTreeNodeDropEvent {
     dragNodesKeys: string[];
     dropPosition: number;
     dropToGap?: boolean;
-    event: React.MouseEventHandler<any>;
+    event: React.MouseEvent<HTMLElement>;
+}
+export interface TreeNodeNormal {
+    title?: React.ReactNode;
+    key: string;
+    isLeaf?: boolean;
+    disabled?: boolean;
+    disableCheckbox?: boolean;
+    selectable?: boolean;
+    children?: TreeNodeNormal[];
 }
 export interface TreeProps {
     showLine?: boolean;
@@ -102,7 +115,7 @@ export interface TreeProps {
     defaultSelectedKeys?: string[];
     selectable?: boolean;
     /** 展开/收起节点时触发 */
-    onExpand?: (expandedKeys: string[], info: AntTreeNodeExpandedEvent) => void | PromiseLike<any>;
+    onExpand?: (expandedKeys: string[], info: AntTreeNodeExpandedEvent) => void | PromiseLike<void>;
     /** 点击复选框触发 */
     onCheck?: (checkedKeys: string[] | {
         checked: string[];
@@ -117,9 +130,9 @@ export interface TreeProps {
     /** filter some AntTreeNodes as you need. it should return true */
     filterAntTreeNode?: (node: AntTreeNode) => boolean;
     /** 异步加载数据 */
-    loadData?: (node: AntTreeNode) => PromiseLike<any>;
+    loadData?: (node: AntTreeNode) => PromiseLike<void>;
     loadedKeys?: string[];
-    onLoaded?: (loadedKeys: string[], info: {
+    onLoad?: (loadedKeys: string[], info: {
         event: 'load';
         node: AntTreeNode;
     }) => void;
@@ -128,18 +141,20 @@ export interface TreeProps {
     /** 设置节点可拖拽（IE>8）*/
     draggable?: boolean;
     onDragStart?: (options: AntTreeNodeMouseEvent) => void;
-    onDragEnter?: (options: AntTreeNodeMouseEvent) => void;
+    onDragEnter?: (options: AntTreeNodeDragEnterEvent) => void;
     onDragOver?: (options: AntTreeNodeMouseEvent) => void;
     onDragLeave?: (options: AntTreeNodeMouseEvent) => void;
     onDragEnd?: (options: AntTreeNodeMouseEvent) => void;
     onDrop?: (options: AntTreeNodeDropEvent) => void;
     style?: React.CSSProperties;
     showIcon?: boolean;
-    icon?: (nodeProps: AntdTreeNodeAttribute) => React.ReactNode | React.ReactNode;
+    icon?: ((nodeProps: AntdTreeNodeAttribute) => React.ReactNode) | React.ReactNode;
     switcherIcon?: React.ReactElement<any>;
     prefixCls?: string;
     filterTreeNode?: (node: AntTreeNode) => boolean;
-    children?: React.ReactNode | React.ReactNode[];
+    children?: React.ReactNode;
+    blockNode?: boolean;
+    treeData?: Array<TreeNodeNormal>;
 }
 export default class Tree extends React.Component<TreeProps, any> {
     static TreeNode: React.ComponentClass<AntTreeNodeProps>;
@@ -147,11 +162,26 @@ export default class Tree extends React.Component<TreeProps, any> {
     static defaultProps: {
         checkable: boolean;
         showIcon: boolean;
-        openAnimation: {
-            appear: null;
-            enter(node: HTMLElement, done: () => void): any;
-            leave(node: HTMLElement, done: () => void): any;
+        motion: {
+            motionAppear: boolean;
+            visible?: boolean | undefined;
+            motionName?: string | undefined;
+            motionEnter?: boolean | undefined;
+            motionLeave?: boolean | undefined;
+            motionLeaveImmediately?: boolean | undefined;
+            removeOnLeave?: boolean | undefined;
+            leavedClassName?: string | undefined;
+            onAppearStart?: ((element: HTMLElement) => React.CSSProperties) | undefined;
+            onAppearActive?: ((element: HTMLElement) => React.CSSProperties) | undefined;
+            onAppearEnd?: ((element: HTMLElement) => React.CSSProperties) | undefined;
+            onEnterStart?: ((element: HTMLElement) => React.CSSProperties) | undefined;
+            onEnterActive?: ((element: HTMLElement) => React.CSSProperties) | undefined;
+            onEnterEnd?: ((element: HTMLElement) => React.CSSProperties) | undefined;
+            onLeaveStart?: ((element: HTMLElement) => React.CSSProperties) | undefined;
+            onLeaveActive?: ((element: HTMLElement) => React.CSSProperties) | undefined;
+            onLeaveEnd?: ((element: HTMLElement) => React.CSSProperties) | undefined;
         };
+        blockNode: boolean;
     };
     tree: any;
     renderSwitcherIcon: (prefixCls: string, switcherIcon: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)> | undefined, { isLeaf, expanded, loading }: AntTreeNodeProps) => JSX.Element | null;

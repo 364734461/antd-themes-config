@@ -58,21 +58,32 @@
 }
 .ant-tooltip-arrow {
   position: absolute;
-  width: 0;
-  height: 0;
+  display: block;
+  width: 7.07106781px;
+  height: 7.07106781px;
+  background: transparent;
   border-style: solid;
-  border-color: transparent;
+  border-width: 3.53553391px;
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
 }
 .ant-tooltip-placement-top .ant-tooltip-arrow,
 .ant-tooltip-placement-topLeft .ant-tooltip-arrow,
 .ant-tooltip-placement-topRight .ant-tooltip-arrow {
-  bottom: 3px;
-  border-width: 5px 5px 0;
-  border-top-color: rgba(0, 0, 0, 0.75);
+  bottom: 5.2px;
+  border-top-color: transparent;
+  border-right-color: #404040;
+  border-bottom-color: #404040;
+  border-left-color: transparent;
+  -webkit-box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.07);
+          box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.07);
 }
 .ant-tooltip-placement-top .ant-tooltip-arrow {
   left: 50%;
-  margin-left: -5px;
+  -webkit-transform: translateX(-50%) rotate(45deg);
+      -ms-transform: translateX(-50%) rotate(45deg);
+          transform: translateX(-50%) rotate(45deg);
 }
 .ant-tooltip-placement-topLeft .ant-tooltip-arrow {
   left: 16px;
@@ -83,13 +94,19 @@
 .ant-tooltip-placement-right .ant-tooltip-arrow,
 .ant-tooltip-placement-rightTop .ant-tooltip-arrow,
 .ant-tooltip-placement-rightBottom .ant-tooltip-arrow {
-  left: 3px;
-  border-width: 5px 5px 5px 0;
-  border-right-color: rgba(0, 0, 0, 0.75);
+  left: 5px;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: #404040;
+  border-left-color: #404040;
+  -webkit-box-shadow: -3px 3px 7px rgba(0, 0, 0, 0.07);
+          box-shadow: -3px 3px 7px rgba(0, 0, 0, 0.07);
 }
 .ant-tooltip-placement-right .ant-tooltip-arrow {
   top: 50%;
-  margin-top: -5px;
+  -webkit-transform: translateY(-50%) rotate(45deg);
+      -ms-transform: translateY(-50%) rotate(45deg);
+          transform: translateY(-50%) rotate(45deg);
 }
 .ant-tooltip-placement-rightTop .ant-tooltip-arrow {
   top: 8px;
@@ -100,13 +117,19 @@
 .ant-tooltip-placement-left .ant-tooltip-arrow,
 .ant-tooltip-placement-leftTop .ant-tooltip-arrow,
 .ant-tooltip-placement-leftBottom .ant-tooltip-arrow {
-  right: 3px;
-  border-width: 5px 0 5px 5px;
-  border-left-color: rgba(0, 0, 0, 0.75);
+  right: 5px;
+  border-top-color: #404040;
+  border-right-color: #404040;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  -webkit-box-shadow: 3px -3px 7px rgba(0, 0, 0, 0.07);
+          box-shadow: 3px -3px 7px rgba(0, 0, 0, 0.07);
 }
 .ant-tooltip-placement-left .ant-tooltip-arrow {
   top: 50%;
-  margin-top: -5px;
+  -webkit-transform: translateY(-50%) rotate(45deg);
+      -ms-transform: translateY(-50%) rotate(45deg);
+          transform: translateY(-50%) rotate(45deg);
 }
 .ant-tooltip-placement-leftTop .ant-tooltip-arrow {
   top: 8px;
@@ -117,13 +140,19 @@
 .ant-tooltip-placement-bottom .ant-tooltip-arrow,
 .ant-tooltip-placement-bottomLeft .ant-tooltip-arrow,
 .ant-tooltip-placement-bottomRight .ant-tooltip-arrow {
-  top: 3px;
-  border-width: 0 5px 5px;
-  border-bottom-color: rgba(0, 0, 0, 0.75);
+  top: 5px;
+  border-top-color: #404040;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: #404040;
+  -webkit-box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.06);
+          box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.06);
 }
 .ant-tooltip-placement-bottom .ant-tooltip-arrow {
   left: 50%;
-  margin-left: -5px;
+  -webkit-transform: translateX(-50%) rotate(45deg);
+      -ms-transform: translateX(-50%) rotate(45deg);
+          transform: translateX(-50%) rotate(45deg);
 }
 .ant-tooltip-placement-bottomLeft .ant-tooltip-arrow {
   left: 16px;

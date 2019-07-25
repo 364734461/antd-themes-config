@@ -22,18 +22,23 @@ function wrapperRaf(callback) {
 
     if (restFrames <= 0) {
       callback();
-      delete ids[id];
+      delete ids[myId];
     } else {
-      ids[id] = (0, _raf["default"])(internalCallback);
+      ids[myId] = (0, _raf["default"])(internalCallback);
     }
   }
 
-  ids[id] = (0, _raf["default"])(internalCallback);
+  ids[myId] = (0, _raf["default"])(internalCallback);
   return myId;
 }
 
 wrapperRaf.cancel = function (pid) {
+  if (pid === undefined) return;
+
   _raf["default"].cancel(ids[pid]);
 
   delete ids[pid];
 };
+
+wrapperRaf.ids = ids; // export this for test usage
+//# sourceMappingURL=raf.js.map

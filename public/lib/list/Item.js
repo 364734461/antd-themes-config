@@ -15,6 +15,8 @@ var _grid = require("../grid");
 
 var _configProvider = require("../config-provider");
 
+var _reactNode = require("../_util/reactNode");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
@@ -49,7 +51,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -102,7 +104,9 @@ function (_React$Component) {
 
     _this.renderItem = function (_ref2) {
       var getPrefixCls = _ref2.getPrefixCls;
-      var grid = _this.context.grid;
+      var _this$context = _this.context,
+          grid = _this$context.grid,
+          itemLayout = _this$context.itemLayout;
 
       var _a = _this.props,
           customizePrefixCls = _a.prefixCls,
@@ -113,46 +117,30 @@ function (_React$Component) {
           others = __rest(_a, ["prefixCls", "children", "actions", "extra", "className"]);
 
       var prefixCls = getPrefixCls('list', customizePrefixCls);
-      var classString = (0, _classnames["default"])("".concat(prefixCls, "-item"), className);
-      var metaContent = [];
-      var otherContent = [];
-      React.Children.forEach(children, function (element) {
-        if (element && element.type && element.type === Meta) {
-          metaContent.push(element);
-        } else {
-          otherContent.push(element);
-        }
-      });
-      var contentClassString = (0, _classnames["default"])("".concat(prefixCls, "-item-content"), _defineProperty({}, "".concat(prefixCls, "-item-content-single"), metaContent.length < 1));
-      var content = otherContent.length > 0 ? React.createElement("div", {
-        className: contentClassString
-      }, otherContent) : null;
-      var actionsContent;
-
-      if (actions && actions.length > 0) {
-        var actionsContentItem = function actionsContentItem(action, i) {
-          return React.createElement("li", {
-            key: "".concat(prefixCls, "-item-action-").concat(i)
-          }, action, i !== actions.length - 1 && React.createElement("em", {
-            className: "".concat(prefixCls, "-item-action-split")
-          }));
-        };
-
-        actionsContent = React.createElement("ul", {
-          className: "".concat(prefixCls, "-item-action")
-        }, actions.map(function (action, i) {
-          return actionsContentItem(action, i);
+      var actionsContent = actions && actions.length > 0 && React.createElement("ul", {
+        className: "".concat(prefixCls, "-item-action"),
+        key: "actions"
+      }, actions.map(function (action, i) {
+        return React.createElement("li", {
+          key: "".concat(prefixCls, "-item-action-").concat(i)
+        }, action, i !== actions.length - 1 && React.createElement("em", {
+          className: "".concat(prefixCls, "-item-action-split")
         }));
-      }
-
-      var extraContent = React.createElement("div", {
-        className: "".concat(prefixCls, "-item-extra-wrap")
-      }, React.createElement("div", {
-        className: "".concat(prefixCls, "-item-main")
-      }, metaContent, content, actionsContent), React.createElement("div", {
-        className: "".concat(prefixCls, "-item-extra")
-      }, extra));
-      var mainContent = grid ? React.createElement(_grid.Col, {
+      }));
+      var Tag = grid ? 'div' : 'li';
+      var itemChildren = React.createElement(Tag, _extends({}, others, {
+        // `li` element `onCopy` prop args is not same as `div`
+        className: (0, _classnames["default"])("".concat(prefixCls, "-item"), className, _defineProperty({}, "".concat(prefixCls, "-item-no-flex"), !_this.isFlexMode()))
+      }), itemLayout === 'vertical' && extra ? [React.createElement("div", {
+        className: "".concat(prefixCls, "-item-main"),
+        key: "content"
+      }, children, actionsContent), React.createElement("div", {
+        className: "".concat(prefixCls, "-item-extra"),
+        key: "extra"
+      }, extra)] : [children, actionsContent, (0, _reactNode.cloneElement)(extra, {
+        key: 'extra'
+      })]);
+      return grid ? React.createElement(_grid.Col, {
         span: getGrid(grid, 'column'),
         xs: getGrid(grid, 'xs'),
         sm: getGrid(grid, 'sm'),
@@ -160,18 +148,37 @@ function (_React$Component) {
         lg: getGrid(grid, 'lg'),
         xl: getGrid(grid, 'xl'),
         xxl: getGrid(grid, 'xxl')
-      }, React.createElement("div", _extends({}, others, {
-        className: classString
-      }), extra && extraContent, !extra && metaContent, !extra && content, !extra && actionsContent)) : React.createElement("div", _extends({}, others, {
-        className: classString
-      }), extra && extraContent, !extra && metaContent, !extra && content, !extra && actionsContent);
-      return mainContent;
+      }, itemChildren) : itemChildren;
     };
 
     return _this;
   }
 
   _createClass(Item, [{
+    key: "isItemContainsTextNode",
+    value: function isItemContainsTextNode() {
+      var children = this.props.children;
+      var result;
+      React.Children.forEach(children, function (element) {
+        if (typeof element === 'string') {
+          result = true;
+        }
+      });
+      return result;
+    }
+  }, {
+    key: "isFlexMode",
+    value: function isFlexMode() {
+      var extra = this.props.extra;
+      var itemLayout = this.context.itemLayout;
+
+      if (itemLayout === 'vertical') {
+        return !!extra;
+      }
+
+      return !this.isItemContainsTextNode();
+    }
+  }, {
     key: "render",
     value: function render() {
       return React.createElement(_configProvider.ConfigConsumer, null, this.renderItem);
@@ -184,5 +191,7 @@ function (_React$Component) {
 exports["default"] = Item;
 Item.Meta = Meta;
 Item.contextTypes = {
-  grid: PropTypes.any
+  grid: PropTypes.any,
+  itemLayout: PropTypes.string
 };
+//# sourceMappingURL=Item.js.map

@@ -24,7 +24,7 @@ declare class Upload extends React.Component<UploadProps, UploadState> {
     } | null;
     recentUploadStatus: boolean | PromiseLike<any>;
     progressTimer: any;
-    private upload;
+    upload: any;
     constructor(props: UploadProps);
     componentWillUnmount(): void;
     onStart: (file: RcFile) => void;
@@ -36,9 +36,9 @@ declare class Upload extends React.Component<UploadProps, UploadState> {
     onError: (error: Error, response: any, file: UploadFile) => void;
     handleRemove(file: UploadFile): void;
     handleManualRemove: (file: UploadFile) => void;
-    onChange: (info: UploadChangeParam) => void;
+    onChange: (info: UploadChangeParam<UploadFile>) => void;
     onFileDrop: (e: React.DragEvent<HTMLDivElement>) => void;
-    beforeUpload: (file: RcFile, fileList: RcFile[]) => boolean | PromiseLike<any>;
+    beforeUpload: (file: RcFile, fileList: RcFile[]) => boolean | PromiseLike<void>;
     clearProgressTimer(): void;
     saveUpload: (node: any) => void;
     renderUploadList: (locale: UploadLocale) => JSX.Element;

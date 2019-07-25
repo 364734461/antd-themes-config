@@ -6,6 +6,10 @@ declare const _default: {
         timePickerLocale: {
             placeholder: string;
         };
+        dateFormat: string;
+        monthFormat: string;
+        dateTimeFormat: string;
+        weekFormat: string;
     };
     TimePicker: {
         placeholder: string;
@@ -15,6 +19,10 @@ declare const _default: {
         timePickerLocale: {
             placeholder: string;
         };
+        dateFormat: string;
+        monthFormat: string;
+        dateTimeFormat: string;
+        weekFormat: string;
     };
     Table: {
         filterTitle: string;

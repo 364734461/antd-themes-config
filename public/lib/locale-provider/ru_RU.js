@@ -26,7 +26,8 @@ var _default = {
     filterConfirm: 'OK',
     filterReset: 'Сбросить',
     selectAll: 'Выбрать всё',
-    selectInvert: 'Инвертировать выбор'
+    selectInvert: 'Инвертировать выбор',
+    sortTitle: 'Сортировка'
   },
   Modal: {
     okText: 'OK',
@@ -50,6 +51,16 @@ var _default = {
   },
   Empty: {
     description: 'Нет данных'
+  },
+  Text: {
+    edit: 'редактировать',
+    copy: 'копировать',
+    copied: 'скопировано',
+    expand: 'раскрыть'
+  },
+  PageHeader: {
+    back: 'назад'
   }
 };
 exports["default"] = _default;
+//# sourceMappingURL=ru_RU.js.map

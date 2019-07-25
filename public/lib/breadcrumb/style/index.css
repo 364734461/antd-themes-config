@@ -40,3 +40,6 @@
 .ant-breadcrumb-link > .anticon + span {
   margin-left: 4px;
 }
+.ant-breadcrumb-overlay-link > .anticon {
+  margin-left: 4px;
+}

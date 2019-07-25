@@ -54,5 +54,14 @@ declare const _default: {
     Icon: {
         icon: string;
     };
+    Text: {
+        edit: string;
+        copy: string;
+        copied: string;
+        expand: string;
+    };
+    PageHeader: {
+        back: string;
+    };
 };
 export default _default;

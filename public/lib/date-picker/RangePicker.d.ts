@@ -11,21 +11,22 @@ declare class RangePicker extends React.Component<any, RangePickerState> {
     static defaultProps: {
         allowClear: boolean;
         showToday: boolean;
+        separator: string;
     };
     static getDerivedStateFromProps(nextProps: any, prevState: any): {
+        value: any;
+    } | {
+        showDate: any;
+        value: any;
+    } | {
         open: any;
         value?: undefined;
     } | {
         open: any;
-        showDate: any;
         value: any;
     } | {
         open: any;
-        value: any;
-    } | {
         showDate: any;
-        value: any;
-    } | {
         value: any;
     } | null;
     private picker;
@@ -46,7 +47,7 @@ declare class RangePicker extends React.Component<any, RangePickerState> {
     focus(): void;
     blur(): void;
     savePicker: (node: HTMLSpanElement) => void;
-    renderFooter: (...args: any[]) => (JSX.Element | null)[] | null;
+    renderFooter: () => (JSX.Element | null)[] | null;
     renderRangePicker: ({ getPrefixCls }: ConfigConsumerProps) => JSX.Element;
     render(): JSX.Element;
 }

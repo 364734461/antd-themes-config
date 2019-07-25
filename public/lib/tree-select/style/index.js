@@ -6,4 +6,5 @@ require("./index.less");
 
 require("../../select/style");
 
-require("../../checkbox/style");
+require("../../empty/style");
+//# sourceMappingURL=index.js.map

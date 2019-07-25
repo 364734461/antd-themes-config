@@ -51,7 +51,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -85,7 +85,9 @@ function (_React$Component) {
 
       var _this$props = _this.props,
           tipFormatter = _this$props.tipFormatter,
-          tooltipVisible = _this$props.tooltipVisible;
+          tooltipVisible = _this$props.tooltipVisible,
+          tooltipPlacement = _this$props.tooltipPlacement,
+          getTooltipPopupContainer = _this$props.getTooltipPopupContainer;
       var visibles = _this.state.visibles;
       var isTipFormatter = tipFormatter ? visibles[index] || dragging : false;
       var visible = tooltipVisible || tooltipVisible === undefined && isTipFormatter;
@@ -93,9 +95,12 @@ function (_React$Component) {
         prefixCls: tooltipPrefixCls,
         title: tipFormatter ? tipFormatter(value) : '',
         visible: visible,
-        placement: "top",
+        placement: tooltipPlacement || 'top',
         transitionName: "zoom-down",
-        key: index
+        key: index,
+        getPopupContainer: getTooltipPopupContainer ? getTooltipPopupContainer : function () {
+          return document.body;
+        }
       }, React.createElement(_Handle["default"], _extends({}, restProps, {
         value: value,
         onMouseEnter: function onMouseEnter() {
@@ -176,3 +181,4 @@ Slider.defaultProps = {
     return value.toString();
   }
 };
+//# sourceMappingURL=index.js.map

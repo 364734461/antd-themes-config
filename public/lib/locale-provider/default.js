@@ -58,6 +58,16 @@ var _default = {
   },
   Icon: {
     icon: 'icon'
+  },
+  Text: {
+    edit: 'edit',
+    copy: 'copy',
+    copied: 'copy success',
+    expand: 'expand'
+  },
+  PageHeader: {
+    back: 'back'
   }
 };
 exports["default"] = _default;
+//# sourceMappingURL=default.js.map

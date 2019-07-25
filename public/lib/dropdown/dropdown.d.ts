@@ -4,14 +4,26 @@ import { ConfigConsumerProps } from '../config-provider';
 declare const Placements: ["topLeft", "topCenter", "topRight", "bottomLeft", "bottomCenter", "bottomRight"];
 declare type Placement = (typeof Placements)[number];
 declare type OverlayFunc = () => React.ReactNode;
+declare type Align = {
+    points?: [string, string];
+    offset?: [number, number];
+    targetOffset?: [number, number];
+    overflow?: {
+        adjustX?: boolean;
+        adjustY?: boolean;
+    };
+    useCssRight?: boolean;
+    useCssBottom?: boolean;
+    useCssTransform?: boolean;
+};
 export interface DropDownProps {
     trigger?: ('click' | 'hover' | 'contextMenu')[];
     overlay: React.ReactNode | OverlayFunc;
     onVisibleChange?: (visible: boolean) => void;
     visible?: boolean;
     disabled?: boolean;
-    align?: Object;
-    getPopupContainer?: (triggerNode: Element) => HTMLElement;
+    align?: Align;
+    getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
     prefixCls?: string;
     className?: string;
     transitionName?: string;
@@ -28,7 +40,7 @@ export default class Dropdown extends React.Component<DropDownProps, any> {
     static defaultProps: {
         mouseEnterDelay: number;
         mouseLeaveDelay: number;
-        placement: "bottomLeft" | "bottomRight" | "topLeft" | "topCenter" | "topRight" | "bottomCenter";
+        placement: "bottomRight" | "topLeft" | "topCenter" | "topRight" | "bottomLeft" | "bottomCenter";
     };
     getTransitionName(): string;
     renderOverlay: (prefixCls: string) => {} | null | undefined;

@@ -6,4 +6,5 @@ require("./index.css");
 
 require("../../select/style/css");
 
-require("../../checkbox/style/css");
+require("../../empty/style/css");
+//# sourceMappingURL=css.js.map

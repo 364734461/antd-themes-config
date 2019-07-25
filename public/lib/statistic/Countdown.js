@@ -43,6 +43,10 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 var REFRESH_INTERVAL = 1000 / 30;
 
+function getTime(value) {
+  return (0, _interopDefault["default"])(moment)(value).valueOf();
+}
+
 var Countdown =
 /*#__PURE__*/
 function (_React$Component) {
@@ -57,7 +61,7 @@ function (_React$Component) {
 
     _this.syncTimer = function () {
       var value = _this.props.value;
-      var timestamp = (0, _interopDefault["default"])(moment)(value).valueOf();
+      var timestamp = getTime(value);
 
       if (timestamp >= Date.now()) {
         _this.startTimer();
@@ -67,15 +71,26 @@ function (_React$Component) {
     };
 
     _this.startTimer = function () {
-      if (_this.countdownId !== undefined) return;
+      if (_this.countdownId) return;
       _this.countdownId = window.setInterval(function () {
         _this.forceUpdate();
       }, REFRESH_INTERVAL);
     };
 
     _this.stopTimer = function () {
-      clearInterval(_this.countdownId);
-      _this.countdownId = undefined;
+      var _this$props = _this.props,
+          onFinish = _this$props.onFinish,
+          value = _this$props.value;
+
+      if (_this.countdownId) {
+        clearInterval(_this.countdownId);
+        _this.countdownId = undefined;
+        var timestamp = getTime(value);
+
+        if (onFinish && timestamp < Date.now()) {
+          onFinish();
+        }
+      }
     };
 
     _this.formatCountdown = function (value, config) {
@@ -130,3 +145,4 @@ Countdown.defaultProps = {
 (0, _reactLifecyclesCompat.polyfill)(Countdown);
 var _default = Countdown;
 exports["default"] = _default;
+//# sourceMappingURL=Countdown.js.map

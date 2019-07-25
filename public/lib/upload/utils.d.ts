@@ -8,3 +8,5 @@ export declare function fileToObject(file: RcFile): UploadFile;
 export declare function genPercentAdd(): (s: number) => number;
 export declare function getFileItem(file: UploadFile, fileList: UploadFile[]): UploadFile;
 export declare function removeFileItem(file: UploadFile, fileList: UploadFile[]): UploadFile[] | null;
+export declare const isImageUrl: (file: UploadFile) => boolean;
+export declare function previewImage(file: File | Blob): Promise<string>;

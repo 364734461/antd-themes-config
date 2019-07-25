@@ -21,12 +21,16 @@ var _default = {
   DatePicker: _tr_TR2["default"],
   TimePicker: _tr_TR3["default"],
   Calendar: _tr_TR4["default"],
+  global: {
+    placeholder: 'Lütfen seçiniz'
+  },
   Table: {
     filterTitle: 'Menü Filtrele',
     filterConfirm: 'Tamam',
     filterReset: 'Sıfırla',
     selectAll: 'Hepsini Seç',
-    selectInvert: 'Tersini Seç'
+    selectInvert: 'Tersini Seç',
+    sortTitle: 'Sırala'
   },
   Modal: {
     okText: 'Tamam',
@@ -38,6 +42,7 @@ var _default = {
     cancelText: 'İptal'
   },
   Transfer: {
+    titles: ['', ''],
     searchPlaceholder: 'Arama',
     itemUnit: 'Öğe',
     itemsUnit: 'Öğeler'
@@ -50,6 +55,16 @@ var _default = {
   },
   Empty: {
     description: 'Veri Yok'
+  },
+  Icon: {
+    icon: 'icon'
+  },
+  Text: {
+    edit: 'düzenle',
+    copy: 'kopyala',
+    copied: 'kopyalandı',
+    expand: 'genişlet'
   }
 };
 exports["default"] = _default;
+//# sourceMappingURL=tr_TR.js.map

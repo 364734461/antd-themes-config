@@ -105,6 +105,45 @@
 .ant-badge-status-warning {
   background-color: #faad14;
 }
+.ant-badge-status-pink {
+  background: #eb2f96;
+}
+.ant-badge-status-magenta {
+  background: #eb2f96;
+}
+.ant-badge-status-red {
+  background: #f5222d;
+}
+.ant-badge-status-volcano {
+  background: #fa541c;
+}
+.ant-badge-status-orange {
+  background: #fa8c16;
+}
+.ant-badge-status-yellow {
+  background: #fadb14;
+}
+.ant-badge-status-gold {
+  background: #faad14;
+}
+.ant-badge-status-cyan {
+  background: #13c2c2;
+}
+.ant-badge-status-lime {
+  background: #a0d911;
+}
+.ant-badge-status-green {
+  background: #52c41a;
+}
+.ant-badge-status-blue {
+  background: #1890ff;
+}
+.ant-badge-status-geekblue {
+  background: #2f54eb;
+}
+.ant-badge-status-purple {
+  background: #722ed1;
+}
 .ant-badge-status-text {
   margin-left: 8px;
   color: rgba(0, 0, 0, 0.65);
@@ -123,7 +162,7 @@
   -webkit-animation-fill-mode: both;
           animation-fill-mode: both;
 }
-.ant-badge-not-a-wrapper {
+.ant-badge-not-a-wrapper:not(.ant-badge-status) {
   vertical-align: middle;
 }
 .ant-badge-not-a-wrapper .ant-scroll-number {
@@ -172,6 +211,9 @@
 .ant-scroll-number-only > p {
   height: 20px;
   margin: 0;
+}
+.ant-scroll-number-symbol {
+  vertical-align: top;
 }
 @-webkit-keyframes antZoomBadgeIn {
   0% {

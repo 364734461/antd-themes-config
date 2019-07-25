@@ -7,11 +7,9 @@ exports["default"] = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
-var PropTypes = _interopRequireWildcard(require("prop-types"));
-
 var _rcDrawer = _interopRequireDefault(require("rc-drawer"));
 
-var _createReactContext = _interopRequireDefault(require("create-react-context"));
+var _createReactContext = _interopRequireDefault(require("@ant-design/create-react-context"));
 
 var _warning = _interopRequireDefault(require("../_util/warning"));
 
@@ -55,7 +53,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -76,24 +74,6 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Drawer).apply(this, arguments));
     _this.state = {
       push: false
-    };
-
-    _this.close = function (e) {
-      if (_this.props.visible !== undefined) {
-        if (_this.props.onClose) {
-          _this.props.onClose(e);
-        }
-
-        return;
-      }
-    };
-
-    _this.onMaskClick = function (e) {
-      if (!_this.props.maskClosable) {
-        return;
-      }
-
-      _this.close(e);
     };
 
     _this.push = function () {
@@ -124,7 +104,7 @@ function (_React$Component) {
 
     _this.getDestroyOnClose = function () {
       return _this.props.destroyOnClose && !_this.props.visible;
-    }; // get drawar push width or height
+    }; // get drawer push width or height
 
 
     _this.getPushTransform = function (placement) {
@@ -183,7 +163,7 @@ function (_React$Component) {
         className: "".concat(prefixCls, "-body"),
         style: bodyStyle
       }, _this.props.children));
-    }; // render Provider for Multi-level drawe
+    }; // render Provider for Multi-level drawer
 
 
     _this.renderProvider = function (value) {
@@ -196,10 +176,23 @@ function (_React$Component) {
           wrapClassName = _a.wrapClassName,
           width = _a.width,
           height = _a.height,
-          rest = __rest(_a, ["prefixCls", "zIndex", "style", "placement", "className", "wrapClassName", "width", "height"]);
+          closable = _a.closable,
+          destroyOnClose = _a.destroyOnClose,
+          mask = _a.mask,
+          bodyStyle = _a.bodyStyle,
+          title = _a.title,
+          push = _a.push,
+          visible = _a.visible,
+          getPopupContainer = _a.getPopupContainer,
+          rootPrefixCls = _a.rootPrefixCls,
+          getPrefixCls = _a.getPrefixCls,
+          renderEmpty = _a.renderEmpty,
+          csp = _a.csp,
+          autoInsertSpaceInButton = _a.autoInsertSpaceInButton,
+          rest = __rest(_a, ["prefixCls", "zIndex", "style", "placement", "className", "wrapClassName", "width", "height", "closable", "destroyOnClose", "mask", "bodyStyle", "title", "push", "visible", "getPopupContainer", "rootPrefixCls", "getPrefixCls", "renderEmpty", "csp", "autoInsertSpaceInButton"]);
 
-      (0, _warning["default"])(wrapClassName === undefined, 'wrapClassName is deprecated, please use className instead.');
-      var haveMask = rest.mask ? '' : 'no-mask';
+      (0, _warning["default"])(wrapClassName === undefined, 'Drawer', 'wrapClassName is deprecated, please use className instead.');
+      var haveMask = mask ? '' : 'no-mask';
       _this.parentDrawer = value;
       var offsetStyle = {};
 
@@ -216,8 +209,7 @@ function (_React$Component) {
       }, rest, offsetStyle, {
         prefixCls: prefixCls,
         open: _this.props.visible,
-        onMaskClick: _this.onMaskClick,
-        showMask: _this.props.mask,
+        showMask: mask,
         placement: placement,
         style: _this.getRcDrawerStyle(),
         className: (0, _classnames["default"])(wrapClassName, className, haveMask)
@@ -228,14 +220,36 @@ function (_React$Component) {
   }
 
   _createClass(Drawer, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      // fix: delete drawer in child and re-render, no push started.
+      // <Drawer>{show && <Drawer />}</Drawer>
+      var visible = this.props.visible;
+
+      if (visible && this.parentDrawer) {
+        this.parentDrawer.push();
+      }
+    }
+  }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(preProps) {
-      if (preProps.visible !== this.props.visible && this.parentDrawer) {
-        if (this.props.visible) {
+      var visible = this.props.visible;
+
+      if (preProps.visible !== visible && this.parentDrawer) {
+        if (visible) {
           this.parentDrawer.push();
         } else {
           this.parentDrawer.pull();
         }
+      }
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      // unmount drawer in child, clear push.
+      if (this.parentDrawer) {
+        this.parentDrawer.pull();
+        this.parentDrawer = null;
       }
     }
   }, {
@@ -262,9 +276,10 @@ function (_React$Component) {
     value: function renderCloseIcon() {
       var _this$props4 = this.props,
           closable = _this$props4.closable,
-          prefixCls = _this$props4.prefixCls;
+          prefixCls = _this$props4.prefixCls,
+          onClose = _this$props4.onClose;
       return closable && React.createElement("button", {
-        onClick: this.close,
+        onClick: onClose,
         "aria-label": "Close",
         className: "".concat(prefixCls, "-close")
       }, React.createElement(_icon["default"], {
@@ -281,23 +296,6 @@ function (_React$Component) {
   return Drawer;
 }(React.Component);
 
-Drawer.propTypes = {
-  closable: PropTypes.bool,
-  destroyOnClose: PropTypes.bool,
-  getContainer: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.func, PropTypes.bool]),
-  maskClosable: PropTypes.bool,
-  mask: PropTypes.bool,
-  maskStyle: PropTypes.object,
-  style: PropTypes.object,
-  title: PropTypes.node,
-  visible: PropTypes.bool,
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  zIndex: PropTypes.number,
-  prefixCls: PropTypes.string,
-  placement: PropTypes.oneOf(PlacementTypes),
-  onClose: PropTypes.func,
-  className: PropTypes.string
-};
 Drawer.defaultProps = {
   width: 256,
   height: 256,
@@ -305,7 +303,8 @@ Drawer.defaultProps = {
   placement: 'right',
   maskClosable: true,
   mask: true,
-  level: null
+  level: null,
+  keyboard: true
 };
 
 var _default = (0, _configProvider.withConfigConsumer)({
@@ -313,3 +312,4 @@ var _default = (0, _configProvider.withConfigConsumer)({
 })(Drawer);
 
 exports["default"] = _default;
+//# sourceMappingURL=index.js.map

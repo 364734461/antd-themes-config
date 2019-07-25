@@ -13,7 +13,7 @@ export interface AvatarProps {
     style?: React.CSSProperties;
     prefixCls?: string;
     className?: string;
-    children?: any;
+    children?: React.ReactNode;
     alt?: string;
     onError?: () => boolean;
 }
@@ -30,9 +30,12 @@ export default class Avatar extends React.Component<AvatarProps, AvatarState> {
         scale: number;
         isImgExist: boolean;
     };
+    private avatarNode;
     private avatarChildren;
+    private lastChildrenWidth;
+    private lastNodeWidth;
     componentDidMount(): void;
-    componentDidUpdate(prevProps: AvatarProps, prevState: AvatarState): void;
+    componentDidUpdate(prevProps: AvatarProps): void;
     setScale: () => void;
     handleImgLoadError: () => void;
     renderAvatar: ({ getPrefixCls }: ConfigConsumerProps) => JSX.Element;

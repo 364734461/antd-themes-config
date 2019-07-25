@@ -1,46 +1,15 @@
 import * as React from 'react';
 import { ConfigConsumerProps } from '../config-provider';
+import { Settings } from 'react-slick';
 export declare type CarouselEffect = 'scrollx' | 'fade';
-export interface CarouselProps {
+export declare type DotPosition = 'top' | 'bottom' | 'left' | 'right';
+export interface CarouselProps extends Settings {
     effect?: CarouselEffect;
-    dots?: boolean;
-    vertical?: boolean;
-    autoplay?: boolean;
-    easing?: string;
-    beforeChange?: (from: number, to: number) => void;
-    afterChange?: (current: number) => void;
     style?: React.CSSProperties;
     prefixCls?: string;
-    accessibility?: boolean;
-    nextArrow?: HTMLElement | any;
-    prevArrow?: HTMLElement | any;
-    pauseOnHover?: boolean;
-    className?: string;
-    adaptiveHeight?: boolean;
-    arrows?: boolean;
-    autoplaySpeed?: number;
-    centerMode?: boolean;
-    centerPadding?: string | any;
-    cssEase?: string | any;
-    dotsClass?: string;
-    draggable?: boolean;
-    fade?: boolean;
-    focusOnSelect?: boolean;
-    infinite?: boolean;
-    initialSlide?: number;
-    lazyLoad?: boolean;
-    rtl?: boolean;
-    slide?: string;
-    slidesToShow?: number;
-    slidesToScroll?: number;
-    speed?: number;
-    swipe?: boolean;
-    swipeToSlide?: boolean;
-    touchMove?: boolean;
-    touchThreshold?: number;
-    variableWidth?: boolean;
-    useCSS?: boolean;
     slickGoTo?: number;
+    dotPosition?: DotPosition;
+    children?: React.ReactNode;
 }
 export default class Carousel extends React.Component<CarouselProps, {}> {
     static defaultProps: {
@@ -52,12 +21,14 @@ export default class Carousel extends React.Component<CarouselProps, {}> {
     private slick;
     constructor(props: CarouselProps);
     componentDidMount(): void;
+    componentDidUpdate(prevProps: CarouselProps): void;
     componentWillUnmount(): void;
     onWindowResized: () => void;
     saveSlick: (node: any) => void;
     next(): void;
     prev(): void;
     goTo(slide: number, dontAnimate?: boolean): void;
+    getDotPosition(): DotPosition;
     renderCarousel: ({ getPrefixCls }: ConfigConsumerProps) => JSX.Element;
     render(): JSX.Element;
 }

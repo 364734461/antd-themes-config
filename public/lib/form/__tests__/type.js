@@ -129,4 +129,56 @@ var WithCreateOptionsForm = _Form["default"].create(formOptions)(WithCreateOptio
 
 React.createElement(WithCreateOptionsForm, {
   username: "foo"
+}); // Should work with forwardRef & wrappedComponentRef
+// https://github.com/ant-design/ant-design/issues/16229
+
+if (React.forwardRef) {
+  var ForwardDemo = React.forwardRef(function (_ref, ref) {
+    var str = _ref.str;
+    return React.createElement("div", {
+      ref: ref
+    }, str || '');
+  });
+
+  var WrappedForwardDemo = _Form["default"].create()(ForwardDemo);
+
+  React.createElement(WrappedForwardDemo, {
+    str: ""
+  });
+}
+
+var WrapRefDemo =
+/*#__PURE__*/
+function (_React$Component4) {
+  _inherits(WrapRefDemo, _React$Component4);
+
+  function WrapRefDemo() {
+    _classCallCheck(this, WrapRefDemo);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(WrapRefDemo).apply(this, arguments));
+  }
+
+  _createClass(WrapRefDemo, [{
+    key: "getForm",
+    value: function getForm() {
+      return this.props.form;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return React.createElement("div", null, this.props.str || '');
+    }
+  }]);
+
+  return WrapRefDemo;
+}(React.Component);
+
+var WrappedWrapRefDemo = _Form["default"].create()(WrapRefDemo);
+
+React.createElement(WrappedWrapRefDemo, {
+  str: "",
+  wrappedComponentRef: function wrappedComponentRef() {
+    return null;
+  }
 });
+//# sourceMappingURL=type.js.map

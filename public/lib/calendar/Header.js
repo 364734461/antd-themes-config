@@ -99,11 +99,15 @@ function (_React$Component) {
       }
     };
 
-    _this.onTypeChange = function (e) {
+    _this.onInternalTypeChange = function (e) {
+      _this.onTypeChange(e.target.value);
+    };
+
+    _this.onTypeChange = function (type) {
       var onTypeChange = _this.props.onTypeChange;
 
       if (onTypeChange) {
-        onTypeChange(e.target.value);
+        onTypeChange(type);
       }
     };
 
@@ -111,33 +115,68 @@ function (_React$Component) {
       _this.calenderHeaderNode = node;
     };
 
-    _this.renderHeader = function (_ref) {
-      var getPrefixCls = _ref.getPrefixCls;
+    _this.getMonthYearSelections = function (getPrefixCls) {
       var _this$props2 = _this.props,
           customizePrefixCls = _this$props2.prefixCls,
           type = _this$props2.type,
-          value = _this$props2.value,
-          locale = _this$props2.locale,
-          fullscreen = _this$props2.fullscreen;
+          value = _this$props2.value;
       var prefixCls = getPrefixCls('fullcalendar', customizePrefixCls);
 
-      var yearSelect = _this.getYearSelectElement(prefixCls, value.year());
+      var yearReactNode = _this.getYearSelectElement(prefixCls, value.year());
 
-      var monthSelect = type === 'date' ? _this.getMonthSelectElement(prefixCls, value.month(), _this.getMonthsLocale(value)) : null;
+      var monthReactNode = type === 'month' ? _this.getMonthSelectElement(prefixCls, value.month(), _this.getMonthsLocale(value)) : null;
+      return {
+        yearReactNode: yearReactNode,
+        monthReactNode: monthReactNode
+      };
+    };
+
+    _this.getTypeSwitch = function () {
+      var _this$props3 = _this.props,
+          locale = _this$props3.locale,
+          type = _this$props3.type,
+          fullscreen = _this$props3.fullscreen;
       var size = fullscreen ? 'default' : 'small';
-      var typeSwitch = React.createElement(_radio.Group, {
-        onChange: _this.onTypeChange,
+      return React.createElement(_radio.Group, {
+        onChange: _this.onInternalTypeChange,
         value: type,
         size: size
       }, React.createElement(_radio.Button, {
-        value: "date"
-      }, locale.month), React.createElement(_radio.Button, {
         value: "month"
+      }, locale.month), React.createElement(_radio.Button, {
+        value: "year"
       }, locale.year));
-      return React.createElement("div", {
+    };
+
+    _this.headerRenderCustom = function (headerRender) {
+      var _this$props4 = _this.props,
+          type = _this$props4.type,
+          onValueChange = _this$props4.onValueChange,
+          value = _this$props4.value;
+      return headerRender({
+        value: value,
+        type: type || 'month',
+        onChange: onValueChange,
+        onTypeChange: _this.onTypeChange
+      });
+    };
+
+    _this.renderHeader = function (_ref) {
+      var getPrefixCls = _ref.getPrefixCls;
+      var _this$props5 = _this.props,
+          prefixCls = _this$props5.prefixCls,
+          headerRender = _this$props5.headerRender;
+
+      var typeSwitch = _this.getTypeSwitch();
+
+      var _this$getMonthYearSel = _this.getMonthYearSelections(getPrefixCls),
+          yearReactNode = _this$getMonthYearSel.yearReactNode,
+          monthReactNode = _this$getMonthYearSel.monthReactNode;
+
+      return headerRender ? _this.headerRenderCustom(headerRender) : React.createElement("div", {
         className: "".concat(prefixCls, "-header"),
         ref: _this.getCalenderHeaderNode
-      }, yearSelect, monthSelect, typeSwitch);
+      }, yearReactNode, monthReactNode, typeSwitch);
     };
 
     return _this;
@@ -148,12 +187,12 @@ function (_React$Component) {
     value: function getYearSelectElement(prefixCls, year) {
       var _this2 = this;
 
-      var _this$props3 = this.props,
-          yearSelectOffset = _this$props3.yearSelectOffset,
-          yearSelectTotal = _this$props3.yearSelectTotal,
-          locale = _this$props3.locale,
-          fullscreen = _this$props3.fullscreen,
-          validRange = _this$props3.validRange;
+      var _this$props6 = this.props,
+          yearSelectOffset = _this$props6.yearSelectOffset,
+          yearSelectTotal = _this$props6.yearSelectTotal,
+          locale = _this$props6.locale,
+          fullscreen = _this$props6.fullscreen,
+          validRange = _this$props6.validRange;
       var start = year - yearSelectOffset;
       var end = start + yearSelectTotal;
 
@@ -201,10 +240,10 @@ function (_React$Component) {
     value: function getMonthSelectElement(prefixCls, month, months) {
       var _this3 = this;
 
-      var _this$props4 = this.props,
-          fullscreen = _this$props4.fullscreen,
-          validRange = _this$props4.validRange,
-          value = _this$props4.value;
+      var _this$props7 = this.props,
+          fullscreen = _this$props7.fullscreen,
+          validRange = _this$props7.validRange,
+          value = _this$props7.value;
       var options = [];
       var start = 0;
       var end = 12;
@@ -257,3 +296,4 @@ Header.defaultProps = {
   yearSelectOffset: 10,
   yearSelectTotal: 20
 };
+//# sourceMappingURL=Header.js.map

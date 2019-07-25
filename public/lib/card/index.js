@@ -9,8 +9,6 @@ var React = _interopRequireWildcard(require("react"));
 
 var _classnames = _interopRequireDefault(require("classnames"));
 
-var _addEventListener = _interopRequireDefault(require("rc-util/lib/Dom/addEventListener"));
-
 var _omit = _interopRequireDefault(require("omit.js"));
 
 var _Grid = _interopRequireDefault(require("./Grid"));
@@ -25,13 +23,13 @@ var _col = _interopRequireDefault(require("../col"));
 
 var _configProvider = require("../config-provider");
 
-var _throttleByAnimationFrame = require("../_util/throttleByAnimationFrame");
-
 var _warning = _interopRequireDefault(require("../_util/warning"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; return newObj; } }
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -53,18 +51,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-var __decorate = void 0 && (void 0).__decorate || function (decorators, target, key, desc) {
-  var c = arguments.length,
-      r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
-      d;
-  if ((typeof Reflect === "undefined" ? "undefined" : _typeof(Reflect)) === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);else for (var i = decorators.length - 1; i >= 0; i--) {
-    if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-  }
-  return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-
 var __rest = void 0 && (void 0).__rest || function (s, e) {
   var t = {};
 
@@ -73,7 +59,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -89,19 +75,11 @@ function (_React$Component) {
     _classCallCheck(this, Card);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Card).apply(this, arguments));
-    _this.state = {
-      widerPadding: false
-    };
-    _this.updateWiderPaddingCalled = false;
 
     _this.onTabChange = function (key) {
       if (_this.props.onTabChange) {
         _this.props.onTabChange(key);
       }
-    };
-
-    _this.saveRef = function (node) {
-      _this.container = node;
     };
 
     _this.renderCard = function (_ref) {
@@ -135,7 +113,7 @@ function (_React$Component) {
           others = __rest(_a, ["prefixCls", "className", "extra", "headStyle", "bodyStyle", "noHovering", "hoverable", "title", "loading", "bordered", "size", "type", "cover", "actions", "tabList", "children", "activeTabKey", "defaultActiveTabKey"]);
 
       var prefixCls = getPrefixCls('card', customizePrefixCls);
-      var classString = (0, _classnames["default"])(prefixCls, className, (_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-loading"), loading), _defineProperty(_classNames, "".concat(prefixCls, "-bordered"), bordered), _defineProperty(_classNames, "".concat(prefixCls, "-hoverable"), _this.getCompatibleHoverable()), _defineProperty(_classNames, "".concat(prefixCls, "-wider-padding"), _this.state.widerPadding), _defineProperty(_classNames, "".concat(prefixCls, "-padding-transition"), _this.updateWiderPaddingCalled), _defineProperty(_classNames, "".concat(prefixCls, "-contain-grid"), _this.isContainGrid()), _defineProperty(_classNames, "".concat(prefixCls, "-contain-tabs"), tabList && tabList.length), _defineProperty(_classNames, "".concat(prefixCls, "-").concat(size), size !== 'default'), _defineProperty(_classNames, "".concat(prefixCls, "-type-").concat(type), !!type), _classNames));
+      var classString = (0, _classnames["default"])(prefixCls, className, (_classNames = {}, _defineProperty(_classNames, "".concat(prefixCls, "-loading"), loading), _defineProperty(_classNames, "".concat(prefixCls, "-bordered"), bordered), _defineProperty(_classNames, "".concat(prefixCls, "-hoverable"), _this.getCompatibleHoverable()), _defineProperty(_classNames, "".concat(prefixCls, "-contain-grid"), _this.isContainGrid()), _defineProperty(_classNames, "".concat(prefixCls, "-contain-tabs"), tabList && tabList.length), _defineProperty(_classNames, "".concat(prefixCls, "-").concat(size), size !== 'default'), _defineProperty(_classNames, "".concat(prefixCls, "-type-").concat(type), !!type), _classNames));
       var loadingBlockStyle = bodyStyle.padding === 0 || bodyStyle.padding === '0px' ? {
         padding: 24
       } : undefined;
@@ -235,8 +213,7 @@ function (_React$Component) {
       }, _this.getAction(actions)) : null;
       var divProps = (0, _omit["default"])(others, ['onTabChange']);
       return React.createElement("div", _extends({}, divProps, {
-        className: classString,
-        ref: _this.saveRef
+        className: classString
       }), head, coverDom, body, actionDom);
     };
 
@@ -246,49 +223,9 @@ function (_React$Component) {
   _createClass(Card, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.updateWiderPadding();
-      this.resizeEvent = (0, _addEventListener["default"])(window, 'resize', this.updateWiderPadding);
-
       if ('noHovering' in this.props) {
-        (0, _warning["default"])(!this.props.noHovering, '`noHovering` of Card is deprecated, you can remove it safely or use `hoverable` instead.');
-        (0, _warning["default"])(!!this.props.noHovering, '`noHovering={false}` of Card is deprecated, use `hoverable` instead.');
-      }
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      if (this.resizeEvent) {
-        this.resizeEvent.remove();
-      }
-
-      this.updateWiderPadding.cancel();
-    }
-  }, {
-    key: "updateWiderPadding",
-    value: function updateWiderPadding() {
-      var _this2 = this;
-
-      if (!this.container) {
-        return;
-      } // 936 is a magic card width pixel number indicated by designer
-
-
-      var WIDTH_BOUNDARY_PX = 936;
-
-      if (this.container.offsetWidth >= WIDTH_BOUNDARY_PX && !this.state.widerPadding) {
-        this.setState({
-          widerPadding: true
-        }, function () {
-          _this2.updateWiderPaddingCalled = true; // first render without css transition
-        });
-      }
-
-      if (this.container.offsetWidth < WIDTH_BOUNDARY_PX && this.state.widerPadding) {
-        this.setState({
-          widerPadding: false
-        }, function () {
-          _this2.updateWiderPaddingCalled = true; // first render without css transition
-        });
+        (0, _warning["default"])(!this.props.noHovering, 'Card', '`noHovering` is deprecated, you can remove it safely or use `hoverable` instead.');
+        (0, _warning["default"])(!!this.props.noHovering, 'Card', '`noHovering={false}` is deprecated, use `hoverable` instead.');
       }
     }
   }, {
@@ -305,10 +242,6 @@ function (_React$Component) {
   }, {
     key: "getAction",
     value: function getAction(actions) {
-      if (!actions || !actions.length) {
-        return null;
-      }
-
       var actionList = actions.map(function (action, index) {
         return React.createElement("li", {
           style: {
@@ -346,5 +279,4 @@ function (_React$Component) {
 exports["default"] = Card;
 Card.Grid = _Grid["default"];
 Card.Meta = _Meta["default"];
-
-__decorate([(0, _throttleByAnimationFrame.throttleByAnimationFrameDecorator)()], Card.prototype, "updateWiderPadding", null);
+//# sourceMappingURL=index.js.map

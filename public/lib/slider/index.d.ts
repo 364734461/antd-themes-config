@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { TooltipPlacement } from '../tooltip';
 import { ConfigConsumerProps } from '../config-provider';
 export interface SliderMarks {
     [key: number]: React.ReactNode | {
@@ -13,7 +14,7 @@ interface HandleGeneratorInfo {
     index: number;
     rest: any[];
 }
-export declare type HandleGeneratorFn = (tooltipPrefixCls: string, info: HandleGeneratorInfo) => React.ReactElement<any>;
+export declare type HandleGeneratorFn = (tooltipPrefixCls: string, info: HandleGeneratorInfo) => React.ReactNode;
 export interface SliderProps {
     prefixCls?: string;
     tooltipPrefixCls?: string;
@@ -35,6 +36,8 @@ export interface SliderProps {
     id?: string;
     style?: React.CSSProperties;
     tooltipVisible?: boolean;
+    tooltipPlacement?: TooltipPlacement;
+    getTooltipPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;
 }
 export interface SliderState {
     visibles: {
@@ -45,7 +48,7 @@ export default class Slider extends React.Component<SliderProps, SliderState> {
     static defaultProps: {
         tipFormatter(value: number): string;
     };
-    private rcSlider;
+    rcSlider: any;
     constructor(props: SliderProps);
     toggleTooltipVisible: (index: number, visible: boolean) => void;
     handleWithTooltip: HandleGeneratorFn;

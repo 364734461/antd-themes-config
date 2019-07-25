@@ -61,7 +61,7 @@ var __rest = void 0 && (void 0).__rest || function (s, e) {
   }
 
   if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
   }
   return t;
 };
@@ -78,7 +78,29 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(CheckboxGroup).call(this, props));
 
+    _this.registerValue = function (value) {
+      _this.setState(function (_ref) {
+        var registeredValues = _ref.registeredValues;
+        return {
+          registeredValues: [].concat(_toConsumableArray(registeredValues), [value])
+        };
+      });
+    };
+
+    _this.cancelValue = function (value) {
+      _this.setState(function (_ref2) {
+        var registeredValues = _ref2.registeredValues;
+        return {
+          registeredValues: registeredValues.filter(function (val) {
+            return val !== value;
+          })
+        };
+      });
+    };
+
     _this.toggleOption = function (option) {
+      var registeredValues = _this.state.registeredValues;
+
       var optionIndex = _this.state.value.indexOf(option.value);
 
       var value = _toConsumableArray(_this.state.value);
@@ -98,12 +120,24 @@ function (_React$Component) {
       var onChange = _this.props.onChange;
 
       if (onChange) {
-        onChange(value);
+        var options = _this.getOptions();
+
+        onChange(value.filter(function (val) {
+          return registeredValues.indexOf(val) !== -1;
+        }).sort(function (a, b) {
+          var indexA = options.findIndex(function (opt) {
+            return opt.value === a;
+          });
+          var indexB = options.findIndex(function (opt) {
+            return opt.value === b;
+          });
+          return indexA - indexB;
+        }));
       }
     };
 
-    _this.renderGroup = function (_ref) {
-      var getPrefixCls = _ref.getPrefixCls;
+    _this.renderGroup = function (_ref3) {
+      var getPrefixCls = _ref3.getPrefixCls;
 
       var _assertThisInitialize = _assertThisInitialized(_this),
           props = _assertThisInitialize.props,
@@ -142,7 +176,8 @@ function (_React$Component) {
     };
 
     _this.state = {
-      value: props.value || props.defaultValue || []
+      value: props.value || props.defaultValue || [],
+      registeredValues: []
     };
     return _this;
   }
@@ -154,7 +189,11 @@ function (_React$Component) {
         checkboxGroup: {
           toggleOption: this.toggleOption,
           value: this.state.value,
-          disabled: this.props.disabled
+          disabled: this.props.disabled,
+          name: this.props.name,
+          // https://github.com/ant-design/ant-design/issues/16376
+          registerValue: this.registerValue,
+          cancelValue: this.cancelValue
         }
       };
     }
@@ -215,3 +254,4 @@ CheckboxGroup.childContextTypes = {
 (0, _reactLifecyclesCompat.polyfill)(CheckboxGroup);
 var _default = CheckboxGroup;
 exports["default"] = _default;
+//# sourceMappingURL=Group.js.map

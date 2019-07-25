@@ -27,6 +27,7 @@
   padding: 4px 11px;
   color: rgba(0, 0, 0, 0.65);
   font-size: 14px;
+  line-height: 32px;
   background-color: #fff;
   background-image: none;
   border: 1px solid #d9d9d9;
@@ -70,10 +71,21 @@
   border-color: #e6d8d8;
   border-right-width: 1px !important;
 }
+.ant-mention-wrapper .ant-mention-editor[disabled] {
+  color: rgba(0, 0, 0, 0.25);
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 1;
+}
+.ant-mention-wrapper .ant-mention-editor[disabled]:hover {
+  border-color: #e6d8d8;
+  border-right-width: 1px !important;
+}
 textarea.ant-mention-wrapper .ant-mention-editor {
   max-width: 100%;
   height: auto;
   min-height: 32px;
+  line-height: 1.5;
   vertical-align: bottom;
   -webkit-transition: all 0.3s, height 0s;
   transition: all 0.3s, height 0s;
@@ -82,10 +94,12 @@ textarea.ant-mention-wrapper .ant-mention-editor {
   height: 40px;
   padding: 6px 11px;
   font-size: 16px;
+  line-height: 40px;
 }
 .ant-mention-wrapper .ant-mention-editor-sm {
   height: 24px;
   padding: 1px 7px;
+  line-height: 24px;
 }
 .ant-mention-wrapper .ant-mention-editor-wrapper {
   height: auto;

@@ -1,31 +1,1070 @@
+
 @import "./lib/style/themes/default";
 @import "./lib/style/mixins/index";
+  
 
-// .backgroundcard(@className,@index) {
-//   .colorPalette-@{className}-@{index} {
-//     background-color: color(~`colorPalette("@{className}", @index) `);
-//   }
-// }
-
-// @bgcardList: "blue", "purple", "cyan", "green", "magenta", "pink", "red",
-//   "orange", "yellow", "volcano", "geekblue", "lime", "gold";
-
-// .backgroundcardLoopItem(@key, @i) when (@i < 10) {
-//   .backgroundcard(@key, @i);
-//   .backgroundcardLoopItem(@i+1);
-// }
-
-// .backgroundcardLoop(@key, @i) when (@i < 10) {
-//   .backgroundcardLoopItem("@{key}-@{i}", 1);
-//   .backgroundcardLoop(@i+1);
-// }
-
-// .loop(@i) when (@i < length(@bgcardList)+1) {
-//   .backgroundcardLoop(extract(@bgcardList, @i), 1);
-//   .loop(@i+1);
-// }
-// .loop(1);
-
+.colorPalette-primary-color-1 {
+  background-color: color(~`colorPalette("@{primary-color}", 1) `);
+}
+      
+.colorPalette-primary-color-2 {
+  background-color: color(~`colorPalette("@{primary-color}", 2) `);
+}
+      
+.colorPalette-primary-color-3 {
+  background-color: color(~`colorPalette("@{primary-color}", 3) `);
+}
+      
+.colorPalette-primary-color-4 {
+  background-color: color(~`colorPalette("@{primary-color}", 4) `);
+}
+      
+.colorPalette-primary-color-5 {
+  background-color: color(~`colorPalette("@{primary-color}", 5) `);
+}
+      
+.colorPalette-primary-color-6 {
+  background-color: color(~`colorPalette("@{primary-color}", 6) `);
+}
+      
+.colorPalette-primary-color-7 {
+  background-color: color(~`colorPalette("@{primary-color}", 7) `);
+}
+      
+.colorPalette-primary-color-8 {
+  background-color: color(~`colorPalette("@{primary-color}", 8) `);
+}
+      
+.colorPalette-primary-color-9 {
+  background-color: color(~`colorPalette("@{primary-color}", 9) `);
+}
+      
 .colorPalette-blue-6-1 {
   background-color: color(~`colorPalette("@{blue-6}", 1) `);
 }
+      
+.colorPalette-blue-6-2 {
+  background-color: color(~`colorPalette("@{blue-6}", 2) `);
+}
+      
+.colorPalette-blue-6-3 {
+  background-color: color(~`colorPalette("@{blue-6}", 3) `);
+}
+      
+.colorPalette-blue-6-4 {
+  background-color: color(~`colorPalette("@{blue-6}", 4) `);
+}
+      
+.colorPalette-blue-6-5 {
+  background-color: color(~`colorPalette("@{blue-6}", 5) `);
+}
+      
+.colorPalette-blue-6-6 {
+  background-color: color(~`colorPalette("@{blue-6}", 6) `);
+}
+      
+.colorPalette-blue-6-7 {
+  background-color: color(~`colorPalette("@{blue-6}", 7) `);
+}
+      
+.colorPalette-blue-6-8 {
+  background-color: color(~`colorPalette("@{blue-6}", 8) `);
+}
+      
+.colorPalette-blue-6-9 {
+  background-color: color(~`colorPalette("@{blue-6}", 9) `);
+}
+      
+.colorPalette-purple-6-1 {
+  background-color: color(~`colorPalette("@{purple-6}", 1) `);
+}
+      
+.colorPalette-purple-6-2 {
+  background-color: color(~`colorPalette("@{purple-6}", 2) `);
+}
+      
+.colorPalette-purple-6-3 {
+  background-color: color(~`colorPalette("@{purple-6}", 3) `);
+}
+      
+.colorPalette-purple-6-4 {
+  background-color: color(~`colorPalette("@{purple-6}", 4) `);
+}
+      
+.colorPalette-purple-6-5 {
+  background-color: color(~`colorPalette("@{purple-6}", 5) `);
+}
+      
+.colorPalette-purple-6-6 {
+  background-color: color(~`colorPalette("@{purple-6}", 6) `);
+}
+      
+.colorPalette-purple-6-7 {
+  background-color: color(~`colorPalette("@{purple-6}", 7) `);
+}
+      
+.colorPalette-purple-6-8 {
+  background-color: color(~`colorPalette("@{purple-6}", 8) `);
+}
+      
+.colorPalette-purple-6-9 {
+  background-color: color(~`colorPalette("@{purple-6}", 9) `);
+}
+      
+.colorPalette-cyan-6-1 {
+  background-color: color(~`colorPalette("@{cyan-6}", 1) `);
+}
+      
+.colorPalette-cyan-6-2 {
+  background-color: color(~`colorPalette("@{cyan-6}", 2) `);
+}
+      
+.colorPalette-cyan-6-3 {
+  background-color: color(~`colorPalette("@{cyan-6}", 3) `);
+}
+      
+.colorPalette-cyan-6-4 {
+  background-color: color(~`colorPalette("@{cyan-6}", 4) `);
+}
+      
+.colorPalette-cyan-6-5 {
+  background-color: color(~`colorPalette("@{cyan-6}", 5) `);
+}
+      
+.colorPalette-cyan-6-6 {
+  background-color: color(~`colorPalette("@{cyan-6}", 6) `);
+}
+      
+.colorPalette-cyan-6-7 {
+  background-color: color(~`colorPalette("@{cyan-6}", 7) `);
+}
+      
+.colorPalette-cyan-6-8 {
+  background-color: color(~`colorPalette("@{cyan-6}", 8) `);
+}
+      
+.colorPalette-cyan-6-9 {
+  background-color: color(~`colorPalette("@{cyan-6}", 9) `);
+}
+      
+.colorPalette-green-6-1 {
+  background-color: color(~`colorPalette("@{green-6}", 1) `);
+}
+      
+.colorPalette-green-6-2 {
+  background-color: color(~`colorPalette("@{green-6}", 2) `);
+}
+      
+.colorPalette-green-6-3 {
+  background-color: color(~`colorPalette("@{green-6}", 3) `);
+}
+      
+.colorPalette-green-6-4 {
+  background-color: color(~`colorPalette("@{green-6}", 4) `);
+}
+      
+.colorPalette-green-6-5 {
+  background-color: color(~`colorPalette("@{green-6}", 5) `);
+}
+      
+.colorPalette-green-6-6 {
+  background-color: color(~`colorPalette("@{green-6}", 6) `);
+}
+      
+.colorPalette-green-6-7 {
+  background-color: color(~`colorPalette("@{green-6}", 7) `);
+}
+      
+.colorPalette-green-6-8 {
+  background-color: color(~`colorPalette("@{green-6}", 8) `);
+}
+      
+.colorPalette-green-6-9 {
+  background-color: color(~`colorPalette("@{green-6}", 9) `);
+}
+      
+.colorPalette-magenta-6-1 {
+  background-color: color(~`colorPalette("@{magenta-6}", 1) `);
+}
+      
+.colorPalette-magenta-6-2 {
+  background-color: color(~`colorPalette("@{magenta-6}", 2) `);
+}
+      
+.colorPalette-magenta-6-3 {
+  background-color: color(~`colorPalette("@{magenta-6}", 3) `);
+}
+      
+.colorPalette-magenta-6-4 {
+  background-color: color(~`colorPalette("@{magenta-6}", 4) `);
+}
+      
+.colorPalette-magenta-6-5 {
+  background-color: color(~`colorPalette("@{magenta-6}", 5) `);
+}
+      
+.colorPalette-magenta-6-6 {
+  background-color: color(~`colorPalette("@{magenta-6}", 6) `);
+}
+      
+.colorPalette-magenta-6-7 {
+  background-color: color(~`colorPalette("@{magenta-6}", 7) `);
+}
+      
+.colorPalette-magenta-6-8 {
+  background-color: color(~`colorPalette("@{magenta-6}", 8) `);
+}
+      
+.colorPalette-magenta-6-9 {
+  background-color: color(~`colorPalette("@{magenta-6}", 9) `);
+}
+      
+.colorPalette-pink-6-1 {
+  background-color: color(~`colorPalette("@{pink-6}", 1) `);
+}
+      
+.colorPalette-pink-6-2 {
+  background-color: color(~`colorPalette("@{pink-6}", 2) `);
+}
+      
+.colorPalette-pink-6-3 {
+  background-color: color(~`colorPalette("@{pink-6}", 3) `);
+}
+      
+.colorPalette-pink-6-4 {
+  background-color: color(~`colorPalette("@{pink-6}", 4) `);
+}
+      
+.colorPalette-pink-6-5 {
+  background-color: color(~`colorPalette("@{pink-6}", 5) `);
+}
+      
+.colorPalette-pink-6-6 {
+  background-color: color(~`colorPalette("@{pink-6}", 6) `);
+}
+      
+.colorPalette-pink-6-7 {
+  background-color: color(~`colorPalette("@{pink-6}", 7) `);
+}
+      
+.colorPalette-pink-6-8 {
+  background-color: color(~`colorPalette("@{pink-6}", 8) `);
+}
+      
+.colorPalette-pink-6-9 {
+  background-color: color(~`colorPalette("@{pink-6}", 9) `);
+}
+      
+.colorPalette-red-6-1 {
+  background-color: color(~`colorPalette("@{red-6}", 1) `);
+}
+      
+.colorPalette-red-6-2 {
+  background-color: color(~`colorPalette("@{red-6}", 2) `);
+}
+      
+.colorPalette-red-6-3 {
+  background-color: color(~`colorPalette("@{red-6}", 3) `);
+}
+      
+.colorPalette-red-6-4 {
+  background-color: color(~`colorPalette("@{red-6}", 4) `);
+}
+      
+.colorPalette-red-6-5 {
+  background-color: color(~`colorPalette("@{red-6}", 5) `);
+}
+      
+.colorPalette-red-6-6 {
+  background-color: color(~`colorPalette("@{red-6}", 6) `);
+}
+      
+.colorPalette-red-6-7 {
+  background-color: color(~`colorPalette("@{red-6}", 7) `);
+}
+      
+.colorPalette-red-6-8 {
+  background-color: color(~`colorPalette("@{red-6}", 8) `);
+}
+      
+.colorPalette-red-6-9 {
+  background-color: color(~`colorPalette("@{red-6}", 9) `);
+}
+      
+.colorPalette-orange-6-1 {
+  background-color: color(~`colorPalette("@{orange-6}", 1) `);
+}
+      
+.colorPalette-orange-6-2 {
+  background-color: color(~`colorPalette("@{orange-6}", 2) `);
+}
+      
+.colorPalette-orange-6-3 {
+  background-color: color(~`colorPalette("@{orange-6}", 3) `);
+}
+      
+.colorPalette-orange-6-4 {
+  background-color: color(~`colorPalette("@{orange-6}", 4) `);
+}
+      
+.colorPalette-orange-6-5 {
+  background-color: color(~`colorPalette("@{orange-6}", 5) `);
+}
+      
+.colorPalette-orange-6-6 {
+  background-color: color(~`colorPalette("@{orange-6}", 6) `);
+}
+      
+.colorPalette-orange-6-7 {
+  background-color: color(~`colorPalette("@{orange-6}", 7) `);
+}
+      
+.colorPalette-orange-6-8 {
+  background-color: color(~`colorPalette("@{orange-6}", 8) `);
+}
+      
+.colorPalette-orange-6-9 {
+  background-color: color(~`colorPalette("@{orange-6}", 9) `);
+}
+      
+.colorPalette-yellow-6-1 {
+  background-color: color(~`colorPalette("@{yellow-6}", 1) `);
+}
+      
+.colorPalette-yellow-6-2 {
+  background-color: color(~`colorPalette("@{yellow-6}", 2) `);
+}
+      
+.colorPalette-yellow-6-3 {
+  background-color: color(~`colorPalette("@{yellow-6}", 3) `);
+}
+      
+.colorPalette-yellow-6-4 {
+  background-color: color(~`colorPalette("@{yellow-6}", 4) `);
+}
+      
+.colorPalette-yellow-6-5 {
+  background-color: color(~`colorPalette("@{yellow-6}", 5) `);
+}
+      
+.colorPalette-yellow-6-6 {
+  background-color: color(~`colorPalette("@{yellow-6}", 6) `);
+}
+      
+.colorPalette-yellow-6-7 {
+  background-color: color(~`colorPalette("@{yellow-6}", 7) `);
+}
+      
+.colorPalette-yellow-6-8 {
+  background-color: color(~`colorPalette("@{yellow-6}", 8) `);
+}
+      
+.colorPalette-yellow-6-9 {
+  background-color: color(~`colorPalette("@{yellow-6}", 9) `);
+}
+      
+.colorPalette-volcano-6-1 {
+  background-color: color(~`colorPalette("@{volcano-6}", 1) `);
+}
+      
+.colorPalette-volcano-6-2 {
+  background-color: color(~`colorPalette("@{volcano-6}", 2) `);
+}
+      
+.colorPalette-volcano-6-3 {
+  background-color: color(~`colorPalette("@{volcano-6}", 3) `);
+}
+      
+.colorPalette-volcano-6-4 {
+  background-color: color(~`colorPalette("@{volcano-6}", 4) `);
+}
+      
+.colorPalette-volcano-6-5 {
+  background-color: color(~`colorPalette("@{volcano-6}", 5) `);
+}
+      
+.colorPalette-volcano-6-6 {
+  background-color: color(~`colorPalette("@{volcano-6}", 6) `);
+}
+      
+.colorPalette-volcano-6-7 {
+  background-color: color(~`colorPalette("@{volcano-6}", 7) `);
+}
+      
+.colorPalette-volcano-6-8 {
+  background-color: color(~`colorPalette("@{volcano-6}", 8) `);
+}
+      
+.colorPalette-volcano-6-9 {
+  background-color: color(~`colorPalette("@{volcano-6}", 9) `);
+}
+      
+.colorPalette-geekblue-6-1 {
+  background-color: color(~`colorPalette("@{geekblue-6}", 1) `);
+}
+      
+.colorPalette-geekblue-6-2 {
+  background-color: color(~`colorPalette("@{geekblue-6}", 2) `);
+}
+      
+.colorPalette-geekblue-6-3 {
+  background-color: color(~`colorPalette("@{geekblue-6}", 3) `);
+}
+      
+.colorPalette-geekblue-6-4 {
+  background-color: color(~`colorPalette("@{geekblue-6}", 4) `);
+}
+      
+.colorPalette-geekblue-6-5 {
+  background-color: color(~`colorPalette("@{geekblue-6}", 5) `);
+}
+      
+.colorPalette-geekblue-6-6 {
+  background-color: color(~`colorPalette("@{geekblue-6}", 6) `);
+}
+      
+.colorPalette-geekblue-6-7 {
+  background-color: color(~`colorPalette("@{geekblue-6}", 7) `);
+}
+      
+.colorPalette-geekblue-6-8 {
+  background-color: color(~`colorPalette("@{geekblue-6}", 8) `);
+}
+      
+.colorPalette-geekblue-6-9 {
+  background-color: color(~`colorPalette("@{geekblue-6}", 9) `);
+}
+      
+.colorPalette-lime-6-1 {
+  background-color: color(~`colorPalette("@{lime-6}", 1) `);
+}
+      
+.colorPalette-lime-6-2 {
+  background-color: color(~`colorPalette("@{lime-6}", 2) `);
+}
+      
+.colorPalette-lime-6-3 {
+  background-color: color(~`colorPalette("@{lime-6}", 3) `);
+}
+      
+.colorPalette-lime-6-4 {
+  background-color: color(~`colorPalette("@{lime-6}", 4) `);
+}
+      
+.colorPalette-lime-6-5 {
+  background-color: color(~`colorPalette("@{lime-6}", 5) `);
+}
+      
+.colorPalette-lime-6-6 {
+  background-color: color(~`colorPalette("@{lime-6}", 6) `);
+}
+      
+.colorPalette-lime-6-7 {
+  background-color: color(~`colorPalette("@{lime-6}", 7) `);
+}
+      
+.colorPalette-lime-6-8 {
+  background-color: color(~`colorPalette("@{lime-6}", 8) `);
+}
+      
+.colorPalette-lime-6-9 {
+  background-color: color(~`colorPalette("@{lime-6}", 9) `);
+}
+      
+.colorPalette-gold-6-1 {
+  background-color: color(~`colorPalette("@{gold-6}", 1) `);
+}
+      
+.colorPalette-gold-6-2 {
+  background-color: color(~`colorPalette("@{gold-6}", 2) `);
+}
+      
+.colorPalette-gold-6-3 {
+  background-color: color(~`colorPalette("@{gold-6}", 3) `);
+}
+      
+.colorPalette-gold-6-4 {
+  background-color: color(~`colorPalette("@{gold-6}", 4) `);
+}
+      
+.colorPalette-gold-6-5 {
+  background-color: color(~`colorPalette("@{gold-6}", 5) `);
+}
+      
+.colorPalette-gold-6-6 {
+  background-color: color(~`colorPalette("@{gold-6}", 6) `);
+}
+      
+.colorPalette-gold-6-7 {
+  background-color: color(~`colorPalette("@{gold-6}", 7) `);
+}
+      
+.colorPalette-gold-6-8 {
+  background-color: color(~`colorPalette("@{gold-6}", 8) `);
+}
+      
+.colorPalette-gold-6-9 {
+  background-color: color(~`colorPalette("@{gold-6}", 9) `);
+}
+      
+.tint-primary-color-10 {
+  background-color: tint(@primary-color, 10%);
+}
+      
+.tint-primary-color-15 {
+  background-color: tint(@primary-color, 15%);
+}
+      
+.tint-primary-color-20 {
+  background-color: tint(@primary-color, 20%);
+}
+      
+.tint-primary-color-25 {
+  background-color: tint(@primary-color, 25%);
+}
+      
+.tint-primary-color-30 {
+  background-color: tint(@primary-color, 30%);
+}
+      
+.tint-primary-color-35 {
+  background-color: tint(@primary-color, 35%);
+}
+      
+.tint-primary-color-40 {
+  background-color: tint(@primary-color, 40%);
+}
+      
+.tint-primary-color-45 {
+  background-color: tint(@primary-color, 45%);
+}
+      
+.tint-primary-color-50 {
+  background-color: tint(@primary-color, 50%);
+}
+      
+.tint-primary-color-55 {
+  background-color: tint(@primary-color, 55%);
+}
+      
+.tint-primary-color-60 {
+  background-color: tint(@primary-color, 60%);
+}
+      
+.tint-primary-color-65 {
+  background-color: tint(@primary-color, 65%);
+}
+      
+.tint-primary-color-70 {
+  background-color: tint(@primary-color, 70%);
+}
+      
+.tint-primary-color-75 {
+  background-color: tint(@primary-color, 75%);
+}
+      
+.tint-primary-color-80 {
+  background-color: tint(@primary-color, 80%);
+}
+      
+.tint-primary-color-85 {
+  background-color: tint(@primary-color, 85%);
+}
+      
+.tint-primary-color-90 {
+  background-color: tint(@primary-color, 90%);
+}
+      
+.tint-primary-color-95 {
+  background-color: tint(@primary-color, 95%);
+}
+      
+.tint-primary-color-100 {
+  background-color: tint(@primary-color, 100%);
+}
+      
+.tint-primary-color-105 {
+  background-color: tint(@primary-color, 105%);
+}
+      
+.fade-00230b-10 {
+  background-color: fade(#00230b, 10%);
+}
+      
+.fade-00230b-15 {
+  background-color: fade(#00230b, 15%);
+}
+      
+.fade-00230b-20 {
+  background-color: fade(#00230b, 20%);
+}
+      
+.fade-00230b-25 {
+  background-color: fade(#00230b, 25%);
+}
+      
+.fade-00230b-30 {
+  background-color: fade(#00230b, 30%);
+}
+      
+.fade-00230b-35 {
+  background-color: fade(#00230b, 35%);
+}
+      
+.fade-00230b-40 {
+  background-color: fade(#00230b, 40%);
+}
+      
+.fade-00230b-45 {
+  background-color: fade(#00230b, 45%);
+}
+      
+.fade-00230b-50 {
+  background-color: fade(#00230b, 50%);
+}
+      
+.fade-00230b-55 {
+  background-color: fade(#00230b, 55%);
+}
+      
+.fade-00230b-60 {
+  background-color: fade(#00230b, 60%);
+}
+      
+.fade-00230b-65 {
+  background-color: fade(#00230b, 65%);
+}
+      
+.fade-00230b-70 {
+  background-color: fade(#00230b, 70%);
+}
+      
+.fade-00230b-75 {
+  background-color: fade(#00230b, 75%);
+}
+      
+.fade-00230b-80 {
+  background-color: fade(#00230b, 80%);
+}
+      
+.fade-00230b-85 {
+  background-color: fade(#00230b, 85%);
+}
+      
+.fade-00230b-90 {
+  background-color: fade(#00230b, 90%);
+}
+      
+.fade-00230b-95 {
+  background-color: fade(#00230b, 95%);
+}
+      
+.fade-00230b-100 {
+  background-color: fade(#00230b, 100%);
+}
+      
+.fade-00230b-105 {
+  background-color: fade(#00230b, 105%);
+}
+      
+.fade-black-10 {
+  background-color: fade(@black, 10%);
+}
+      
+.fade-black-15 {
+  background-color: fade(@black, 15%);
+}
+      
+.fade-black-20 {
+  background-color: fade(@black, 20%);
+}
+      
+.fade-black-25 {
+  background-color: fade(@black, 25%);
+}
+      
+.fade-black-30 {
+  background-color: fade(@black, 30%);
+}
+      
+.fade-black-35 {
+  background-color: fade(@black, 35%);
+}
+      
+.fade-black-40 {
+  background-color: fade(@black, 40%);
+}
+      
+.fade-black-45 {
+  background-color: fade(@black, 45%);
+}
+      
+.fade-black-50 {
+  background-color: fade(@black, 50%);
+}
+      
+.fade-black-55 {
+  background-color: fade(@black, 55%);
+}
+      
+.fade-black-60 {
+  background-color: fade(@black, 60%);
+}
+      
+.fade-black-65 {
+  background-color: fade(@black, 65%);
+}
+      
+.fade-black-70 {
+  background-color: fade(@black, 70%);
+}
+      
+.fade-black-75 {
+  background-color: fade(@black, 75%);
+}
+      
+.fade-black-80 {
+  background-color: fade(@black, 80%);
+}
+      
+.fade-black-85 {
+  background-color: fade(@black, 85%);
+}
+      
+.fade-black-90 {
+  background-color: fade(@black, 90%);
+}
+      
+.fade-black-95 {
+  background-color: fade(@black, 95%);
+}
+      
+.fade-black-100 {
+  background-color: fade(@black, 100%);
+}
+      
+.fade-black-105 {
+  background-color: fade(@black, 105%);
+}
+      
+.fade-white-10 {
+  background-color: fade(@white, 10%);
+}
+      
+.fade-white-15 {
+  background-color: fade(@white, 15%);
+}
+      
+.fade-white-20 {
+  background-color: fade(@white, 20%);
+}
+      
+.fade-white-25 {
+  background-color: fade(@white, 25%);
+}
+      
+.fade-white-30 {
+  background-color: fade(@white, 30%);
+}
+      
+.fade-white-35 {
+  background-color: fade(@white, 35%);
+}
+      
+.fade-white-40 {
+  background-color: fade(@white, 40%);
+}
+      
+.fade-white-45 {
+  background-color: fade(@white, 45%);
+}
+      
+.fade-white-50 {
+  background-color: fade(@white, 50%);
+}
+      
+.fade-white-55 {
+  background-color: fade(@white, 55%);
+}
+      
+.fade-white-60 {
+  background-color: fade(@white, 60%);
+}
+      
+.fade-white-65 {
+  background-color: fade(@white, 65%);
+}
+      
+.fade-white-70 {
+  background-color: fade(@white, 70%);
+}
+      
+.fade-white-75 {
+  background-color: fade(@white, 75%);
+}
+      
+.fade-white-80 {
+  background-color: fade(@white, 80%);
+}
+      
+.fade-white-85 {
+  background-color: fade(@white, 85%);
+}
+      
+.fade-white-90 {
+  background-color: fade(@white, 90%);
+}
+      
+.fade-white-95 {
+  background-color: fade(@white, 95%);
+}
+      
+.fade-white-100 {
+  background-color: fade(@white, 100%);
+}
+      
+.fade-white-105 {
+  background-color: fade(@white, 105%);
+}
+      
+.fade-000-10 {
+  background-color: fade(#000, 10%);
+}
+      
+.fade-000-15 {
+  background-color: fade(#000, 15%);
+}
+      
+.fade-000-20 {
+  background-color: fade(#000, 20%);
+}
+      
+.fade-000-25 {
+  background-color: fade(#000, 25%);
+}
+      
+.fade-000-30 {
+  background-color: fade(#000, 30%);
+}
+      
+.fade-000-35 {
+  background-color: fade(#000, 35%);
+}
+      
+.fade-000-40 {
+  background-color: fade(#000, 40%);
+}
+      
+.fade-000-45 {
+  background-color: fade(#000, 45%);
+}
+      
+.fade-000-50 {
+  background-color: fade(#000, 50%);
+}
+      
+.fade-000-55 {
+  background-color: fade(#000, 55%);
+}
+      
+.fade-000-60 {
+  background-color: fade(#000, 60%);
+}
+      
+.fade-000-65 {
+  background-color: fade(#000, 65%);
+}
+      
+.fade-000-70 {
+  background-color: fade(#000, 70%);
+}
+      
+.fade-000-75 {
+  background-color: fade(#000, 75%);
+}
+      
+.fade-000-80 {
+  background-color: fade(#000, 80%);
+}
+      
+.fade-000-85 {
+  background-color: fade(#000, 85%);
+}
+      
+.fade-000-90 {
+  background-color: fade(#000, 90%);
+}
+      
+.fade-000-95 {
+  background-color: fade(#000, 95%);
+}
+      
+.fade-000-100 {
+  background-color: fade(#000, 100%);
+}
+      
+.fade-000-105 {
+  background-color: fade(#000, 105%);
+}
+      
+.fade-fff-10 {
+  background-color: fade(#fff, 10%);
+}
+      
+.fade-fff-15 {
+  background-color: fade(#fff, 15%);
+}
+      
+.fade-fff-20 {
+  background-color: fade(#fff, 20%);
+}
+      
+.fade-fff-25 {
+  background-color: fade(#fff, 25%);
+}
+      
+.fade-fff-30 {
+  background-color: fade(#fff, 30%);
+}
+      
+.fade-fff-35 {
+  background-color: fade(#fff, 35%);
+}
+      
+.fade-fff-40 {
+  background-color: fade(#fff, 40%);
+}
+      
+.fade-fff-45 {
+  background-color: fade(#fff, 45%);
+}
+      
+.fade-fff-50 {
+  background-color: fade(#fff, 50%);
+}
+      
+.fade-fff-55 {
+  background-color: fade(#fff, 55%);
+}
+      
+.fade-fff-60 {
+  background-color: fade(#fff, 60%);
+}
+      
+.fade-fff-65 {
+  background-color: fade(#fff, 65%);
+}
+      
+.fade-fff-70 {
+  background-color: fade(#fff, 70%);
+}
+      
+.fade-fff-75 {
+  background-color: fade(#fff, 75%);
+}
+      
+.fade-fff-80 {
+  background-color: fade(#fff, 80%);
+}
+      
+.fade-fff-85 {
+  background-color: fade(#fff, 85%);
+}
+      
+.fade-fff-90 {
+  background-color: fade(#fff, 90%);
+}
+      
+.fade-fff-95 {
+  background-color: fade(#fff, 95%);
+}
+      
+.fade-fff-100 {
+  background-color: fade(#fff, 100%);
+}
+      
+.fade-fff-105 {
+  background-color: fade(#fff, 105%);
+}
+      
+.fade-primary-color-10 {
+  background-color: fade(@primary-color, 10%);
+}
+      
+.fade-primary-color-15 {
+  background-color: fade(@primary-color, 15%);
+}
+      
+.fade-primary-color-20 {
+  background-color: fade(@primary-color, 20%);
+}
+      
+.fade-primary-color-25 {
+  background-color: fade(@primary-color, 25%);
+}
+      
+.fade-primary-color-30 {
+  background-color: fade(@primary-color, 30%);
+}
+      
+.fade-primary-color-35 {
+  background-color: fade(@primary-color, 35%);
+}
+      
+.fade-primary-color-40 {
+  background-color: fade(@primary-color, 40%);
+}
+      
+.fade-primary-color-45 {
+  background-color: fade(@primary-color, 45%);
+}
+      
+.fade-primary-color-50 {
+  background-color: fade(@primary-color, 50%);
+}
+      
+.fade-primary-color-55 {
+  background-color: fade(@primary-color, 55%);
+}
+      
+.fade-primary-color-60 {
+  background-color: fade(@primary-color, 60%);
+}
+      
+.fade-primary-color-65 {
+  background-color: fade(@primary-color, 65%);
+}
+      
+.fade-primary-color-70 {
+  background-color: fade(@primary-color, 70%);
+}
+      
+.fade-primary-color-75 {
+  background-color: fade(@primary-color, 75%);
+}
+      
+.fade-primary-color-80 {
+  background-color: fade(@primary-color, 80%);
+}
+      
+.fade-primary-color-85 {
+  background-color: fade(@primary-color, 85%);
+}
+      
+.fade-primary-color-90 {
+  background-color: fade(@primary-color, 90%);
+}
+      
+.fade-primary-color-95 {
+  background-color: fade(@primary-color, 95%);
+}
+      
+.fade-primary-color-100 {
+  background-color: fade(@primary-color, 100%);
+}
+      
+.fade-primary-color-105 {
+  background-color: fade(@primary-color, 105%);
+}
+      
+  

@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const lessToJs = require("less-vars-to-js");
 const AntDesignThemePlugin = require("./lib/antd-theme-webpack-plugin");
+const generatorColorLess = require("./lib/generatorColorLess");
 
 module.exports = [
   ["use-babel-config", ".babelrc"],
@@ -11,6 +12,9 @@ module.exports = [
     let rule = newConfig.module.rules.find(rule => rule.oneOf);
     const paletteLess = fs.readFileSync("./src/styles/variables.less", "utf8");
     const variables = lessToJs(paletteLess);
+
+    // 生成 color less
+    generatorColorLess();
 
     // 生成 initialValue
     const colorLessBase = fs.readFileSync(

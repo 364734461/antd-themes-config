@@ -53,13 +53,15 @@ function setNotificationConfig(options) {
 }
 
 function getPlacementStyle(placement) {
+  var top = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultTop;
+  var bottom = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : defaultBottom;
   var style;
 
   switch (placement) {
     case 'topLeft':
       style = {
         left: 0,
-        top: defaultTop,
+        top: top,
         bottom: 'auto'
       };
       break;
@@ -67,7 +69,7 @@ function getPlacementStyle(placement) {
     case 'topRight':
       style = {
         right: 0,
-        top: defaultTop,
+        top: top,
         bottom: 'auto'
       };
       break;
@@ -76,7 +78,7 @@ function getPlacementStyle(placement) {
       style = {
         left: 0,
         top: 'auto',
-        bottom: defaultBottom
+        bottom: bottom
       };
       break;
 
@@ -84,7 +86,7 @@ function getPlacementStyle(placement) {
       style = {
         right: 0,
         top: 'auto',
-        bottom: defaultBottom
+        bottom: bottom
       };
       break;
   }
@@ -92,7 +94,14 @@ function getPlacementStyle(placement) {
   return style;
 }
 
-function getNotificationInstance(prefixCls, placement, callback) {
+function getNotificationInstance(_ref, callback) {
+  var prefixCls = _ref.prefixCls,
+      _ref$placement = _ref.placement,
+      placement = _ref$placement === void 0 ? defaultPlacement : _ref$placement,
+      _ref$getContainer = _ref.getContainer,
+      getContainer = _ref$getContainer === void 0 ? defaultGetContainer : _ref$getContainer,
+      top = _ref.top,
+      bottom = _ref.bottom;
   var cacheKey = "".concat(prefixCls, "-").concat(placement);
 
   if (notificationInstance[cacheKey]) {
@@ -103,8 +112,8 @@ function getNotificationInstance(prefixCls, placement, callback) {
   _rcNotification["default"].newInstance({
     prefixCls: prefixCls,
     className: "".concat(prefixCls, "-").concat(placement),
-    style: getPlacementStyle(placement),
-    getContainer: defaultGetContainer,
+    style: getPlacementStyle(placement, top, bottom),
+    getContainer: getContainer,
     closeIcon: React.createElement(_icon["default"], {
       className: "".concat(prefixCls, "-close-icon"),
       type: 'close'
@@ -143,7 +152,17 @@ function notice(args) {
   var autoMarginTag = !args.description && iconNode ? React.createElement("span", {
     className: "".concat(prefixCls, "-message-single-line-auto-margin")
   }) : null;
-  getNotificationInstance(outerPrefixCls, args.placement || defaultPlacement, function (notification) {
+  var placement = args.placement,
+      top = args.top,
+      bottom = args.bottom,
+      getContainer = args.getContainer;
+  getNotificationInstance({
+    prefixCls: outerPrefixCls,
+    placement: placement,
+    top: top,
+    bottom: bottom,
+    getContainer: getContainer
+  }, function (notification) {
     notification.notice({
       content: React.createElement("div", {
         className: iconNode ? "".concat(prefixCls, "-with-icon") : ''
@@ -190,3 +209,4 @@ var api = {
 api.warn = api.warning;
 var _default = api;
 exports["default"] = _default;
+//# sourceMappingURL=index.js.map

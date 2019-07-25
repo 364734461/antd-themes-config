@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import { TimePickerProps } from '../time-picker';
 export interface PickerProps {
     id?: number | string;
+    name?: string;
     prefixCls?: string;
     inputPrefixCls?: string;
     format?: string | string[];
@@ -19,17 +20,20 @@ export interface PickerProps {
     open?: boolean;
     onOpenChange?: (status: boolean) => void;
     disabledDate?: (current: moment.Moment | undefined) => boolean;
-    renderExtraFooter?: () => React.ReactNode;
     dateRender?: (current: moment.Moment, today: moment.Moment) => React.ReactNode;
+    autoFocus?: boolean;
 }
 export interface SinglePickerProps {
     value?: moment.Moment;
     defaultValue?: moment.Moment;
     defaultPickerValue?: moment.Moment;
+    placeholder?: string;
+    renderExtraFooter?: (mode: DatePickerMode) => React.ReactNode;
     onChange?: (date: moment.Moment, dateString: string) => void;
 }
+declare const DatePickerModes: ["time", "date", "month", "year", "decade"];
+export declare type DatePickerMode = (typeof DatePickerModes)[number];
 export interface DatePickerProps extends PickerProps, SinglePickerProps {
-    className?: string;
     showTime?: TimePickerProps | boolean;
     showToday?: boolean;
     open?: boolean;
@@ -39,13 +43,11 @@ export interface DatePickerProps extends PickerProps, SinglePickerProps {
         disabledSeconds?: () => number[];
     };
     onOpenChange?: (status: boolean) => void;
+    onPanelChange?: (value: moment.Moment | undefined, mode: DatePickerMode) => void;
     onOk?: (selectedTime: moment.Moment) => void;
-    placeholder?: string;
-    mode?: 'time' | 'date' | 'month' | 'year';
+    mode?: DatePickerMode;
 }
 export interface MonthPickerProps extends PickerProps, SinglePickerProps {
-    className?: string;
-    placeholder?: string;
 }
 export declare type RangePickerValue = undefined[] | [moment.Moment] | [undefined, moment.Moment] | [moment.Moment, moment.Moment];
 export declare type RangePickerPresetRange = RangePickerValue | (() => RangePickerValue);
@@ -58,24 +60,26 @@ export interface RangePickerProps extends PickerProps {
     onCalendarChange?: (dates: RangePickerValue, dateStrings: [string, string]) => void;
     onOk?: (selectedTime: RangePickerPresetRange) => void;
     showTime?: TimePickerProps | boolean;
+    showToday?: boolean;
     ranges?: {
         [range: string]: RangePickerPresetRange;
     };
     placeholder?: [string, string];
     mode?: string | string[];
+    separator?: React.ReactNode;
     disabledTime?: (current: moment.Moment | undefined, type: string) => {
         disabledHours?: () => number[];
         disabledMinutes?: () => number[];
         disabledSeconds?: () => number[];
     };
     onPanelChange?: (value?: RangePickerValue, mode?: string | string[]) => void;
+    renderExtraFooter?: () => React.ReactNode;
 }
 export interface WeekPickerProps extends PickerProps, SinglePickerProps {
-    className?: string;
-    placeholder?: string;
 }
 export interface DatePickerDecorator extends React.ClassicComponentClass<DatePickerProps> {
     RangePicker: React.ClassicComponentClass<RangePickerProps>;
     MonthPicker: React.ClassicComponentClass<MonthPickerProps>;
     WeekPicker: React.ClassicComponentClass<WeekPickerProps>;
 }
+export {};
