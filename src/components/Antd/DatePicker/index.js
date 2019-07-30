@@ -16,19 +16,26 @@ class PickerSizesDemo extends React.Component {
     const { size } = this.state;
     return (
       <div>
-        <Radio.Group value={size} onChange={this.handleSizeChange}>
-          <Radio.Button value="large">Large</Radio.Button>
-          <Radio.Button value="default">Default</Radio.Button>
-          <Radio.Button value="small">Small</Radio.Button>
-        </Radio.Group>
+        <div style={{ marginBottom: 20 }}>
+          <Radio.Group value={size} onChange={this.handleSizeChange}>
+            <Radio.Button value="large">Large</Radio.Button>
+
+            <Radio.Button value="default">Default</Radio.Button>
+
+            <Radio.Button value="small">Small</Radio.Button>
+          </Radio.Group>
+        </div>
         <br />
-        <br />
+        <p>DatePicker</p>
         <DatePicker size={size} />
         <br />
+        <p>MonthPicker</p>
         <MonthPicker size={size} placeholder="Select Month" />
         <br />
+        <p>RangePicker</p>
         <RangePicker size={size} />
         <br />
+        <p>WeekPicker</p>
         <WeekPicker size={size} placeholder="Select Week" />
       </div>
     );

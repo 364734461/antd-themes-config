@@ -38,6 +38,21 @@ import Empty from "./Empty";
 import List from "./List";
 import Popover from "./Popover";
 import Statistic from "./Statistic";
+import Tree from "./Tree";
+import Tooltip from "./Tooltip";
+import Timeline from "./Timeline";
+import Tag from "./Tag";
+import Tabs from "./Tabs";
+import Table from "./Table";
+import Alert from "./Alert";
+import Drawer from "./Drawer";
+import Modal from "./Modal";
+import Message from "./Message";
+import Notification from "./Notification";
+import Progress from "./Progress";
+import Popconfirm from "./Popconfirm";
+import Result from "./Result";
+import Skeleton from "./Skeleton";
 
 const AntdComponents = [
   Button,
@@ -76,7 +91,22 @@ const AntdComponents = [
   Empty,
   List,
   Popover,
-  Statistic
+  Statistic,
+  Tree,
+  Tooltip,
+  Timeline,
+  Tag,
+  Tabs,
+  Table,
+  Alert,
+  Drawer,
+  Modal,
+  Message,
+  Notification,
+  Progress,
+  Popconfirm,
+  Result,
+  Skeleton
 ];
 
 export default class extends React.Component {
