@@ -53,6 +53,10 @@ class App extends Component {
       });
   };
 
+  getInitValueItem = key => {
+    return initialValue[key];
+  };
+
   getColorPicker = (varName, position) => (
     <InputVar
       key={varName}
@@ -60,6 +64,7 @@ class App extends Component {
       data={this.state.vars[varName]}
       position={position || "right"}
       handleChange={this.handleChange}
+      initValue={this.getInitValueItem(varName)}
     />
   );
 
@@ -86,7 +91,7 @@ class App extends Component {
     });
 
     const { collapsed } = this.state;
-    const width = 600;
+    const width = 700;
     const collapsedWidth = 60;
 
     return (

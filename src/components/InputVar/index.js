@@ -58,6 +58,11 @@ export default class extends React.Component {
     this.setState({ value });
   };
 
+  resetValue = () => {
+    const { handleChange, varName } = this.props;
+    handleChange(varName, this.props.initValue);
+  };
+
   render() {
     const { position, varName, data } = this.props;
     const color = getColor(this.state.value) || this.state.value;
@@ -116,6 +121,16 @@ export default class extends React.Component {
                   }}
                 >
                   取消
+                </Button>
+                <Button
+                  size="small"
+                  onClick={this.resetValue}
+                  style={{
+                    cursor: "pointer",
+                    display: this.state.value !== data ? "none" : "inline-block"
+                  }}
+                >
+                  重置
                 </Button>
               </>
             }

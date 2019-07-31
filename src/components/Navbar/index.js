@@ -16,7 +16,9 @@ const Navbar = props => {
       style={{ lineHeight: "64px" }}
     >
       <Menu.Item key="1">Antd组件</Menu.Item>
-      <Menu.Item key="2">行业二部</Menu.Item>
+      <Menu.Item key="2" disabled>
+        行业二部
+      </Menu.Item>
       <Menu.Item key="3" onClick={props.resetTheme}>
         重置样式
       </Menu.Item>
