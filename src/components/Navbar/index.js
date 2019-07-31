@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Layout, Menu, Drawer, Icon } from "antd";
+import { Layout, Menu, Drawer, Icon, Button } from "antd";
+
 import { Mobile, Default } from "../Responsive";
 
 import "./index.less";
@@ -28,6 +29,27 @@ const Navbar = props => {
   return (
     <Header className="app-header">
       <div className="logo">主题配置</div>
+
+      <Button
+        type="primary"
+        shape="round"
+        icon="download"
+        onClick={() => {
+          props.downloadFn();
+        }}
+        style={{ marginRight: 12 }}
+      >
+        下载配置
+      </Button>
+      <Button
+        shape="round"
+        icon="download"
+        onClick={() => {
+          props.downloadFn("default");
+        }}
+      >
+        下载默认配置
+      </Button>
       <Default>{menu}</Default>
       <Mobile>
         <Icon

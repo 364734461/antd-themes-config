@@ -4,11 +4,23 @@ import { Row, Layout, message, Icon } from "antd";
 import Navbar from "../Navbar";
 import AntdMain from "../Antd";
 import InputVar from "../InputVar";
+import DownLoad from "../DownLoad";
 
 import "./index.less";
 import initialValue from "../../initialValue";
 
 const { Content, Sider } = Layout;
+
+const columnsArr = [
+  {
+    title: "变量名称",
+    dataIndex: "key"
+  },
+  {
+    title: "值",
+    dataIndex: "value"
+  }
+];
 
 class App extends Component {
   constructor(props) {
@@ -81,6 +93,40 @@ class App extends Component {
     this.setState({ collapsed });
   };
 
+  downloadFn = type => {
+    let obj = {};
+    let exlName = "";
+    if (type === "default") {
+      obj = this.state.initialValue;
+      exlName = "默认配置";
+    } else {
+      Object.keys(this.state.vars).forEach(key => {
+        if (this.state.vars[key] !== this.state.initialValue[key]) {
+          obj[key] = this.state.vars[key];
+        }
+      });
+      exlName = "已更改配置";
+    }
+
+    console.log(obj);
+    const data = [];
+    Object.keys(obj).forEach(key => {
+      data.push({
+        key,
+        value: obj[key]
+      });
+    });
+
+    this.setState(
+      {
+        exlName
+      },
+      () => {
+        this.DownLoadRef && this.DownLoadRef.exportExcel({ data });
+      }
+    );
+  };
+
   render() {
     const varsArr = Object.keys(this.state.vars);
     const colorPickers = varsArr.map((varName, index) => {
@@ -96,7 +142,7 @@ class App extends Component {
 
     return (
       <Layout className="app">
-        <Navbar resetTheme={this.resetTheme} />
+        <Navbar resetTheme={this.resetTheme} downloadFn={this.downloadFn} />
         <Content className="content" style={{ position: "relative" }}>
           <Layout>
             <Sider
@@ -137,6 +183,12 @@ class App extends Component {
             </Content>
           </Layout>
         </Content>
+        <DownLoad
+          ref={ref => (this.DownLoadRef = ref)}
+          exlBtn={null}
+          exlName={this.state.exlName}
+          columnsArr={columnsArr}
+        />
       </Layout>
     );
   }
