@@ -64,7 +64,7 @@ export default class extends React.Component {
   };
 
   render() {
-    const { position, varName, data } = this.props;
+    const { position, varName, data, initValue } = this.props;
     const color = getColor(this.state.value) || this.state.value;
     return (
       <Row className="color-row">
@@ -127,7 +127,12 @@ export default class extends React.Component {
                   onClick={this.resetValue}
                   style={{
                     cursor: "pointer",
-                    display: this.state.value !== data ? "none" : "inline-block"
+                    display:
+                      this.state.value !== data
+                        ? "none"
+                        : data !== initValue
+                        ? "inline-block"
+                        : "none"
                   }}
                 >
                   重置
