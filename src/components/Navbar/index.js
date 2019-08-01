@@ -16,9 +16,9 @@ const Navbar = props => {
       defaultSelectedKeys={["1"]}
       style={{ lineHeight: "64px" }}
     >
-      <Menu.Item key="1">Antd组件</Menu.Item>
+      <Menu.Item key="1">Antd</Menu.Item>
       <Menu.Item key="2" disabled>
-        行业二部
+        custom-2
       </Menu.Item>
       <Menu.Item key="3" onClick={props.resetTheme}>
         重置样式
@@ -28,7 +28,7 @@ const Navbar = props => {
 
   return (
     <Header className="app-header">
-      <div className="logo">主题配置</div>
+      <div className="logo">主题配置 ~antd@3.20.5</div>
 
       <Button
         type="primary"
