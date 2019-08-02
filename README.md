@@ -1,6 +1,6 @@
 #### ~antd@3.20.5
 
-[Demo][https://364734461.github.io/antd-themes-config/]
+[Demo](https://364734461.github.io/antd-themes-config/)
 
 用于配置antd主题样式，获取配置列表，在项目中使用它。
 
